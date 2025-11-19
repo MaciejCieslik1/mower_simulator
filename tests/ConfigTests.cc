@@ -1,3 +1,9 @@
+/* 
+    Author: Maciej Cieslik
+    
+    Tests initializeRuntimeConstants function in Config.cc file.
+*/
+
 #include <gtest/gtest.h>
 #include "../include/Config.h"
 

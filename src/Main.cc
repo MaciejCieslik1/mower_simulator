@@ -1,7 +1,7 @@
 /* 
     Author: Maciej Cieslik
     
-    Main program file
+    Main program file.
 */
 
 #include <iostream>
