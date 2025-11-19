@@ -16,6 +16,8 @@ namespace Config {
     extern unsigned int MIN_MOVER_LENGTH; // cm
     extern unsigned int MIN_MOVER_LENGTH; // cm
     extern double FIELD_WIDTH; // cm
+    extern unsigned int HORIZONTAL_FIELDS_NUMBER;
+    extern unsigned int VERTICAL_FIELDS_NUMBER;
     
     void initializeRuntimeConstants(const unsigned int& lawn_width, const unsigned int& lawn_length);
 }

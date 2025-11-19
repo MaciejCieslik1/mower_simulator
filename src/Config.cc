@@ -5,6 +5,7 @@
 */
 
 #include <algorithm>
+#include <cmath>
 #include "../include/Constants.h"
 #include "../include/Config.h"
 
@@ -18,6 +19,8 @@ namespace Config {
     unsigned int MAX_MOVER_LENGTH = 0;
     unsigned int MIN_MOVER_LENGTH = 0;
     double FIELD_WIDTH = 0.0;
+    unsigned int HORIZONTAL_FIELDS_NUMBER = 0;
+    unsigned int VERTICAL_FIELDS_NUMBER = 0;
 
     void initializeRuntimeConstants(const unsigned int& lawn_width, const unsigned int& lawn_length) {
 
@@ -38,5 +41,8 @@ namespace Config {
         MAX_MOVER_LENGTH = MAX_MOVER_WIDTH;
         
         FIELD_WIDTH = min(lawn_width, lawn_length) / 1000.0;
+
+        HORIZONTAL_FIELDS_NUMBER = static_cast<unsigned int>(round(static_cast<double>(lawn_width) / FIELD_WIDTH));
+        VERTICAL_FIELDS_NUMBER = static_cast<unsigned int>(round(static_cast<double>(lawn_length) / FIELD_WIDTH));
     }
 }
