@@ -109,3 +109,43 @@ TEST(InitializeRuntimeConstantsTest, FieldCustomLawnMaxRation) {
 
     EXPECT_NEAR(FIELD_WIDTH, expected, 1e-9);
 }
+
+TEST(InitializeRuntimeConstantsTest, VerticalAndHorizontalFieldNumberMinimalLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(VERTICAL_FIELDS_NUMBER, 1000u);
+    EXPECT_EQ(HORIZONTAL_FIELDS_NUMBER, 1000u);
+}
+
+TEST(InitializeRuntimeConstantsTest, VerticalAndHorizontalFieldNumberMaximalLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(VERTICAL_FIELDS_NUMBER, 1000u);
+    EXPECT_EQ(HORIZONTAL_FIELDS_NUMBER, 1000u);
+}
+
+TEST(InitializeRuntimeConstantsTest, VerticalAndHorizontalFieldNumberCustomLawn1) {
+    unsigned int lawn_width = 50000;
+    unsigned int lawn_length = 60000;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(VERTICAL_FIELDS_NUMBER, 1200u);
+    EXPECT_EQ(HORIZONTAL_FIELDS_NUMBER, 1000u);
+}
+
+TEST(InitializeRuntimeConstantsTest, VerticalAndHorizontalFieldNumberCustomLawn2) {
+    unsigned int lawn_width = 5000;
+    unsigned int lawn_length = 50000;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(VERTICAL_FIELDS_NUMBER, 10000u);
+    EXPECT_EQ(HORIZONTAL_FIELDS_NUMBER, 1000u);
+}
