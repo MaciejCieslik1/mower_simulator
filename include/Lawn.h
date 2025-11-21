@@ -24,5 +24,9 @@ public:
     unsigned int getLength();
 
     bool isPointInLawn(const double& x, const double& y);
+    std::pair<unsigned int, unsigned int> calculateFieldIndexes(const double& x, const double& y);
+
     static bool countIfCoordInSection(const unsigned int& section_length, const double& coord_value);
+    static unsigned int calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
+        const unsigned int& vector_size);
 };
