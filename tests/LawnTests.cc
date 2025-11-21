@@ -14,19 +14,25 @@ using namespace std;
 TEST(Getters, Getters) {
     unsigned int lawn_width = 100;
     unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    std::vector<std::vector<bool>> lawn_fields (Config::VERTICAL_FIELDS_NUMBER, 
+        std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false));
     Lawn lawn = Lawn(lawn_width, lawn_length);
 
     unsigned int width = lawn.getWidth();
     unsigned int length = lawn.getWidth();
+    std::vector<std::vector<bool>> fields = lawn.getFields();
 
     EXPECT_EQ(width, lawn_width);
     EXPECT_EQ(length, lawn_length);
+    EXPECT_EQ(fields, lawn_fields);
 }
 
 
 TEST(IsPointInLawn, isPointInLawnCorrect) {
     unsigned int lawn_width = 100;
     unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 0.5;
     double y = 0.3;
@@ -39,6 +45,7 @@ TEST(IsPointInLawn, isPointInLawnCorrect) {
 TEST(IsPointInLawn, isPointInLawnCorrectMinimalValues) {
     unsigned int lawn_width = 100;
     unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 0.0;
     double y = 0.0;
@@ -52,6 +59,7 @@ TEST(IsPointInLawn, isPointInLawnCorrectMinimalValues) {
 TEST(IsPointInLawn, isPointInLawnCorrectMaximalValues) {
     unsigned int lawn_width = 100000;
     unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 100000.0;
     double y = 100000.0;
@@ -65,6 +73,7 @@ TEST(IsPointInLawn, isPointInLawnCorrectMaximalValues) {
 TEST(IsPointInLawn, isPointInLawnIncorrectSquareLawn) {
     unsigned int lawn_width = 60000;
     unsigned int lawn_length = 60000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 60000.1;
     double y = 50000.1;
@@ -78,6 +87,7 @@ TEST(IsPointInLawn, isPointInLawnIncorrectSquareLawn) {
 TEST(IsPointInLawn, isPointInLawnIncorrectRectangularLawn) {
     unsigned int lawn_width = 60000;
     unsigned int lawn_length = 6000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     double x = 50000.1;
     double y = 6000.1;
@@ -222,4 +232,17 @@ TEST(CalculateFieldIndexes, calculateFieldIndexesCustomValuesCustomLawnCustomRat
     pair<unsigned int, unsigned int> result = lawn.calculateFieldIndexes(x, y);
 
     EXPECT_EQ(pattern, result);
+}
+
+
+TEST(CutGrassOnFields, cutGrassOnField) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<unsigned int, unsigned int> indexes (151, 3);
+
+    lawn.cutGrassOnField(indexes);
+
+    EXPECT_EQ(true, lawn.getFields()[indexes.second][indexes.first]);
 }
