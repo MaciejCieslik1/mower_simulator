@@ -22,9 +22,11 @@ public:
 
     unsigned int getWidth();
     unsigned int getLength();
+    std::vector<std::vector<bool>> getFields();
 
     bool isPointInLawn(const double& x, const double& y);
     std::pair<unsigned int, unsigned int> calculateFieldIndexes(const double& x, const double& y);
+    void cutGrassOnField(const std::pair<unsigned int, unsigned int>& indexes);
 
     static bool countIfCoordInSection(const unsigned int& section_length, const double& coord_value);
     static unsigned int calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
