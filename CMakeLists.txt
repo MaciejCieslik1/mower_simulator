@@ -16,3 +16,7 @@ add_executable(mover_simulator src/Main.cc src/Config.cc)
 add_executable(ConfigTests tests/ConfigTests.cc src/Config.cc)
 target_link_libraries(ConfigTests gtest gtest_main pthread)
 add_test(NAME ConfigTests COMMAND ConfigTests)
+
+add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc)
+target_link_libraries(LawnTests gtest gtest_main pthread)
+add_test(NAME LawnTests COMMAND LawnTests)
