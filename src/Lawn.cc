@@ -5,7 +5,9 @@
 */
 
 #include <iostream>
+#include <cmath>
 #include "../include/Lawn.h"
+#include "../include/Config.h"
 
 using namespace std;
 
@@ -40,4 +42,27 @@ bool Lawn::isPointInLawn(const double& x, const double& y) {
 bool Lawn::countIfCoordInSection(const unsigned int& section_length,
         const double& coord_value) {
     return coord_value <= static_cast<double>(section_length);
+}
+
+
+pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, const double& y) {
+    unsigned int x_index = Lawn::calculateIndexInSection(width_, x, fields_[0].size());
+    unsigned int y_index = Lawn::calculateIndexInSection(length_, y, fields_.size());
+
+    pair<unsigned int, unsigned int> field_indexes = pair<unsigned int, unsigned int>(x_index, y_index);
+
+    return field_indexes;
+}
+
+
+unsigned int Lawn::calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
+        const unsigned int& vector_size) {
+    unsigned int INDEX_OFFSET = 1;
+    
+    unsigned int index = static_cast<unsigned int>(ceil(coord_value / Config::FIELD_WIDTH));
+    if (index != 0) {
+        index -= INDEX_OFFSET;
+    }
+
+    return index;
 }
