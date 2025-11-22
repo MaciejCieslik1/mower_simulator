@@ -8,7 +8,7 @@ struct Point {
         double x_;         
         double y_;         
         unsigned int id_;  
-        static unsigned int id_counter_;  
+        static unsigned int idCounter_;  
 
     public:
         Point();
