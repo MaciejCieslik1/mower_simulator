@@ -2,7 +2,6 @@
     Author: Hanna Biegacz
     
     Implementation of Point struct for lawn mower simulator. 
-    Point represents a marker on the lawn that the mower should reach.
 */
 
 #include "../include/Point.h"
@@ -41,6 +40,7 @@ void Point::setPosition(const double& x, const double& y) {
 }
 
 double Point::calcDistanceTo(const Point& other) const {
+    /* Pythagorean theorem */ 
     double dx = x_ - other.x_;
     double dy = y_ - other.y_;
     
