@@ -20,6 +20,8 @@ struct Point {
 
     public:
         Point(const double& x, const double& y);
+        Point(const Point&) = delete;
+        Point& operator=(const Point&) = delete;
         
         double getX() const;
         double getY() const;
