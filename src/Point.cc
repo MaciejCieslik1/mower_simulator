@@ -46,3 +46,17 @@ double Point::calcDistanceTo(const Point& other) const {
     
     return sqrt(dx * dx + dy * dy);
 }
+
+bool Point::operator==(const Point& other) const {
+    const double EPSILON = 1e-9;     
+    bool x_equal = fabs(x_ - other.x_) < EPSILON;
+    bool y_equal = fabs(y_ - other.y_) < EPSILON;
+    
+    return x_equal && y_equal;
+}
+
+
+ostream& operator<<(ostream& os, const Point& point) {
+    os << "Point(id: " << point.id_  << ", x: " << point.x_ << ", y: " << point.y_ << ")";
+    return os;
+}
