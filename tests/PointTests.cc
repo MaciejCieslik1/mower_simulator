@@ -83,6 +83,7 @@ TEST(Constructor, constructorThrowsErrOnBothNegative) {
 
 
 
+
 TEST(IdCounter, autoIncrementId) {
     Point first = Point(0.0, 0.0);
     Point second = Point(0.0, 0.0);
@@ -103,6 +104,7 @@ TEST(IdCounter, eachPointHasUniqueId) {
     EXPECT_NE(p1.getId(), p3.getId());
     EXPECT_NE(p2.getId(), p3.getId());
 }
+
 
 
 
@@ -210,4 +212,63 @@ TEST(calcDistanceTo, distanceWithMaximalCoordinates) {
     double distance = p1.calcDistanceTo(p2);
     
     EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
+
+
+
+
+
+TEST(EqualityOperator, pointsWithSameCoordinatesAreEqual) {
+    Point p1 = Point(1500.5, 2000.7);
+    Point p2 = Point(1500.5, 2000.7);
+    
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(EqualityOperator, originPointsAreEqual) {
+    Point p1 = Point(0.0, 0.0);
+    Point p2 = Point(0.0, 0.0);
+    
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(EqualityOperator, pointsWithDifferentCoordinatesAreNotEqual) {
+    Point p1 = Point(1500.5, 2000.7);
+    Point p2 = Point(1500.6, 2000.7);
+    
+    EXPECT_FALSE(p1 == p2);
+}
+
+TEST(EqualityOperator, pointsWithVeryCloseCoordinatesAreEqual) {
+    Point p1 = Point(1000.0, 2000.0);
+    Point p2 = Point(1000.0000000001, 2000.0000000001);
+    
+    EXPECT_TRUE(p1 == p2);
+}
+TEST(EqualityOperator, pointsWithDifferenceJustAboveEpsilonNotEqual) {
+    Point p1 = Point(1000.0, 2000.0);
+    Point p2 = Point(1000.00000001, 2000.0);  // above EPSILON
+    
+    EXPECT_FALSE(p1 == p2);
+}
+TEST(EqualityOperator, equalityIgnoresId) {
+    Point p1 = Point(100.0, 200.0);
+    Point p2 = Point(100.0, 200.0);
+    
+    EXPECT_NE(p1.getId(), p2.getId());
+    EXPECT_TRUE(p1 == p2);
+}
+
+TEST(EqualityOperator, pointsWithDifferentXCoordinatesNotEqual) {
+    Point p1 = Point(100.0, 200.0);
+    Point p2 = Point(101.0, 200.0);
+    
+    EXPECT_FALSE(p1 == p2);
+}
+
+TEST(EqualityOperator, pointsWithDifferentYCoordinatesNotEqual) {
+    Point p1 = Point(100.0, 200.0);
+    Point p2 = Point(100.0, 201.0);
+    
+    EXPECT_FALSE(p1 == p2);
 }
