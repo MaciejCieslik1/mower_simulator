@@ -15,8 +15,10 @@ unsigned int Point::idCounter_ = 0;
 
 
 
-Point::Point(const double& x, const double& y)
-    : x_(x), y_(y), id_(idCounter_++) {}
+Point::Point(const double& x, const double& y) : x_(x), y_(y), id_(idCounter_++) {
+    if (x_ < 0.0 || y_ < 0.0) 
+        throw std::invalid_argument("Point coordinates cannot be negative.");
+}
 
 
 double Point::getX() const {
