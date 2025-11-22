@@ -84,7 +84,7 @@ TEST(Constructor, constructorThrowsErrOnBothNegative) {
 
 
 
-TEST(IdCounter, autoIncrementId) {
+TEST(idCounter, autoIncrementId) {
     Point first = Point(0.0, 0.0);
     Point second = Point(0.0, 0.0);
     Point third = Point(100.0, 200.0);
@@ -95,7 +95,7 @@ TEST(IdCounter, autoIncrementId) {
     EXPECT_EQ(third.getId(), second.getId() + 1);
 }
 
-TEST(IdCounter, eachPointHasUniqueId) {
+TEST(idCounter, eachPointHasUniqueId) {
     Point p1 = Point(0.0, 0.0);
     Point p2 = Point(0.0, 0.0);
     Point p3 = Point(100.0, 100.0);

@@ -16,7 +16,7 @@ struct Point {
         double x_;         
         double y_;         
         unsigned int id_;  
-        static unsigned int idCounter_;  
+        static unsigned int id_counter_;  
 
     public:
         Point(const double& x, const double& y);
@@ -27,9 +27,9 @@ struct Point {
         double getY() const;
         unsigned int getId() const;
                 
-        double calcDistanceTo(const Point& other) const;
+        double calcDistanceTo(const Point& another) const;
         
-        bool operator==(const Point& other) const;
+        bool operator==(const Point& another) const;
         friend std::ostream& operator<<(std::ostream& os, const Point& point);
 };
 

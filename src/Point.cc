@@ -11,13 +11,14 @@
 using namespace std;
 
 
-unsigned int Point::idCounter_ = 0;
+unsigned int Point::id_counter_ = 0;
 
 
 
-Point::Point(const double& x, const double& y) : x_(x), y_(y), id_(idCounter_++) {
-    if (x_ < 0.0 || y_ < 0.0) 
+Point::Point(const double& x, const double& y) : x_(x), y_(y), id_(id_counter_++) {
+    if (x_ < 0.0 || y_ < 0.0) {
         throw std::invalid_argument("Point coordinates cannot be negative.");
+    }
 }
 
 
