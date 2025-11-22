@@ -19,15 +19,12 @@ struct Point {
         static unsigned int idCounter_;  
 
     public:
-        Point();
         Point(const double& x, const double& y);
         
         double getX() const;
         double getY() const;
         unsigned int getId() const;
-        
-        void setPosition(const double& x, const double& y);
-        
+                
         double calcDistanceTo(const Point& other) const;
         
         bool operator==(const Point& other) const;
