@@ -103,3 +103,111 @@ TEST(IdCounter, eachPointHasUniqueId) {
     EXPECT_NE(p1.getId(), p3.getId());
     EXPECT_NE(p2.getId(), p3.getId());
 }
+
+
+
+
+TEST(calcDistanceTo, distanceFromOriginToOrigin) {
+    Point p1 = Point(0.0, 0.0);
+    Point p2 = Point(0.0, 0.0);
+
+    double distance = p1.calcDistanceTo(p2);
+
+    EXPECT_DOUBLE_EQ(0.0, distance);
+}
+
+TEST(calcDistanceTo, distanceBetweenOriginAndPoint) {
+    Point origin = Point(0.0, 0.0);
+    Point target = Point(300.0, 400.0);
+    double expected_distance = 500.0; 
+
+    double distance = origin.calcDistanceTo(target);
+
+    EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
+
+TEST(calcDistanceTo, distanceBetweenTwoPoints) {
+    Point p1 = Point(100.0, 200.0);
+    Point p2 = Point(400.0, 600.0);
+    double dx = 300.0;
+    double dy = 400.0;
+    double expected_distance = sqrt(dx * dx + dy * dy);
+
+    double distance = p1.calcDistanceTo(p2);
+
+    EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
+
+TEST(calcDistanceTo, distanceIsSymmetric) {
+    Point p1 = Point(1500.5, 2000.7);
+    Point p2 = Point(3000.3, 4500.9);
+
+    double distance1 = p1.calcDistanceTo(p2);
+    double distance2 = p2.calcDistanceTo(p1);
+
+    EXPECT_DOUBLE_EQ(distance1, distance2);
+}
+
+TEST(calcDistanceTo, distanceOnSameXAxis) {
+    Point p1 = Point(100.0, 500.0);
+    Point p2 = Point(400.0, 500.0);
+    double expected_distance = 300.0;
+    
+    double distance = p1.calcDistanceTo(p2);
+
+    EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
+
+TEST(calcDistanceTo, distanceOnSameYAxis) {
+    Point p1 = Point(500.0, 100.0);
+    Point p2 = Point(500.0, 700.0);
+    double expected_distance = 600.0;
+    
+    double distance = p1.calcDistanceTo(p2);
+    
+    EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
+
+TEST(calcDistanceTo, distanceFromOriginAlongXAxis) {
+    Point origin = Point(0.0, 0.0);
+    Point target = Point(100.0, 0.0);
+    
+    double distance = origin.calcDistanceTo(target);
+    
+    EXPECT_DOUBLE_EQ(100.0, distance);
+}
+
+TEST(calcDistanceTo, distanceFromOriginAlongYAxis) {
+    Point origin = Point(0.0, 0.0);
+    Point target = Point(0.0, 100.0);
+    
+    double distance = origin.calcDistanceTo(target);
+    
+    EXPECT_DOUBLE_EQ(100.0, distance);
+}
+
+TEST(calcDistanceTo, distanceWithVerySmallDifference) {
+    Point p1 = Point(1000.0, 2000.0);
+    Point p2 = Point(1000.01, 2000.01);
+    double dx = 0.01;
+    double dy = 0.01;
+    double expected_distance = sqrt(dx * dx + dy * dy);
+    
+    double distance = p1.calcDistanceTo(p2);
+    
+    EXPECT_NEAR(expected_distance, distance, 1e-10);
+}
+
+TEST(calcDistanceTo, distanceWithMaximalCoordinates) {
+    Point p1 = Point(0.0, 0.0);
+    Point p2 = Point(   static_cast<double>(Constants::MAX_LAWN_WIDTH), 
+                        static_cast<double>(Constants::MAX_LAWN_LENGTH));
+    double max_width = static_cast<double>(Constants::MAX_LAWN_WIDTH);
+    double max_length = static_cast<double>(Constants::MAX_LAWN_LENGTH);
+
+    double expected_distance = sqrt(max_width * max_width + max_length * max_length);
+    
+    double distance = p1.calcDistanceTo(p2);
+    
+    EXPECT_DOUBLE_EQ(expected_distance, distance);
+}
