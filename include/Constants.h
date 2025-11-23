@@ -13,5 +13,15 @@ namespace Constants {
     inline constexpr unsigned int MIN_LAWN_LENGTH = MIN_LAWN_WIDTH;
     inline constexpr unsigned int LAWN_SIDES_MAX_RATIO = 10; 
     inline constexpr unsigned int LAWN_SIDE_PRECISION = 10; //cm
+    inline constexpr unsigned int ABSOLUTE_MIN_BLADE_DIAMETER = 10; // cm
+    inline constexpr unsigned int MIN_LAWN_DIVISION_FACTOR = 1000;
+    inline constexpr unsigned int ABSOLUTE_MAX_BLADE_DIAMETER = 100; // cm
+    inline constexpr unsigned int MAX_LAWN_DIVISION_FACTOR = 10;
+    inline constexpr unsigned int MOVER_SIZE_MULTIPLICATON_FACTOR = 2;
+    inline constexpr unsigned int ABSOLUTE_MIN_SPEED = 10; // cm/s
+    inline constexpr unsigned int ABSOLUTE_MAX_SPEED = 1000; // cm/s
+    inline constexpr unsigned int MIN_SPEED_DIVISION_FACTOR = 1000;
+    inline constexpr unsigned int MAX_SPEED_DIVISION_FACTOR = 10;
+
     inline constexpr double PI = 3.14159265358979;
 }
