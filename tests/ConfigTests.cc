@@ -163,3 +163,58 @@ TEST(InitializeRuntimeConstantsTest, VerticalAndHorizontalFieldNumberCustomLawn2
     EXPECT_EQ(VERTICAL_FIELDS_NUMBER, 10000u);
     EXPECT_EQ(HORIZONTAL_FIELDS_NUMBER, 1000u);
 }
+
+
+TEST(InitializeRuntimeConstantsTest, SpeedLimitsMinimalLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(MIN_SPEED, 10);
+    EXPECT_EQ(MAX_SPEED, 10);
+}
+
+
+TEST(InitializeRuntimeConstantsTest, SpeedLimitsMaximalLawn) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(MIN_SPEED, 100);
+    EXPECT_EQ(MAX_SPEED, 1000);
+}
+
+
+TEST(InitializeRuntimeConstantsTest, SpeedLimitsCustomSmallLawn) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 10000;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(MIN_SPEED, 10);
+    EXPECT_EQ(MAX_SPEED, 100);
+}
+
+
+TEST(InitializeRuntimeConstantsTest, SpeedLimitsCustomMediumLawn) {
+    unsigned int lawn_width = 5550;
+    unsigned int lawn_length = 6320;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(MIN_SPEED, 10);
+    EXPECT_EQ(MAX_SPEED, 555);
+}
+
+
+TEST(InitializeRuntimeConstantsTest, SpeedLimitsCustomBigLawn) {
+    unsigned int lawn_width = 55500;
+    unsigned int lawn_length = 63200;
+
+    initializeRuntimeConstants(lawn_width, lawn_length);
+
+    EXPECT_EQ(MIN_SPEED, 55);
+    EXPECT_EQ(MAX_SPEED, 1000);
+}
