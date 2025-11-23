@@ -24,3 +24,7 @@ add_test(NAME LawnTests COMMAND LawnTests)
 add_executable(PointTests tests/PointTests.cc src/Point.cc)
 target_link_libraries(PointTests gtest gtest_main)
 add_test(NAME PointTests COMMAND PointTests)
+
+add_executable(MoverTests tests/MoverTests.cc src/Mover.cc src/Config.cc)
+target_link_libraries(MoverTests gtest gtest_main)
+add_test(NAME MoverTests COMMAND MoverTests)
