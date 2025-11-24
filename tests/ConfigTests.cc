@@ -218,3 +218,20 @@ TEST(InitializeRuntimeConstantsTest, SpeedLimitsCustomBigLawn) {
     EXPECT_EQ(MIN_SPEED, 55);
     EXPECT_EQ(MAX_SPEED, 1000);
 }
+
+
+TEST(InitializeMoverConstatsTest, initializeMoverConstants) {
+    unsigned int mover_width = 100;
+    unsigned int mover_length = 90;
+    unsigned short starting_angle = 10;
+    double starting_x = 5.0;
+    double starting_y = 3.0;
+
+    initializeMoverConstants(mover_width, mover_length, starting_x, starting_y, starting_angle);
+
+    EXPECT_NEAR(MAX_HORIZONTAL_EXCEEDANCE, 50.0, 1e-9);
+    EXPECT_NEAR(MAX_VERTICAL_EXCEEDANCE, 45.0, 1e-9);
+    EXPECT_EQ(STARTING_ANGLE, 10);
+    EXPECT_EQ(STARTING_X, 5.0);
+    EXPECT_EQ(STARTING_Y, 3.0);
+}
