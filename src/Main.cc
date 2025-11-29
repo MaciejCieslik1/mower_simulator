@@ -1,45 +1,37 @@
 #include <QApplication>
-#include <QThread>
 #include <iostream>
-#include "Lawn.h"
-#include "LawnVisualizer.h"
+#include "../include/Lawn.h"
+#include "simulation/SimulationEngine.h"
+#include "simulation/LawnSimulationView.h"
+
+using namespace std;
 
 int main(int argc, char *argv[]) {
-    std::cout << "=== Lawn Mower Simulator - Visualization Test ===" << std::endl;
-    
     QApplication app(argc, argv);
     
+    cout << "=== Lawn Mower Simulator - Threaded ===" << endl;
+    
     Lawn lawn(500, 400);
+    const auto fields = lawn.getFields();
     
+    cout << "[Main] Lawn: " << fields[0].size() << " x " << fields.size() << " fields" << endl;
+
+    SimulationEngine engine(&lawn);
+    engine.setSimulationSpeed(10000.0);
+
+    LawnSimulationView simulationView(&lawn, engine.getLawnMutex());  // ← BEZ &
+    simulationView.setWindowTitle("Lawn Mower Simulator - Threaded");    
     
-    auto fields = lawn.getFields();
-    LawnVisualizer visualizer(&lawn);
-    visualizer.setWindowTitle("Lawn Mower Simulator");
+    simulationView.show();
+    simulationView.startSimulation(30);    
+    engine.start();
+
+    cout << "[Main] Starting event loop" << endl;
+
+    const int result = app.exec();
     
-    visualizer.show();
-    app.processEvents();
+    cout << "[Main] Stopping simulation" << endl;
+    engine.stop();
     
-    unsigned int total_rows = fields.size();
-    unsigned int total_cols = fields[0].size();
-    unsigned int half_rows = total_rows / 2;
-    
-    unsigned int mowed_count = 0;
-    unsigned int refresh_interval = 10;
-    
-    for (unsigned int row = 0; row < half_rows; row++) {
-        for (unsigned int col = 0; col < total_cols; col++) {
-            lawn.cutGrassOnField({col, row});
-            mowed_count++;
-        }
-        
-        if (row % refresh_interval == 0) {
-            visualizer.refresh();
-            app.processEvents();
-            QThread::msleep(5);
-        }
-    }
-    
-    visualizer.refresh();
-    app.processEvents();    
-    return app.exec();
+    return result;
 }
