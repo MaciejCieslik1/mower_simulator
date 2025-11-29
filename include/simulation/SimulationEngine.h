@@ -45,7 +45,7 @@ private:
     std::atomic<double> speed_multiplier_;
     std::mutex lawn_mutex_;
     
-    // TODO: Remove these fields when Mower class is implemented
+    // PROTOTYPE STAGE ONLY: Remove these fields when Mower class is implemented
     unsigned int current_row_;   // Temporary: tracks mock mowing position
     unsigned int current_col_;   // Temporary: tracks mock mowing position
     

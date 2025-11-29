@@ -82,7 +82,7 @@ void SimulationEngine::simulationLoop() {
         
         next_tick += Ms(adjusted_timestep);
         
-         executePrototypeMowingStep();  // TODO: Replace with mower_->update() or sth
+         executePrototypeMowingStep();  // TODO: Replace with mower_->update() after prototype stage
         
         this_thread::sleep_until(next_tick);
     }
