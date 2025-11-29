@@ -12,8 +12,8 @@
 
 using namespace std;
 
-const QColor LawnSimulationView::UNMOWED_GRASS_COLOR = QColor(34, 139, 34);
-const QColor LawnSimulationView::MOWED_GRASS_COLOR = QColor(139, 90, 43);
+const QColor LawnSimulationView::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);  
+const QColor LawnSimulationView::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
 const QColor LawnSimulationView::GRID_LINE_COLOR = QColor(200, 200, 200, 100);
 
 LawnSimulationView::LawnSimulationView(Lawn* lawn, mutex& lawn_mutex, QWidget* parent)
