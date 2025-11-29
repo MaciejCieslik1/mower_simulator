@@ -12,6 +12,8 @@ enable_testing()
 
 # --- Qt config Test ---
 find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Threads REQUIRED)
+
 
 # --- Include directories ---
 include_directories(${PROJECT_SOURCE_DIR}/include)
@@ -20,8 +22,8 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mover_simulator src/Main.cc src/Config.cc src/Lawn.cc src/LawnVisualizer.cc include/LawnVisualizer.h)
-target_link_libraries(mover_simulator Qt5::Widgets)
+add_executable(mover_simulator src/Main.cc src/Config.cc src/Lawn.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc)
+target_link_libraries(mover_simulator Qt5::Widgets  Threads::Threads)
 
 
 # Tests
