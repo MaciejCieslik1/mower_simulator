@@ -42,3 +42,8 @@ add_test(NAME PointTests COMMAND PointTests)
 add_executable(SimulationTests tests/SimulationTests.cc src/simulation/SimulationEngine.cc src/Lawn.cc src/Config.cc)
 target_link_libraries(SimulationTests gtest gtest_main pthread Threads::Threads)
 add_test(NAME SimulationTests COMMAND SimulationTests)
+
+add_executable(LawnSimulationViewTests tests/LawnSimulationViewTests.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/Lawn.cc src/Config.cc
+)
+target_link_libraries(LawnSimulationViewTests gtest gtest_main pthread Qt5::Widgets Threads::Threads)
+add_test(NAME LawnSimulationViewTests COMMAND LawnSimulationViewTests)
