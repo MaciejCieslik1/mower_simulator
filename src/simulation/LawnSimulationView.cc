@@ -16,6 +16,8 @@ const QColor LawnSimulationView::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);
 const QColor LawnSimulationView::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
 const QColor LawnSimulationView::GRID_LINE_COLOR = QColor(200, 200, 200, 100);
 
+// Sets up the window. Checks if lawn pointer is valid (throws error if null).
+// Sets minimum and default window sizes.
 LawnSimulationView::LawnSimulationView(Lawn* lawn, mutex& lawn_mutex, QWidget* parent)
     : QWidget(parent), lawn_(lawn), lawn_mutex_(lawn_mutex), update_timer_(nullptr) {
     
@@ -30,6 +32,7 @@ LawnSimulationView::LawnSimulationView(Lawn* lawn, mutex& lawn_mutex, QWidget* p
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 }
 
+// Cleans up on exit. Stops and deletes timer if it exists.
 LawnSimulationView::~LawnSimulationView() {
     if (update_timer_) {
         update_timer_->stop();
@@ -38,6 +41,9 @@ LawnSimulationView::~LawnSimulationView() {
     }
 }
 
+// Starts periodic screen updates at given FPS (frames per second).
+// Creates QTimer and connects it to onTimerUpdate slot.
+// Calculates update interval in milliseconds (1000/fps). Validates fps value.
 void LawnSimulationView::startSimulation(const int fps) {
     if (update_timer_) {
         return;
@@ -55,6 +61,8 @@ void LawnSimulationView::startSimulation(const int fps) {
     update_timer_->start(interval_ms);
 }
 
+// Stops periodic screen updates. Stops timer and schedules it for deletion.
+// Sets timer pointer to null.
 void LawnSimulationView::stopSimulation() {
     if (!update_timer_) {
         return;
@@ -81,6 +89,8 @@ QSize LawnSimulationView::minimumSizeHint() const {
     return QSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 }
 
+// Qt calls this automatically when window needs redrawing.
+// Creates painter, disables antialiasing for sharp grid lines, then draws lawn.
 void LawnSimulationView::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, false);
@@ -88,6 +98,10 @@ void LawnSimulationView::paintEvent(QPaintEvent* event) {
     drawLawnGrid(painter);
 }
 
+// Draws entire lawn grid. Locks mutex for thread-safe access to lawn data.
+// Calculates pixel size for each field, then loops through all fields.
+// Colors each field green (unmowed) or brown (mowed). 
+// Adds grid lines only if fields are big enough (2px+).
 void LawnSimulationView::drawLawnGrid(QPainter& painter) {
     lock_guard<mutex> lock(lawn_mutex_);
     
@@ -119,6 +133,9 @@ void LawnSimulationView::drawLawnGrid(QPainter& painter) {
     }
 }
 
+// Draws single field at given row/col position.
+// Colors it green (unmowed) or brown (mowed) based on is_mowed parameter.
+// Always draws grid border around the field.
 void LawnSimulationView::drawFieldAt(QPainter& painter, const unsigned int row, const unsigned int col, const bool is_mowed) {
     const double field_width_px = calculateFieldPixelWidth();
     const double field_height_px = calculateFieldPixelHeight();
@@ -133,6 +150,8 @@ void LawnSimulationView::drawFieldAt(QPainter& painter, const unsigned int row, 
     painter.drawRect(QRectF(x, y, field_width_px, field_height_px));
 }
 
+// Returns how many pixels wide each lawn field should be.
+// Divides window width by number of columns. Returns 0.0 if lawn is empty.
 double LawnSimulationView::calculateFieldPixelWidth() const {
     const auto fields = lawn_->getFields();
     if (fields.empty() || fields[0].empty()) {
@@ -140,9 +159,11 @@ double LawnSimulationView::calculateFieldPixelWidth() const {
     }
     
     const unsigned int num_cols = fields[0].size();
-    return static_cast<double>(width()) / num_cols;
+    return 20.0* static_cast<double>(width()) / num_cols;
 }
 
+// Returns how many pixels tall each lawn field should be.
+// Divides window height by number of rows. Returns 0.0 if lawn is empty.
 double LawnSimulationView::calculateFieldPixelHeight() const {
     const auto fields = lawn_->getFields();
     if (fields.empty()) {
@@ -150,5 +171,5 @@ double LawnSimulationView::calculateFieldPixelHeight() const {
     }
     
     const unsigned int num_rows = fields.size();
-    return static_cast<double>(height()) / num_rows;
+    return 20.0* static_cast<double>(height()) / num_rows;
 }

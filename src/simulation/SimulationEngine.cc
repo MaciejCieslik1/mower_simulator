@@ -25,6 +25,8 @@ SimulationEngine::~SimulationEngine() {
     }
 }
 
+// creates a new thread for the main simulation loop. 
+// Updates its variables accordingly (is_running_=true, simulation_thread_ = our new thread)
 void SimulationEngine::start() {
     if (is_running_) {
         return;
@@ -34,6 +36,7 @@ void SimulationEngine::start() {
     simulation_thread_ = thread(&SimulationEngine::simulationLoop, this);
 }
 
+// Joins simuulation thread, updates is)running_
 void SimulationEngine::stop() {
     if (!is_running_) {
         return;
@@ -50,7 +53,6 @@ void SimulationEngine::setSimulationSpeed(const double speed_multiplier) {
     if (speed_multiplier <= 0.0) {
         return;
     }
-    
     speed_multiplier_ = speed_multiplier;
 }
 
@@ -66,6 +68,9 @@ bool SimulationEngine::isRunning() const {
     return is_running_.load();
 }
 
+// Main loop in separate thread (opened by .start()). Uses fixed timestep with sleep_until to avoid using 100% CPU.
+// Adjusts timestep based on speed_multiplier, then does one mowing step per iteration.
+// PROTOTYPE: Currently auto-mows field by field. This however will be changed when Mower class is created.
 void SimulationEngine::simulationLoop() {
     using Clock = chrono::steady_clock;
     using Ms = chrono::milliseconds;
@@ -88,6 +93,8 @@ void SimulationEngine::simulationLoop() {
     }
 }
 
+// Simulates mower for prototype stage, 
+// mows the whole bottom half of the lawn row by row.
 void SimulationEngine::executePrototypeMowingStep() {
     lock_guard<mutex> lock(lawn_mutex_);
     
