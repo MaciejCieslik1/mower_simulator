@@ -1,7 +1,7 @@
 /* 
     Author: Maciej Cieslik
     
-    Describes Lawn, on which mover is cutting grass.
+    Describes Lawn, on which mower is cutting grass.
 */
 
 #include <iostream>
