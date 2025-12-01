@@ -20,3 +20,7 @@ Implemented features:
 - **LawnSimulationView**: window shows the current state of the Lawn class (green = unmowed, brown = mowed).
 - **Unit tests** covering implemented functionalities (tests/ directory).
 - **Main.cc** creates the lawn and starts the simulation thread.
+<br/>
+![simulation window](/docs/image.png)
+
+*fig.1 Simulation window -- prototype stage*

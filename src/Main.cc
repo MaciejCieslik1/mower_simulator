@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     
     cout << "[Main] Creating window" << endl;
     LawnSimulationView simulation_view(&lawn, engine.getLawnMutex()); 
-    simulation_view.setWindowTitle("Lawn Mower Simulator - Threaded");    
+    simulation_view.setWindowTitle("Lawn Mower Simulator");    
     
     simulation_view.show();
     simulation_view.startSimulation(DISPLAY_FPS);    
