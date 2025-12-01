@@ -1,11 +1,11 @@
 /* 
     Author: Maciej Cieslik
     
-    Describes Lawn, on which mover is cutting grass. Lawn consists of fields, which are repesented by 
+    Describes Lawn, on which mower is cutting grass. Lawn consists of fields, which are repesented by 
     bool element in 2-dimensional vector. False meaning the grass is not cut, true meaning the grass is cut. 
     Left down corner point has coordinates (0.0, 0.0).
 */
-
+#pragma once
 #include <vector>
 
 class Lawn {

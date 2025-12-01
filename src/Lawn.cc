@@ -1,7 +1,7 @@
 /* 
     Author: Maciej Cieslik
     
-    Describes Lawn, on which mover is cutting grass.
+    Describes Lawn, on which mower is cutting grass.
 */
 
 #include <iostream>
@@ -13,9 +13,12 @@ using namespace std;
 
 
 Lawn::Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length)
-    : width_(lawn_width), length_(lawn_length), 
-    fields_(Config::VERTICAL_FIELDS_NUMBER, std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false)) {}
-
+    : width_(lawn_width), length_(lawn_length)
+    {
+        Config::initializeRuntimeConstants(width_, length_);
+        fields_.resize(Config::VERTICAL_FIELDS_NUMBER, std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false));
+        std::cout << "Lawn initialized: " << Config::HORIZONTAL_FIELDS_NUMBER << "x" << Config::VERTICAL_FIELDS_NUMBER << std::endl;
+    }
 
 unsigned int Lawn::getWidth() {
     return width_;
