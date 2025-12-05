@@ -35,3 +35,27 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     EXPECT_NEAR(0.0, result_x, 1e-9);
     EXPECT_NEAR(0.0, result_y, 1e-9);
 }
+
+
+TEST(Setters, setters) {
+    unsigned short angle = 120;
+    double x = 4.0;
+    double y = 32;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.setAngle(angle);
+    mover.setX(x);
+    mover.setY(y);
+
+    unsigned int result_angle = mover.getAngle();
+    unsigned int result_x = mover.getX();
+    unsigned int result_y = mover.getY();
+
+    EXPECT_EQ(angle, result_angle);
+    EXPECT_NEAR(x, result_x, 1e-9);
+    EXPECT_NEAR(y, result_y, 1e-9);
+}
