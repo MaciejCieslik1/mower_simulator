@@ -344,3 +344,217 @@ TEST(Move, moveOutsideLawnBorderDefaultSpawnPointNegativeXY) {
 
     EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
+
+
+TEST(Rotate, rotatePositiveAngleDefaultSpawnAngle) {
+    short angle_to_rotate = 90;
+    unsigned short angle = 90;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateMaxPositiveAngleDefaultSpawnAngle) {
+    short angle_to_rotate = 360;
+    unsigned short angle = 0;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateNegativeAngleDefaultSpawnAngle) {
+    short angle_to_rotate = -90;
+    unsigned short angle = 270;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateMinNegativeAngleDefaultSpawnAngle) {
+    short angle_to_rotate = -360;
+    unsigned short angle = 0;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotatePositiveAngleCustomSpawnAngle) {
+    short angle_to_rotate = 90;
+    unsigned short angle = 165;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 75);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateNegativeAngleCustomSpawnAngle) {
+    short angle_to_rotate = -90;
+    unsigned short angle = 345;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 75);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateMaxPositiveAngleCustomSpawnAngle) {
+    short angle_to_rotate = 360;
+    unsigned short angle = 30;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 30);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateMinNegativeAngleCustomSpawnAngle) {
+    short angle_to_rotate = -360;
+    unsigned short angle = 30;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 30);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateCustomNegativeAngleCustomSpawnAngle) {
+    short angle_to_rotate = -225;
+    unsigned short angle = 165;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 30);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    mover.rotate(angle_to_rotate);
+    unsigned short result_angle = mover.getAngle();
+
+    EXPECT_EQ(angle, result_angle);
+}
+
+
+TEST(Rotate, rotateTooBigPositiveAngle) {
+    short angle_to_rotate = 361;
+    unsigned short angle = 165;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 30);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    EXPECT_THROW({mover.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
+}
+
+
+TEST(Rotate, rotateTooSmallNegativeAngle) {
+    short angle_to_rotate = -361;
+    unsigned short angle = 165;
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 30);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+
+    EXPECT_THROW({mover.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
+}
