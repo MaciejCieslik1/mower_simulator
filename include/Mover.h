@@ -16,6 +16,11 @@ private:
     double x_;
     double y_;
 
+    std::pair<double, double> calculateFinalPoint(const double& distance) const;
+    double convertDegreesToRadians() const;
+    bool calculateIfXAccessible(const double& calculatedX, const unsigned int& lawn_width) const;
+    bool calculateIfYAccessible(const double& calculatedY, const unsigned int& lawn_length) const;
+
 public:
     Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
         const unsigned int& speed);
@@ -34,7 +39,7 @@ public:
     void setX(const double& new_x);
     void setY(const double& new_y);
 
-    void move(const double& x, const double& y);
+    void move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length);
     void rotate(const unsigned short& angle);
     void cutGrass();
 };
