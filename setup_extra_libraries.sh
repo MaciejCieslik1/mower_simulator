@@ -3,9 +3,23 @@ set -e
 
 PROJECT_DIR=$(pwd)
 GTEST_DIR="$PROJECT_DIR/libs/googletest"
+
+echo "cInstalling Build Tools (CMake, Make, GCC)..."
 if command -v apt-get &> /dev/null; then
+    echo "Updating package list..."
     sudo apt-get update
-    sudo apt-get install -y build-essential cmake qtbase5-dev qt5-qmake qtbase5-dev-tools
+    echo
+    echo "Installing: build-essential, cmake, git..."
+    sudo apt-get install -y build-essential cmake git
+    echo "Build tools installed successfully."
+else
+    echo
+    echo "WARNING: 'apt-get' not found. Skipping build tools installation."
+    echo "Please ensure 'cmake', 'make', 'g++' (build-essential) are installed."
+fi
+
+if command -v apt-get &> /dev/null; then
+    sudo apt-get install -y qtbase5-dev qt5-qmake qtbase5-dev-tools
 else
     echo
     echo "WARNING: 'apt-get' not found. Skipping automatic Qt5 installation."
