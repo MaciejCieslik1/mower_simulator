@@ -5,7 +5,9 @@
 */
 
 #include <gtest/gtest.h>
+#include <cmath>
 #include "../include/Lawn.h"
+#include "../include/Constants.h"
 #include "../include/Config.h"
 
 using namespace std;
@@ -245,4 +247,47 @@ TEST(CutGrassOnFields, cutGrassOnField) {
     lawn.cutGrassOnField(indexes);
 
     EXPECT_EQ(true, lawn.getFields()[indexes.second][indexes.first]);
+}
+
+
+TEST(CalculateShavedArea, calculateShavedAreaCustom) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<unsigned int, unsigned int> indexes1 (151, 3);
+    pair<unsigned int, unsigned int> indexes2 (152, 3);
+    pair<unsigned int, unsigned int> indexes3 (153, 3);
+    pair<unsigned int, unsigned int> indexes4 (154, 3);
+    pair<unsigned int, unsigned int> indexes5 (155, 3);
+    pair<unsigned int, unsigned int> indexes6 (156, 3);
+    pair<unsigned int, unsigned int> indexes7 (157, 3);
+    pair<unsigned int, unsigned int> indexes8 (158, 3);
+    pair<unsigned int, unsigned int> indexes9 (159, 3);
+    pair<unsigned int, unsigned int> indexes0 (160, 3);
+    double shavedFactor = 0.00001;
+
+    lawn.cutGrassOnField(indexes1);
+    lawn.cutGrassOnField(indexes2);
+    lawn.cutGrassOnField(indexes3);
+    lawn.cutGrassOnField(indexes4);
+    lawn.cutGrassOnField(indexes5);
+    lawn.cutGrassOnField(indexes6);
+    lawn.cutGrassOnField(indexes7);
+    lawn.cutGrassOnField(indexes8);
+    lawn.cutGrassOnField(indexes9);
+    lawn.cutGrassOnField(indexes0);
+
+    EXPECT_EQ(shavedFactor, lawn.calculateShavedArea());
+}
+
+
+TEST(CalculateShavedArea, calculateShavedAreaNotShaved) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    double shavedFactor = 0.0;
+
+    EXPECT_EQ(shavedFactor, lawn.calculateShavedArea());
 }
