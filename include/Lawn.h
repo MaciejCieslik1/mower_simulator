@@ -31,4 +31,7 @@ public:
     static bool countIfCoordInSection(const unsigned int& section_length, const double& coord_value);
     static unsigned int calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
         const unsigned int& vector_size);
+    
+    double calculateShavedArea();
+    void cutGrass(const std::pair<double, double>& blade_middle, const unsigned int& blade_diameter);
 };
