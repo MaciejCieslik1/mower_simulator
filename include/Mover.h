@@ -1,8 +1,8 @@
 /* 
     Author: Maciej Cieslik
     
-    Describes mover. Mover has rectangular shape with blade, which middle is located in the cetral point of teh mover.
-    Blade cuts grass in circula area. The mover moves in continuous space(mover can cover the part of the field).
+    Describes mover. Mover has rectangular shape with blade, which middle is located in the central point of the mover.
+    Blade cuts grass in circular area. The mover moves in continuous space(mover can cover the part of the field).
     Location of mover is described by coordinates(x, y) of it's middle point.
 */
 
@@ -41,5 +41,4 @@ public:
 
     void move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length);
     void rotate(const short& angle);
-    void cutGrass();
 };
