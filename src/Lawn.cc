@@ -75,3 +75,22 @@ unsigned int Lawn::calculateIndexInSection(const unsigned int& section_length, c
 void Lawn::cutGrassOnField(const pair<unsigned int, unsigned int>& indexes) {
     fields_[indexes.second][indexes.first] = true;
 }
+
+
+double Lawn::calculateShavedArea() {
+    unsigned int allFieldsNumber = Config::HORIZONTAL_FIELDS_NUMBER * Config::VERTICAL_FIELDS_NUMBER;
+    unsigned int shavedFieldsNumber = 0;
+
+    for (std::vector<bool> shavedRow : getFields()) {
+        for (bool field : shavedRow) {
+            if (field) shavedFieldsNumber ++;
+        }
+    }
+
+    return static_cast<double>(shavedFieldsNumber) / static_cast<double>(allFieldsNumber);
+}
+
+
+void Lawn::cutGrass(const pair<double, double>& blade_middle, const unsigned int& blade_diameter) {
+
+}
