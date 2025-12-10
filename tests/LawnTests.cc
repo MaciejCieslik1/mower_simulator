@@ -291,3 +291,245 @@ TEST(CalculateShavedArea, calculateShavedAreaNotShaved) {
 
     EXPECT_EQ(shavedFactor, lawn.calculateShavedArea());
 }
+
+
+TEST(CutGrass, cutGrassFullCircleIntBladeMiddleMinLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = 20;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMinLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleIntBladeMiddleMaxLawn) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = 20;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawn) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 50);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnDownSide) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 0);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.5 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnUpSide) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (50, 100000);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.5 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnLeftSide) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 50);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.5 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnRigthSide) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (100000, 50);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.5 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.5 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnLeftDownCorner) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 0);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.25 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnRightDownCorner) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (100000, 0);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.25 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnRightUpCorner) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (100000, 100000);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.25 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
+
+
+TEST(CutGrass, cutGrassFullCircleDoubleBladeMiddleMaxLawnLeftUpCorner) {
+    unsigned int lawn_width = 100000;
+    unsigned int lawn_length = 100000;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    pair<double, double> blade_middle (0, 100000);
+    unsigned int blade_diameter = 20.3;
+    double max_radius = blade_diameter / 2 + Config::FIELD_WIDTH; 
+    double max_area = 0.25 * Constants::PI * max_radius * max_radius;
+    double min_radius = blade_diameter / 2 - Config::FIELD_WIDTH; 
+    double min_area = 0.25 * Constants::PI * min_radius * min_radius;
+
+    lawn.cutGrass(blade_middle, blade_diameter);
+    double shaved_area = lawn.calculateShavedArea();
+    
+    EXPECT_LT(max_area, shaved_area);
+    EXPECT_GT(min_area, shaved_area);
+}
