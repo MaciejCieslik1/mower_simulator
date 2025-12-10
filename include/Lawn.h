@@ -15,6 +15,13 @@ private:
     // Outer vector represents length(vertical), inner represents width(horizontal)
     std::vector<std::vector<bool>> fields_; 
 
+    bool isFieldInMowingArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
+        const double& blade_diameter);
+    double calculateDistanceBetweenPoints(const double& x, const double& y, 
+        const std::pair<double, double>& destination_point);
+    unsigned int countCornersInArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
+        const double& blade_diameter);
+
 public:
     Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length);
     Lawn(const Lawn&) = delete;
