@@ -35,7 +35,7 @@ std::vector<std::vector<bool>> Lawn::getFields() const {
 }
 
 
-bool Lawn::isPointInLawn(const double& x, const double& y) {
+bool Lawn::isPointInLawn(const double& x, const double& y) const {
     bool is_point_in_lawn_vertical = Lawn::countIfCoordInSection(length_, y);
     bool is_point_in_lawn_horizontal = Lawn::countIfCoordInSection(width_, x);
 
@@ -49,7 +49,7 @@ bool Lawn::countIfCoordInSection(const unsigned int& section_length,
 }
 
 
-pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, const double& y) {
+pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, const double& y) const {
     unsigned int x_index = Lawn::calculateIndexInSection(width_, x, fields_[0].size());
     unsigned int y_index = Lawn::calculateIndexInSection(length_, y, fields_.size());
 
@@ -72,18 +72,18 @@ void Lawn::cutGrassOnField(const pair<unsigned int, unsigned int>& indexes) {
 }
 
 
-double Lawn::calculateShavedArea() {
-    int64_t allFieldsNumber = static_cast<int64_t>(Config::HORIZONTAL_FIELDS_NUMBER) * 
+double Lawn::calculateShavedArea() const {
+    int64_t all_fields_number = static_cast<int64_t>(Config::HORIZONTAL_FIELDS_NUMBER) * 
         static_cast<int64_t>(Config::VERTICAL_FIELDS_NUMBER);
-    int64_t shavedFieldsNumber = 0;
+    int64_t shaved_fields_number = 0;
 
     for (const std::vector<bool>& shavedRow : getFields()) {
         for (bool field : shavedRow) {
-            if (field) shavedFieldsNumber ++;
+            if (field) shaved_fields_number ++;
         }
     }
 
-    return static_cast<double>(shavedFieldsNumber) / static_cast<double>(allFieldsNumber);
+    return static_cast<double>(shaved_fields_number) / static_cast<double>(all_fields_number);
 }
 
 
@@ -126,7 +126,7 @@ pair<double, double> Lawn::calculateFirstMowingFieldCoords(const pair<double, do
 
 
 bool Lawn::isFieldInMowingArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
-        const double& blade_diameter) {
+        const double& blade_diameter) const {
     unsigned int counter = countCornersInArea(x, y, blade_middle, blade_diameter);
     
     if (counter > 2) {
@@ -143,7 +143,7 @@ bool Lawn::isFieldInMowingArea(const double& x, const double& y, const std::pair
 
 
 unsigned int Lawn::countCornersInArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
-        const double& blade_diameter) {
+        const double& blade_diameter) const {
     pair<double, double> points[4] = {
         {x, y},
         {x + Config::FIELD_WIDTH, y},
@@ -163,7 +163,7 @@ unsigned int Lawn::countCornersInArea(const double& x, const double& y, const st
 
 
 double Lawn::calculateDistanceBetweenPoints(const double& x, const double& y, 
-    const std::pair<double, double>& destination_point) {
+    const std::pair<double, double>& destination_point) const {
     double dx = x - destination_point.first;
     double dy = y - destination_point.second;
 

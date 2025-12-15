@@ -16,11 +16,11 @@ private:
     std::vector<std::vector<bool>> fields_; 
 
     bool isFieldInMowingArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
-        const double& blade_diameter);
+        const double& blade_diameter) const;
     double calculateDistanceBetweenPoints(const double& x, const double& y, 
-        const std::pair<double, double>& destination_point);
+        const std::pair<double, double>& destination_point) const;
     unsigned int countCornersInArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
-        const double& blade_diameter);
+        const double& blade_diameter) const;
     std::pair<double, double> calculateFirstMowingFieldCoords(const std::pair<double, double>& blade_middle, 
         const double& blade_diameter) const;
 
@@ -33,14 +33,14 @@ public:
     unsigned int getLength() const;
     std::vector<std::vector<bool>> getFields() const;
 
-    bool isPointInLawn(const double& x, const double& y);
-    std::pair<unsigned int, unsigned int> calculateFieldIndexes(const double& x, const double& y);
+    bool isPointInLawn(const double& x, const double& y) const;
+    std::pair<unsigned int, unsigned int> calculateFieldIndexes(const double& x, const double& y) const;
     void cutGrassOnField(const std::pair<unsigned int, unsigned int>& indexes);
 
     static bool countIfCoordInSection(const unsigned int& section_length, const double& coord_value);
     static unsigned int calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
         const unsigned int& vector_size);
     
-    double calculateShavedArea();
+    double calculateShavedArea() const;
     void cutGrass(const std::pair<double, double>& blade_middle, const unsigned int& blade_diameter);
 };
