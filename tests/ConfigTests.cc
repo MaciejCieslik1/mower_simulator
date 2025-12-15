@@ -21,8 +21,8 @@ TEST(InitializeRuntimeConstantsTest, MinBladeDiameterMinimalSizeLawn) {
 
 
 TEST(InitializeRuntimeConstantsTest, MinBladeDiameterMaximalSizeLawn) {
-    unsigned int lawn_width = 100000;
-    unsigned int lawn_length = 100000;
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
@@ -31,8 +31,8 @@ TEST(InitializeRuntimeConstantsTest, MinBladeDiameterMaximalSizeLawn) {
 
 
 TEST(InitializeRuntimeConstantsTest, MinBladeDiameterCustomSizeLawn) {
-    unsigned int lawn_width = 50000;
-    unsigned int lawn_length = 60000;
+    unsigned int lawn_width = 5000;
+    unsigned int lawn_length = 6000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
@@ -41,8 +41,8 @@ TEST(InitializeRuntimeConstantsTest, MinBladeDiameterCustomSizeLawn) {
 
 
 TEST(InitializeRuntimeConstantsTest, MaxBladeDiameterMaximalSizeLawn) {
-    unsigned int lawn_width = 100000;
-    unsigned int lawn_length = 100000;
+    unsigned int lawn_width = 10000;
+    unsigned int lawn_length = 10000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
@@ -51,8 +51,8 @@ TEST(InitializeRuntimeConstantsTest, MaxBladeDiameterMaximalSizeLawn) {
 
 
 TEST(InitializeRuntimeConstantsTest, MaxBladeDiameterCustomSizeLawn) {
-    unsigned int lawn_width = 50000;
-    unsigned int lawn_length = 60000;
+    unsigned int lawn_width = 5000;
+    unsigned int lawn_length = 6000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
@@ -61,8 +61,8 @@ TEST(InitializeRuntimeConstantsTest, MaxBladeDiameterCustomSizeLawn) {
 
 
 TEST(InitializeRuntimeConstantsTest, MoverSizes) {
-    unsigned int lawn_width = 50000;
-    unsigned int lawn_length = 60000;
+    unsigned int lawn_width = 5000;
+    unsigned int lawn_length = 6000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
