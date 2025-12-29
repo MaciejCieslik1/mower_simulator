@@ -22,7 +22,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mower_simulator src/Main.cc src/Config.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc)
+add_executable(mower_simulator src/Main.cc src/Config.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc src/Log.cc src/Logger.cc)
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
 
 # Tests
@@ -50,3 +50,11 @@ add_test(NAME SimulationTests COMMAND SimulationTests)
 add_executable(LawnSimulationViewTests tests/LawnSimulationViewTests.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/Lawn.cc src/Config.cc)
 target_link_libraries(LawnSimulationViewTests gtest gtest_main pthread Qt5::Widgets Threads::Threads)
 add_test(NAME LawnSimulationViewTests COMMAND LawnSimulationViewTests)
+
+add_executable(LogTests tests/LogTests.cc src/Log.cc) 
+target_link_libraries(LogTests gtest gtest_main)
+add_test(NAME LogTests COMMAND LogTests)
+
+add_executable(LoggerTests tests/LoggerTests.cc src/Logger.cc src/Log.cc) 
+target_link_libraries(LoggerTests gtest gtest_main)
+add_test(NAME LoggerTests COMMAND LoggerTests)
