@@ -28,6 +28,8 @@ public:
     Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length);
     Lawn(const Lawn&) = delete;
     Lawn& operator=(const Lawn&) = delete;
+    bool operator==(const Lawn& other) const;
+    bool operator!=(const Lawn& other) const;
 
     unsigned int getWidth() const;
     unsigned int getLength() const;

@@ -20,6 +20,17 @@ Lawn::Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length)
         fields_.resize(Config::VERTICAL_FIELDS_NUMBER, std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false));
     }
 
+
+bool Lawn::operator==(const Lawn& other) const {
+    return false;
+}
+
+
+bool Lawn::operator!=(const Lawn& other) const {
+    return true;
+}
+
+
 unsigned int Lawn::getWidth() const {
     return width_;
 }
