@@ -5,6 +5,7 @@
 */
 
 #include <gtest/gtest.h>
+#include "../include/Constants.h"
 #include "../include/Config.h"
 
 using namespace Config;
@@ -229,8 +230,8 @@ TEST(InitializeMoverConstatsTest, initializeMoverConstants) {
 
     initializeMoverConstants(mover_width, mover_length, starting_x, starting_y, starting_angle);
 
-    EXPECT_NEAR(MAX_HORIZONTAL_EXCEEDANCE, 50.0, 1e-9);
-    EXPECT_NEAR(MAX_VERTICAL_EXCEEDANCE, 45.0, 1e-9);
+    EXPECT_NEAR(MAX_HORIZONTAL_EXCEEDANCE, Constants::DISTANCE_PRECISION, 1e-9);
+    EXPECT_NEAR(MAX_VERTICAL_EXCEEDANCE, Constants::DISTANCE_PRECISION, 1e-9);
     EXPECT_EQ(STARTING_ANGLE, 10);
     EXPECT_EQ(STARTING_X, 5.0);
     EXPECT_EQ(STARTING_Y, 3.0);
