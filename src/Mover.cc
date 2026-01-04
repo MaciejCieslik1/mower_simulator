@@ -9,6 +9,7 @@
 #include "../include/Config.h"
 #include "../include/Lawn.h"
 #include "../include/Mover.h"
+#include "../include/MathHelper.h"
 #include "../include/Exceptions.h"
 
 
@@ -101,21 +102,14 @@ void Mover::move(const double& distance, const unsigned int& lawn_width, const u
 
 
 pair<double, double> Mover::calculateFinalPoint(const double& distance) const {
-    const double ANGLE_IN_RADIANS = convertDegreesToRadians();
+    double ROUND_MULTIPLIER = 1 / Constants::DISTANCE_PRECISION;
+    const double ANGLE_IN_RADIANS = MathHelper::convertDegreesToRadians(getAngle());
     double calculated_x = getX() + sin(ANGLE_IN_RADIANS) * distance;
     double calculated_y = getY() + cos(ANGLE_IN_RADIANS) * distance;
-    double rounded_x = round(calculated_x / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
-    double rounded_y = round(calculated_y / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
+    double rounded_x = MathHelper::roundNumber(calculated_x, ROUND_MULTIPLIER);
+    double rounded_y = MathHelper::roundNumber(calculated_y, ROUND_MULTIPLIER);
     
     return pair<double, double>(rounded_x, rounded_y);
-}
-
-
-double Mover::convertDegreesToRadians() const {
-    double RADIAN_FACTOR = 180.0;
-    const double DEGREE_TO_RADIAN_FACTOR = Constants::PI / RADIAN_FACTOR;
-    double radians = angle_ * DEGREE_TO_RADIAN_FACTOR;
-    return radians;
 }
 
 
