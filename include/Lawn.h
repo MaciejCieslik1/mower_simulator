@@ -23,6 +23,12 @@ private:
         const double& blade_diameter) const;
     std::pair<double, double> calculateFirstMowingFieldCoords(const std::pair<double, double>& blade_middle, 
         const double& blade_diameter) const;
+    void cutTiltedRectangle(const std::pair<double, double>& blade_middle_beginning, 
+        const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending, 
+        const unsigned short& angle);
+    void cutVerticalRectangle(const std::pair<double, double>& blade_middle_beginning, 
+        const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending);
+    std::pair<double, double> calculateAdditionFactors(const unsigned short& angle);
 
 public:
     Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length);
@@ -45,4 +51,9 @@ public:
     
     double calculateShavedArea() const;
     void cutGrass(const std::pair<double, double>& blade_middle, const unsigned int& blade_diameter);
+    void cutGrassSection(const std::pair<double, double>& blade_middle_beginning, const unsigned int& blade_diameter,
+        const std::pair<double, double>& blade_middle_ending, const unsigned short& angle);
+    void cutRectangularGrass(const std::pair<double, double>& blade_middle_beginning, 
+        const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending,
+        const unsigned short& angle);
 };
