@@ -6,6 +6,9 @@
     Location of mover is described by coordinates(x, y) of it's middle point.
 */
 
+#pragma once
+
+
 class Mover {
 private:
     unsigned int width_; // cm
@@ -17,7 +20,6 @@ private:
     double y_;
 
     std::pair<double, double> calculateFinalPoint(const double& distance) const;
-    double convertDegreesToRadians() const;
     bool calculateIfXAccessible(const double& calculatedX, const unsigned int& lawn_width) const;
     bool calculateIfYAccessible(const double& calculatedY, const unsigned int& lawn_length) const;
 
@@ -26,6 +28,8 @@ public:
         const unsigned int& speed);
     Mover(const Mover&) = delete;
     Mover& operator=(const Mover&) = delete;
+    bool operator==(const Mover& other) const;
+    bool operator!=(const Mover& other) const;
     
     unsigned int getWidth() const;
     unsigned int getLength() const;

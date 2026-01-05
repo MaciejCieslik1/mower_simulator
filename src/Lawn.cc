@@ -4,10 +4,10 @@
     Describes Lawn, on which mower is cutting grass.
 */
 
-#include <iostream>
 #include <cmath>
 #include <cstdint>
 #include "../include/Lawn.h"
+#include "../include/MathHelper.h"
 #include "../include/Config.h"
 
 using namespace std;
@@ -19,6 +19,18 @@ Lawn::Lawn(const unsigned int& lawn_width, const unsigned int& lawn_length)
         Config::initializeRuntimeConstants(width_, length_);
         fields_.resize(Config::VERTICAL_FIELDS_NUMBER, std::vector<bool>(Config::HORIZONTAL_FIELDS_NUMBER, false));
     }
+
+
+bool Lawn::operator==(const Lawn& other) const {
+    return this->width_ == other.getWidth() && this->length_ == other.getLength() && 
+        this->fields_ == other.getFields();
+}
+
+
+bool Lawn::operator!=(const Lawn& other) const {
+    return !((*this) == other);
+}
+
 
 unsigned int Lawn::getWidth() const {
     return width_;
@@ -45,7 +57,7 @@ bool Lawn::isPointInLawn(const double& x, const double& y) const {
 
 bool Lawn::countIfCoordInSection(const unsigned int& section_length,
         const double& coord_value) {
-    return coord_value <= static_cast<double>(section_length);
+    return coord_value >= 0.0 && coord_value <= static_cast<double>(section_length);
 }
 
 
@@ -167,5 +179,154 @@ double Lawn::calculateDistanceBetweenPoints(const double& x, const double& y,
     double dx = x - destination_point.first;
     double dy = y - destination_point.second;
 
-    return std::sqrt(dx*dx + dy*dy);
+    return std::sqrt(dx * dx + dy * dy);
+}
+
+
+void Lawn::cutGrassSection(const std::pair<double, double>& blade_middle_beginning, const unsigned int& blade_diameter,
+    const std::pair<double, double>& blade_middle_ending, const unsigned short& angle) {
+    cutGrass(blade_middle_beginning, blade_diameter);
+    cutRectangularGrass(blade_middle_beginning, blade_diameter, blade_middle_ending, angle);
+    cutGrass(blade_middle_ending, blade_diameter);
+}
+
+
+void Lawn::cutRectangularGrass(const std::pair<double, double>& blade_middle_beginning, 
+    const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending, 
+    const unsigned short& angle) {
+    
+    if (angle % 90 == 0) {
+        cutVerticalRectangle(blade_middle_beginning, blade_diameter, blade_middle_ending);
+    }
+    else {
+        cutTiltedRectangle(blade_middle_beginning, blade_diameter, blade_middle_ending, angle);
+    }
+}
+
+
+void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_beginning, 
+    const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending, 
+    const unsigned short& angle) {
+    
+    double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
+    double a_mover_path = MathHelper::calculateAParameter(angle);
+    double a_perpendicular = MathHelper::calculateAPerpendicularParameter(a_mover_path);
+
+    double DIAMETER_TO_RADIUS_FACTOR = 2;
+    double blade_radius = blade_diameter / DIAMETER_TO_RADIUS_FACTOR;
+
+    double x_left_beginning = blade_middle_beginning.first - cos(angle_in_radians) * blade_radius;
+    double x_right_beginning = blade_middle_beginning.first + cos(angle_in_radians) * blade_radius;
+    double x_left_ending = blade_middle_ending.first - cos(angle_in_radians) * blade_radius;
+    double x_right_ending = blade_middle_ending.first + cos(angle_in_radians) * blade_radius;
+
+    double b_horizontal_beginning = blade_middle_beginning.second - a_perpendicular * blade_middle_beginning.first;
+    double b_horizontal_ending = blade_middle_ending.second - a_perpendicular * blade_middle_ending.first;
+
+    double y_left_beginning = a_perpendicular * x_left_beginning + b_horizontal_beginning;
+    double y_right_beginning = a_perpendicular * x_right_beginning + b_horizontal_beginning;
+    double y_left_ending = a_perpendicular * x_left_ending + b_horizontal_ending;
+    double y_right_ending = a_perpendicular * x_right_ending + b_horizontal_ending;
+
+    double b_vertical_left = y_left_beginning - a_mover_path * x_left_beginning;
+    double b_vertical_right = y_right_beginning - a_mover_path * x_right_beginning;
+
+    double max_b_horizontal = max(b_horizontal_beginning, b_horizontal_ending);
+    double min_b_horizontal = min(b_horizontal_beginning, b_horizontal_ending);
+    double max_b_vertical = max(b_vertical_left, b_vertical_right);
+    double min_b_vertical = min(b_vertical_left, b_vertical_right);
+       
+    double left_side_x = min(x_left_beginning, x_left_ending);
+    double right_side_x = max(x_right_beginning, x_right_ending);
+
+    double up_side_y = max(max(y_left_beginning, y_right_beginning), max(y_left_ending, y_right_ending));
+    double down_side_y = min(min(y_left_beginning, y_right_beginning), min(y_left_ending, y_right_ending));
+
+    pair<double, double> addition_factors = calculateAdditionFactors(angle);     
+
+    double start_y = (addition_factors.second > 0) ? down_side_y : up_side_y;
+    double end_y   = (addition_factors.second > 0) ? up_side_y : down_side_y;
+    double start_x = (addition_factors.first > 0) ? left_side_x : right_side_x;
+    double end_x   = (addition_factors.first > 0) ? right_side_x : left_side_x;
+
+    double current_y = start_y;
+    while ((addition_factors.second > 0 && current_y <= end_y) ||
+        (addition_factors.second < 0 && current_y >= end_y)) {
+        double current_x = start_x;
+
+        while ((addition_factors.first > 0 && current_x <= end_x) ||
+            (addition_factors.first < 0 && current_x >= end_x)) {
+            double b_horizontal = current_y - a_perpendicular * current_x;
+            double b_vertical = current_y - a_mover_path * current_x;
+
+            if (min_b_horizontal <= b_horizontal && b_horizontal <= max_b_horizontal &&
+                min_b_vertical <= b_vertical && b_vertical <= max_b_vertical &&
+                isPointInLawn(current_x, current_y)) {
+
+                pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(current_x, current_y);
+                cutGrassOnField(indexes); 
+            }
+            current_x += addition_factors.first;
+        }
+        current_y += addition_factors.second;
+    }
+}
+
+
+pair<double, double> Lawn::calculateAdditionFactors(const unsigned short& angle) {
+    double x_addition_factor = Config::FIELD_WIDTH;
+    double y_addition_factor = Config::FIELD_WIDTH;
+
+    if (angle > 90 && angle < 180) {
+        y_addition_factor *= -1;
+    }
+    else if (angle > 180 && angle < 270) {
+        x_addition_factor *= -1;
+        y_addition_factor *= -1;
+    }
+    else if (angle > 270 && angle < 360){
+        x_addition_factor *= -1;
+    }
+
+    return pair<double, double> (x_addition_factor, y_addition_factor);
+}
+
+
+void Lawn::cutVerticalRectangle(const std::pair<double, double>& blade_middle_beginning, 
+    const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending) {
+    double DIAMETER_TO_RADIUS_FACTOR = 2;
+    double blade_radius = blade_diameter / DIAMETER_TO_RADIUS_FACTOR;
+
+    double beginning_x = blade_middle_beginning.first;
+    double beginning_y = blade_middle_beginning.second;
+    double ending_x = blade_middle_ending.first;
+    double ending_y = blade_middle_ending.second;
+
+    double left_side_x;
+    double down_side_y;
+    double right_side_x;
+    double up_side_y;
+    if (beginning_x - ending_x == 0) {
+        left_side_x = max(beginning_x - blade_radius, 0.0);
+        down_side_y = max(min(beginning_y, ending_y), 0.0);
+        right_side_x = min(double(width_), beginning_x + blade_radius);
+        up_side_y = min(max(beginning_y, ending_y), double(length_));
+    }
+    else {
+        left_side_x = max(min(beginning_x, ending_x), 0.0);
+        down_side_y = max(beginning_y - blade_radius, 0.0);
+        right_side_x = min(max(beginning_x, ending_x), double(width_));
+        up_side_y = min(beginning_y + blade_radius, double(length_));
+    }
+
+    pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(left_side_x, down_side_y);
+    beginning_x = indexes.first * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
+    beginning_y = indexes.second * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
+
+    for (double current_y = beginning_y; current_y <= up_side_y; current_y += Config::FIELD_WIDTH) {
+        for (double current_x = beginning_x; current_x <= right_side_x; current_x += Config::FIELD_WIDTH) {
+            pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(current_x, current_y);
+            cutGrassOnField(indexes);
+        }
+    }
 }

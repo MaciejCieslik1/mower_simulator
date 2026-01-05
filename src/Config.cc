@@ -54,8 +54,8 @@ namespace Config {
 
     void initializeMoverConstants(const unsigned int& mover_width, const unsigned int& mover_length, 
         const double& starting_x, const double& starting_y, const unsigned short& starting_angle) {
-        MAX_HORIZONTAL_EXCEEDANCE = static_cast<double>(mover_width) / 2.0;
-        MAX_VERTICAL_EXCEEDANCE = static_cast<double>(mover_length) / 2.0;
+        MAX_HORIZONTAL_EXCEEDANCE = Constants::DISTANCE_PRECISION;
+        MAX_VERTICAL_EXCEEDANCE = Constants::DISTANCE_PRECISION;
         STARTING_X = starting_x;
         STARTING_Y = starting_y;
         STARTING_ANGLE = starting_angle;

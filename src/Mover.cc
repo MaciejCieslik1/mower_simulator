@@ -9,6 +9,7 @@
 #include "../include/Config.h"
 #include "../include/Lawn.h"
 #include "../include/Mover.h"
+#include "../include/MathHelper.h"
 #include "../include/Exceptions.h"
 
 
@@ -18,6 +19,19 @@ using namespace std;
 Mover::Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
         const unsigned int& speed) : width_(width), length_(length), blade_diameter_(blade_diameter), speed_(speed), 
         angle_(Config::STARTING_ANGLE), x_(Config::STARTING_X), y_(Config::STARTING_Y) {}
+
+
+bool Mover::operator==(const Mover& other) const {
+    return this->width_ == other.getWidth() && this->length_ == other.getLength() &&
+        this->blade_diameter_ == other.getBladeDiameter() && this->speed_ == other.getSpeed() &&
+        this->angle_ == other.getAngle() && std::fabs(this->x_ - other.getX()) < Constants::DISTANCE_PRECISION &&
+           std::fabs(this->y_ - other.getY()) < Constants::DISTANCE_PRECISION;
+}
+
+
+bool Mover::operator!=(const Mover& other) const {
+    return !((*this) == other);
+}
 
 
 unsigned int Mover::getWidth() const {
@@ -88,21 +102,14 @@ void Mover::move(const double& distance, const unsigned int& lawn_width, const u
 
 
 pair<double, double> Mover::calculateFinalPoint(const double& distance) const {
-    const double ANGLE_IN_RADIANS = convertDegreesToRadians();
+    double ROUND_MULTIPLIER = 1 / Constants::DISTANCE_PRECISION;
+    const double ANGLE_IN_RADIANS = MathHelper::convertDegreesToRadians(getAngle());
     double calculated_x = getX() + sin(ANGLE_IN_RADIANS) * distance;
     double calculated_y = getY() + cos(ANGLE_IN_RADIANS) * distance;
-    double rounded_x = round(calculated_x / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
-    double rounded_y = round(calculated_y / Constants::DISTANCE_PRECISION) * Constants::DISTANCE_PRECISION;
+    double rounded_x = MathHelper::roundNumber(calculated_x, ROUND_MULTIPLIER);
+    double rounded_y = MathHelper::roundNumber(calculated_y, ROUND_MULTIPLIER);
     
     return pair<double, double>(rounded_x, rounded_y);
-}
-
-
-double Mover::convertDegreesToRadians() const {
-    double RADIAN_FACTOR = 180.0;
-    const double DEGREE_TO_RADIAN_FACTOR = Constants::PI / RADIAN_FACTOR;
-    double radians = angle_ * DEGREE_TO_RADIAN_FACTOR;
-    return radians;
 }
 
 

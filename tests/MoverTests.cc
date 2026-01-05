@@ -38,6 +38,149 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
 }
 
 
+TEST(OperatorEquals, equals) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
+
+    bool result = mover == mover2;
+    EXPECT_TRUE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsWidth) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsLength) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length + 1, blade_diameter, speed);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsBladeDiameter) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length, blade_diameter + 1, speed);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsSpeed) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsX) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.setX(mover.getX() + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsY) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.setY(mover.getY() + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorEquals, notEqualsAngle) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.setAngle(mover.getAngle() + 1);
+    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+
+    bool result = mover == mover2;
+    EXPECT_FALSE(result);
+}
+
+
+TEST(OperatorNotEquals, notEquals) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
+
+    bool result = mover != mover2;
+    EXPECT_TRUE(result);
+}
+
+
+TEST(OperatorNotEquals, equals) {
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mover mover2 = Mover(width, length, blade_diameter, speed);
+
+    bool result = mover != mover2;
+    EXPECT_FALSE(result);
+}
+
+
 TEST(Setters, setters) {
     unsigned short angle = 120;
     double x = 4.0;

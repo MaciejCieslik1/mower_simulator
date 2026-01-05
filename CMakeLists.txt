@@ -22,7 +22,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mower_simulator src/Main.cc src/Config.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc)
+add_executable(mower_simulator src/Main.cc src/Config.cc src/Mover.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc)
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
 
 # Tests
@@ -30,7 +30,7 @@ add_executable(ConfigTests tests/ConfigTests.cc src/Config.cc src/Exceptions.cc)
 target_link_libraries(ConfigTests gtest gtest_main pthread)
 add_test(NAME ConfigTests COMMAND ConfigTests)
 
-add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc src/Exceptions.cc)
+add_executable(LawnTests tests/LawnTests.cc src/Lawn.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc)
 target_link_libraries(LawnTests gtest gtest_main pthread)
 add_test(NAME LawnTests COMMAND LawnTests)
 
@@ -38,15 +38,27 @@ add_executable(PointTests tests/PointTests.cc src/Point.cc src/Exceptions.cc)
 target_link_libraries(PointTests gtest gtest_main)
 add_test(NAME PointTests COMMAND PointTests)
 
-
-add_executable(MoverTests tests/MoverTests.cc src/Mover.cc src/Config.cc src/Exceptions.cc) 
+add_executable(MoverTests tests/MoverTests.cc src/Mover.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc) 
 target_link_libraries(MoverTests gtest gtest_main)
 add_test(NAME MoverTests COMMAND MoverTests)
 
-add_executable(SimulationTests tests/SimulationTests.cc src/simulation/SimulationEngine.cc src/Lawn.cc src/Config.cc)
+add_executable(SimulationTests tests/SimulationTests.cc src/simulation/SimulationEngine.cc src/Lawn.cc src/Config.cc src/MathHelper.cc)
 target_link_libraries(SimulationTests gtest gtest_main pthread Threads::Threads)
 add_test(NAME SimulationTests COMMAND SimulationTests)
 
-add_executable(LawnSimulationViewTests tests/LawnSimulationViewTests.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/Lawn.cc src/Config.cc)
+add_executable(LawnSimulationViewTests tests/LawnSimulationViewTests.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/Lawn.cc src/Config.cc src/MathHelper.cc)
 target_link_libraries(LawnSimulationViewTests gtest gtest_main pthread Qt5::Widgets Threads::Threads)
 add_test(NAME LawnSimulationViewTests COMMAND LawnSimulationViewTests)
+
+add_executable(LogTests tests/LogTests.cc src/Log.cc) 
+target_link_libraries(LogTests gtest gtest_main)
+add_test(NAME LogTests COMMAND LogTests)
+
+add_executable(LoggerTests tests/LoggerTests.cc src/Logger.cc src/Log.cc) 
+target_link_libraries(LoggerTests gtest gtest_main)
+add_test(NAME LoggerTests COMMAND LoggerTests)
+
+add_executable(StateSimulationTests tests/StateSimulationTests.cc src/Logger.cc src/Log.cc src/Lawn.cc src/Mover.cc src/StateSimulation.cc src/Exceptions.cc src/Config.cc src/MathHelper.cc) 
+target_link_libraries(StateSimulationTests gtest gtest_main)
+add_test(NAME StateSimulationTests COMMAND StateSimulationTests)
+
