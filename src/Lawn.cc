@@ -4,7 +4,6 @@
     Describes Lawn, on which mower is cutting grass.
 */
 
-#include <iostream>
 #include <cmath>
 #include <cstdint>
 #include "../include/Lawn.h"
@@ -300,8 +299,8 @@ void Lawn::cutVerticalRectangle(const std::pair<double, double>& blade_middle_be
 
     double beginning_x = blade_middle_beginning.first;
     double beginning_y = blade_middle_beginning.second;
-    double ending_x = blade_middle_beginning.first;
-    double ending_y = blade_middle_beginning.second;
+    double ending_x = blade_middle_ending.first;
+    double ending_y = blade_middle_ending.second;
 
     double left_side_x;
     double down_side_y;
@@ -323,9 +322,9 @@ void Lawn::cutVerticalRectangle(const std::pair<double, double>& blade_middle_be
     pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(left_side_x, down_side_y);
     beginning_x = indexes.first * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
     beginning_y = indexes.second * Config::FIELD_WIDTH + Config::FIELD_WIDTH / 2;
-    
-    for (int current_y = beginning_y; current_y <= up_side_y; current_y += Config::FIELD_WIDTH) {
-        for (int current_x = beginning_x; current_x <= right_side_x; current_x += Config::FIELD_WIDTH) {
+
+    for (double current_y = beginning_y; current_y <= up_side_y; current_y += Config::FIELD_WIDTH) {
+        for (double current_x = beginning_x; current_x <= right_side_x; current_x += Config::FIELD_WIDTH) {
             pair<unsigned int, unsigned int> indexes = calculateFieldIndexes(current_x, current_y);
             cutGrassOnField(indexes);
         }
