@@ -505,3 +505,43 @@ TEST(SimulateRotation, invalidAngleTooSmall) {
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
+
+
+TEST(SimulateMowingOptionOn, turnOn) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+
+    stateSimulation.simulateMowingOptionOn();
+
+    EXPECT_TRUE(stateSimulation.getMover().getIsMowing());
+}
+
+
+TEST(SimulateMovingOptionOff, turnOff) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+
+    stateSimulation.simulateMowingOptionOff();
+
+    EXPECT_FALSE(stateSimulation.getMover().getIsMowing());
+}

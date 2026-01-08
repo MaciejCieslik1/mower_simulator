@@ -25,6 +25,7 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     unsigned int result_blade_diameter = mover.getBladeDiameter();
     unsigned int result_speed = mover.getSpeed();
     unsigned short result_angle = mover.getAngle();
+    bool result_is_mowing = mover.getIsMowing();
     double result_x = mover.getX();
     double result_y = mover.getY();
 
@@ -33,6 +34,7 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     EXPECT_EQ(blade_diameter, result_blade_diameter);
     EXPECT_EQ(speed, result_speed);
     EXPECT_EQ(0, result_angle);
+    EXPECT_TRUE(result_is_mowing);
     EXPECT_NEAR(0.0, result_x, 1e-9);
     EXPECT_NEAR(0.0, result_y, 1e-9);
 }
@@ -700,4 +702,37 @@ TEST(Rotate, rotateTooSmallNegativeAngle) {
     Mover mover = Mover(width, length, blade_diameter, speed);
 
     EXPECT_THROW({mover.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
+}
+
+
+TEST(TurnOnMowing, turnOn) {
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.turnOffMowing();
+    mover.turnOnMowing();
+
+    EXPECT_TRUE(mover.getIsMowing());
+}
+
+
+TEST(TurnOffMowing, turnOff) {
+    unsigned int width = 10;
+    unsigned int length = 10;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    unsigned int lawn_width = 120;
+    unsigned int lawn_length = 100;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    mover.turnOffMowing();
+
+    EXPECT_FALSE(mover.getIsMowing());
 }
