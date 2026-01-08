@@ -37,4 +37,6 @@ public:
 
     void simulateMovement(const double& distance);
     void simulateRotation(const short& angle);
+    void simulateMowingOptionOn();
+    void simulateMowingOptionOff();
 };

@@ -16,6 +16,7 @@ private:
     unsigned int blade_diameter_; // cm
     unsigned int speed_; // cm/s
     unsigned short angle_; // (0-359) degree
+    bool is_mowing_;
     double x_;
     double y_;
 
@@ -36,6 +37,7 @@ public:
     unsigned int getBladeDiameter() const;
     unsigned int getSpeed() const;
     unsigned short getAngle() const;
+    bool getIsMowing() const;
     double getX() const;
     double getY() const;
 
@@ -45,4 +47,6 @@ public:
 
     void move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length);
     void rotate(const short& angle);
+    void turnOnMowing();
+    void turnOffMowing();
 };

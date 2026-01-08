@@ -18,7 +18,7 @@ using namespace std;
 
 Mover::Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
         const unsigned int& speed) : width_(width), length_(length), blade_diameter_(blade_diameter), speed_(speed), 
-        angle_(Config::STARTING_ANGLE), x_(Config::STARTING_X), y_(Config::STARTING_Y) {}
+        angle_(Config::STARTING_ANGLE), is_mowing_(true), x_(Config::STARTING_X), y_(Config::STARTING_Y) {}
 
 
 bool Mover::operator==(const Mover& other) const {
@@ -56,6 +56,11 @@ unsigned int Mover::getSpeed() const {
 
 unsigned short Mover::getAngle() const {
     return angle_;
+}
+
+
+bool Mover::getIsMowing() const {
+    return is_mowing_;
 }
 
 
@@ -134,4 +139,14 @@ void Mover::rotate(const short& angle) {
 
     unsigned short calculated_angle = (getAngle() + angle + MAX_ROTATION_ANGLE) % MAX_ROTATION_ANGLE;
     setAngle(calculated_angle);
+}
+
+
+void Mover::turnOnMowing() {
+    is_mowing_ = true;
+}
+
+
+void Mover::turnOffMowing() {
+    is_mowing_ = false;
 }

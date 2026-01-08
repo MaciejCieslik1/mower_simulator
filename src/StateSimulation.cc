@@ -67,10 +67,15 @@ void StateSimulation::simulateMovement(const double& distance) {
         optional_distance = countDistanceToBorder(distance);
         mover_.move(optional_distance, lawn_.getWidth(), lawn_.getLength());
     }   
+
     calculateMovementTime(optional_distance);
-    pair<double, double> beginning_point = pair<double, double>(begginning_x, begginning_y);
-    pair<double, double> ending_point = pair<double, double>(mover_.getX(), mover_.getY());
-    lawn_.cutGrassSection(beginning_point, mover_.getBladeDiameter(), ending_point, angle);
+
+    if (mover_.getIsMowing()) {
+        pair<double, double> beginning_point = pair<double, double>(begginning_x, begginning_y);
+        pair<double, double> ending_point = pair<double, double>(mover_.getX(), mover_.getY());
+        lawn_.cutGrassSection(beginning_point, mover_.getBladeDiameter(), ending_point, angle);
+    }
+    
 }
 
 
@@ -145,4 +150,14 @@ void StateSimulation::calculateRotationTime(const short& angle) {
     u_int64_t result_time = u_int64_t(ceil(time_ms / 10.0) * 10.0);
 
     time_ += result_time;
+}
+
+
+void StateSimulation::simulateMowingOptionOn() {
+    mover_.turnOnMowing();
+}
+
+
+void StateSimulation::simulateMowingOptionOff() {
+    mover_.turnOffMowing();
 }
