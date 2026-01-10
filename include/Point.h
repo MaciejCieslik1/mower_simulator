@@ -18,7 +18,7 @@ struct Point {
 
     public:
         Point(const double& x, const double& y, const unsigned int& id);
-        Point(const Point&) = delete;
+        Point(const Point& other);
         Point& operator=(const Point&) = delete;
         
         double getX() const;

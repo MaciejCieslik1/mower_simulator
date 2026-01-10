@@ -15,6 +15,9 @@ using namespace std;
 Point::Point(const double& x, const double& y, const unsigned int& id) : x_(x), y_(y), id_(id) {}
 
 
+Point::Point(const Point& other) : x_(other.x_), y_(other.y_), id_(other.id_) {}
+
+
 double Point::getX() const {
     return x_;
 }
