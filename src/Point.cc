@@ -18,6 +18,16 @@ Point::Point(const double& x, const double& y, const unsigned int& id) : x_(x), 
 Point::Point(const Point& other) : x_(other.x_), y_(other.y_), id_(other.id_) {}
 
 
+Point& Point::operator=(const Point& other) {
+    if (this != &other) {
+        x_ = other.x_;
+        y_ = other.y_;
+        id_ = other.id_;
+    }
+    return *this;
+}
+
+
 double Point::getX() const {
     return x_;
 }
