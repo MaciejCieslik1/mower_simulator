@@ -1,3 +1,9 @@
+/* 
+    Author: Maciej Cieslik
+    
+    Defines all exceptions.
+*/
+
 #pragma once
 
 #include <exception>
