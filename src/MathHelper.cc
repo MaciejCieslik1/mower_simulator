@@ -19,6 +19,12 @@ double MathHelper::convertDegreesToRadians(const unsigned short& angle) {
 }
 
 
+double MathHelper::convertRadiansToDegrees(const double& angle) {
+    double DEGREES_FACTOR = 180.0;
+    return angle * DEGREES_FACTOR / Constants::PI;
+}
+
+
 double MathHelper::calculateAParameter(const unsigned short& angle) {
     double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
     return tan(angle_in_radians);
