@@ -30,11 +30,15 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     bool result_mover = mover == stateSimulation.getMover();
     bool result_logger_size = logger.getLogs().size() == stateSimulation.getLogger().getLogs().size();
     uint64_t result_time = 0;
+    vector<Point> result_point_indexes = vector<Point>();
+    unsigned int next_index = 0;
 
     EXPECT_TRUE(result_lawn);
     EXPECT_TRUE(result_mover);
     EXPECT_TRUE(result_logger_size);
     EXPECT_EQ(result_time, stateSimulation.getTime());
+    EXPECT_EQ(result_point_indexes, stateSimulation.getPoints());
+    EXPECT_EQ(next_index, stateSimulation.getNextPointId());
 }
 
 
@@ -544,4 +548,226 @@ TEST(SimulateMovingOptionOff, turnOff) {
     stateSimulation.simulateMowingOptionOff();
 
     EXPECT_FALSE(stateSimulation.getMover().getIsMowing());
+}
+
+
+TEST(SimulateAddPoint, addPoint) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 500);
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 1);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 1);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateAddPoint, addPointOutOfLawn) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(1500, 500);
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 0);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 0);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 1);
+}
+
+
+TEST(SimulateAddPoint, add2Points) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 500);
+    stateSimulation.simulateAddPoint(750, 750);
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 2);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 2);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateDeletePoint, deletePoint) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 500);
+    stateSimulation.simulateDeletePoint(0);
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 0);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 1);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateDeletePoint, deletePointInvalidId) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 500);
+    stateSimulation.simulateDeletePoint(3);
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 1);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 1);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 1);
+}
+
+
+TEST(SimulateMovementToPoint, moveToPoint) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 500);
+    stateSimulation.simulateMovementToPoint(0);
+
+    EXPECT_EQ(mover.getAngle(), 45);
+    EXPECT_EQ(mover.getX(), 500);
+    EXPECT_EQ(mover.getY(), 500);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateMovementToPoint, moveToPoint2) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(250, 250);
+    stateSimulation.simulateMovementToPoint(0);
+
+    EXPECT_EQ(mover.getAngle(), 225);
+    EXPECT_EQ(mover.getX(), 250);
+    EXPECT_EQ(mover.getY(), 250);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateMovementToPoint, moveToPointSameX) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 250);
+    stateSimulation.simulateMovementToPoint(0);
+
+    EXPECT_EQ(mover.getAngle(), 180);
+    EXPECT_EQ(mover.getX(), 500);
+    EXPECT_EQ(mover.getY(), 250);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateMovementToPoint, moveToPointSameX2) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(500, 750);
+    stateSimulation.simulateMovementToPoint(0);
+
+    EXPECT_EQ(mover.getAngle(), 0);
+    EXPECT_EQ(mover.getX(), 500);
+    EXPECT_EQ(mover.getY(), 750);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+
+TEST(SimulateMovementToPoint, moveToPointCustom) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mover mover = Mover(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    stateSimulation.simulateAddPoint(131, 24);
+    stateSimulation.simulateMovementToPoint(0);
+
+    EXPECT_EQ(mover.getX(), 131);
+    EXPECT_EQ(mover.getY(), 24);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
