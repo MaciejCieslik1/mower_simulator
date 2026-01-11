@@ -12,6 +12,18 @@ using namespace std;
 Log::Log(const u_int64_t& time, const string& message) : time_(time), message_(message) {}
 
 
+Log::Log(const Log& other) : time_(other.getTime()), message_(other.getMessage()) {}
+
+
+Log& Log::operator=(const Log& other) {
+    if (this != &other) {
+        time_ = other.getTime();
+        message_ = other.getMessage();
+    }
+    return *this;
+}
+
+
 u_int64_t Log::getTime() const {
     return time_;
 }
