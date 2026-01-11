@@ -11,6 +11,7 @@
 #include "Lawn.h"
 #include "Logger.h"
 #include "Mover.h"
+#include "FileLogger.h"
 
 class StateSimulation {
 private:
@@ -20,6 +21,7 @@ private:
     u_int64_t time_;
     std::vector<Point> points_;
     unsigned int next_point_id_;
+    FileLogger file_logger_;
 
     double countDistanceToBorder(const double& distance) const;
     std::pair<double, double> countBorderPoint() const;
@@ -31,7 +33,7 @@ private:
     double calculateRotationDx(const double& dy, const double& dx) const;
 
 public:
-    StateSimulation(Lawn& lawn, Mover& mover, Logger& logger);
+    StateSimulation(Lawn& lawn, Mover& mover, Logger& logger, FileLogger& file_logger);
     StateSimulation(const StateSimulation&) = delete;
     StateSimulation& operator=(const StateSimulation&) = delete;
     bool operator==(const StateSimulation& other) const;
@@ -43,6 +45,7 @@ public:
     const u_int64_t& getTime() const;
     const std::vector<Point>& getPoints() const;
     const unsigned int& getNextPointId() const;
+    const FileLogger& getFileLogger() const;
 
     void simulateMovement(const double& distance);
     void simulateRotation(const short& angle);

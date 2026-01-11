@@ -8,6 +8,7 @@
 #include "../include/Logger.h"
 #include "../include/StateSimulation.h"
 #include "../include/Exceptions.h"
+#include "../include/FileLogger.h"
 
 using namespace std;
 
@@ -24,7 +25,8 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
 
     bool result_lawn = lawn == stateSimulation.getLawn();
     bool result_mover = mover == stateSimulation.getMover();
@@ -54,8 +56,9 @@ TEST(OperatorEquals, equals) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -76,8 +79,9 @@ TEST(OperatorEquals, notEqualsLawn) {
     Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -98,8 +102,9 @@ TEST(OperatorNotEquals, notEqualsMover) {
     Mover mover = Mover(width, length, blade_diameter, speed);
     Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover2, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mover2, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -121,8 +126,9 @@ TEST(OperatorNotEquals, notEqualsLogger) {
     Logger logger = Logger();
     Logger logger2 = Logger();
     logger2.push(Log(20, "Hello"));
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger2);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger2, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -143,8 +149,9 @@ TEST(OperatorNotEquals, notEquals) {
     Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger, fileLogger);
 
     bool result_simulation = stateSimulation != stateSimulation2;
 
@@ -164,8 +171,9 @@ TEST(OperatorNotEquals, notEqualsEquals) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger, fileLogger);
 
     bool result_simulation = stateSimulation != stateSimulation2;
 
@@ -185,7 +193,8 @@ TEST(SimulateMovement, moveInsideLawn) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 500;
     double result_x = 0;
     double result_y = 500;
@@ -216,7 +225,8 @@ TEST(SimulateMovement, moveInsideLawnCorner) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 1000;
     double result_x = 0;
     double result_y = 1000;
@@ -247,7 +257,8 @@ TEST(SimulateMovement, moveOutsideLawnLine) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 1001;
     double result_x = 0;
     double result_y = 1000;
@@ -277,7 +288,8 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleCorner) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 1000;
     double result_x = 1000;
     double result_y = 1000;
@@ -308,7 +320,8 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngle) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 1000;
     double result_x = 1000;
     double result_y = 500;
@@ -339,7 +352,8 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleOver180) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     double distance = 1000;
     double result_x = 0;
     double result_y = 0;
@@ -370,7 +384,8 @@ TEST(SimulateRotation, rotate) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     unsigned short rotation = 90;
     double result_x = 0;
     double result_y = 0;
@@ -401,7 +416,8 @@ TEST(SimulateRotation, rotatePass360) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     unsigned short rotation = 180;
     double result_x = 0;
     double result_y = 0;
@@ -432,7 +448,8 @@ TEST(SimulateRotation, rotatePass360NegativeAngle) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     short rotation = -180;
     double result_x = 0;
     double result_y = 0;
@@ -463,7 +480,8 @@ TEST(SimulateRotation, invalidAngleTooBig) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     unsigned short rotation = 361;
     double result_x = 0;
     double result_y = 0;
@@ -493,7 +511,8 @@ TEST(SimulateRotation, invalidAngleTooSmall) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     unsigned short rotation = -361;
     double result_x = 0;
     double result_y = 0;
@@ -523,7 +542,8 @@ TEST(SimulateMowingOptionOn, turnOn) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
 
     stateSimulation.simulateMowingOptionOn();
 
@@ -543,7 +563,8 @@ TEST(SimulateMovingOptionOff, turnOff) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
 
     stateSimulation.simulateMowingOptionOff();
 
@@ -563,7 +584,8 @@ TEST(SimulateAddPoint, addPoint) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
 
     EXPECT_EQ(stateSimulation.getPoints().size(), 1);
@@ -584,7 +606,8 @@ TEST(SimulateAddPoint, addPointOutOfLawn) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(1500, 500);
 
     EXPECT_EQ(stateSimulation.getPoints().size(), 0);
@@ -605,7 +628,8 @@ TEST(SimulateAddPoint, add2Points) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateAddPoint(750, 750);
 
@@ -627,7 +651,8 @@ TEST(SimulateDeletePoint, deletePoint) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateDeletePoint(0);
 
@@ -649,7 +674,8 @@ TEST(SimulateDeletePoint, deletePointInvalidId) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateDeletePoint(3);
 
@@ -671,7 +697,8 @@ TEST(SimulateMovementToPoint, moveToPoint) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateMovementToPoint(0);
 
@@ -694,7 +721,8 @@ TEST(SimulateMovementToPoint, moveToPoint2) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(250, 250);
     stateSimulation.simulateMovementToPoint(0);
 
@@ -717,7 +745,8 @@ TEST(SimulateMovementToPoint, moveToPointSameX) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 250);
     stateSimulation.simulateMovementToPoint(0);
 
@@ -740,7 +769,8 @@ TEST(SimulateMovementToPoint, moveToPointSameX2) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 750);
     stateSimulation.simulateMovementToPoint(0);
 
@@ -763,7 +793,8 @@ TEST(SimulateMovementToPoint, moveToPointCustom) {
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Mover mover = Mover(width, length, blade_diameter, speed);
     Logger logger = Logger();
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger);
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
     stateSimulation.simulateAddPoint(131, 24);
     stateSimulation.simulateMovementToPoint(0);
 
