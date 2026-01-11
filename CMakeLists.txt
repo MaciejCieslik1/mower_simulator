@@ -22,7 +22,7 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 add_subdirectory(libs/googletest)
 include_directories(libs/googletest/googletest/include)
 
-add_executable(mower_simulator src/Main.cc src/Config.cc src/Mover.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc)
+add_executable(mower_simulator src/Main.cc src/Config.cc src/Mover.cc src/Lawn.cc src/Exceptions.cc src/simulation/LawnSimulationView.cc include/simulation/LawnSimulationView.h src/simulation/SimulationEngine.cc src/Log.cc src/Logger.cc src/StateSimulation.cc src/MathHelper.cc src/Point.cc)
 target_link_libraries(mower_simulator Qt5::Widgets  Threads::Threads)
 
 # Tests
@@ -58,7 +58,7 @@ add_executable(LoggerTests tests/LoggerTests.cc src/Logger.cc src/Log.cc)
 target_link_libraries(LoggerTests gtest gtest_main)
 add_test(NAME LoggerTests COMMAND LoggerTests)
 
-add_executable(StateSimulationTests tests/StateSimulationTests.cc src/Logger.cc src/Log.cc src/Lawn.cc src/Mover.cc src/StateSimulation.cc src/Exceptions.cc src/Config.cc src/MathHelper.cc) 
+add_executable(StateSimulationTests tests/StateSimulationTests.cc src/Logger.cc src/Log.cc src/Lawn.cc src/Mover.cc src/StateSimulation.cc src/Exceptions.cc src/Config.cc src/MathHelper.cc src/Point.cc) 
 target_link_libraries(StateSimulationTests gtest gtest_main)
 add_test(NAME StateSimulationTests COMMAND StateSimulationTests)
 
