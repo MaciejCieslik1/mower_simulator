@@ -20,6 +20,6 @@ public:
 
     const std::queue<Log>& getLogs() const;
 
-    void push(Log&& newLog);
+    void push(const Log& newLog);
     void clear();
 };

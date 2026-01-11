@@ -18,8 +18,8 @@ const queue<Log>& Logger::getLogs() const {
 }
 
 
-void Logger::push(Log&& log) {
-    logs_.push(std::move(log));
+void Logger::push(const Log& log) {
+    logs_.push(log);
 }
 
 
