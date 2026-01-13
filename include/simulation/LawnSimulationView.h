@@ -4,32 +4,30 @@
     Displays the lawn on screen and shows which parts have been mowed.
     Green color means grass is still there, brown means it has been cut.
     
-    Updates the display regularly (default 60 times per second) using a timer.
-    Safely reads lawn data even when the simulation thread is changing it.
+    Safely reads lawn data from StateSimulation even when the simulation thread is changing it.
+    Updates are triggered externally via triggerRepaint().
 */
 
 #pragma once
 
 #include <QWidget>
 #include <QColor>
-#include <QTimer>
 #include <mutex>
 
-class Lawn;
+class StateSimulation;
 
 class LawnSimulationView : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LawnSimulationView(Lawn* lawn, std::mutex& lawn_mutex, QWidget* parent = nullptr);
+    explicit LawnSimulationView(StateSimulation& simulation, std::mutex& simulation_mutex, QWidget* parent = nullptr);
     ~LawnSimulationView();
     
     LawnSimulationView(const LawnSimulationView&) = delete;
     LawnSimulationView& operator=(const LawnSimulationView&) = delete;
     
-    void refresh();
-    void startSimulation(const int fps = 60);
-    void stopSimulation();
+    // Updates the view. Thread-safe trigger for repaint.
+    void triggerRepaint();
     
     QSize sizeHint() const override;
     QSize minimumSizeHint() const override;
@@ -37,13 +35,9 @@ public:
 protected:
     void paintEvent(QPaintEvent* event) override;
 
-private slots:
-    void onTimerUpdate();
-
 private:
-    Lawn* lawn_;
-    std::mutex& lawn_mutex_;
-    QTimer* update_timer_;
+    StateSimulation& simulation_;
+    std::mutex& simulation_mutex_;
     
     static const QColor UNMOWED_GRASS_COLOR;
     static const QColor MOWED_GRASS_COLOR;
@@ -55,7 +49,6 @@ private:
     static constexpr int MIN_WINDOW_HEIGHT = 300;
     
     void drawLawnGrid(QPainter& painter);
-    void drawFieldAt(QPainter& painter, const unsigned int row, const unsigned int col, const bool is_mowed);
     
     double calculateFieldPixelWidth() const;
     double calculateFieldPixelHeight() const;
