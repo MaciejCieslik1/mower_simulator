@@ -1,11 +1,11 @@
 /* 
     Author: Hanna Biegacz
     
-    LawnSimulationView implementation. 
+    Visualizer implementation. 
 */
-#include "simulation/LawnSimulationView.h"
-#include "../../include/StateSimulation.h"
-#include "../../include/Lawn.h" // Needed to access Lawn methods via StateSimulation
+#include "Visualizer.h"
+#include "StateSimulation.h"
+#include "Lawn.h"
 #include <QPainter>
 #include <QPaintEvent>
 #include <iostream>
@@ -14,41 +14,40 @@
 
 using namespace std;
 
-const QColor LawnSimulationView::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);  
-const QColor LawnSimulationView::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
-const QColor LawnSimulationView::GRID_LINE_COLOR = QColor(200, 200, 200, 100);
+const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(119, 221, 118);  
+const QColor Visualizer::MOWED_GRASS_COLOR = QColor(152, 118, 85);     
+const QColor Visualizer::GRID_LINE_COLOR = QColor(200, 200, 200, 100);
 
-LawnSimulationView::LawnSimulationView(StateSimulation& simulation, mutex& simulation_mutex, QWidget* parent)
+Visualizer::Visualizer(StateSimulation& simulation, mutex& simulation_mutex, QWidget* parent)
     : QWidget(parent), simulation_(simulation), simulation_mutex_(simulation_mutex) {
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 }
 
-LawnSimulationView::~LawnSimulationView() {
+Visualizer::~Visualizer() {
 }
 
-
-void LawnSimulationView::triggerRepaint() {
+void Visualizer::triggerRepaint() {
     QMetaObject::invokeMethod(this, "update", Qt::QueuedConnection);
 }
 
-QSize LawnSimulationView::sizeHint() const {
+QSize Visualizer::sizeHint() const {
     return QSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
 }
 
-QSize LawnSimulationView::minimumSizeHint() const {
+QSize Visualizer::minimumSizeHint() const {
     return QSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
 }
 
-void LawnSimulationView::paintEvent(QPaintEvent* event) {
+void Visualizer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.setRenderHint(QPainter::Antialiasing, false);
     
     drawLawnGrid(painter);
 }
 
-void LawnSimulationView::drawLawnGrid(QPainter& painter) {
+void Visualizer::drawLawnGrid(QPainter& painter) {
     lock_guard<mutex> lock(simulation_mutex_);
     
     const Lawn& lawn = simulation_.getLawn();
@@ -82,7 +81,7 @@ void LawnSimulationView::drawLawnGrid(QPainter& painter) {
     }
 }
 
-double LawnSimulationView::calculateFieldPixelWidth() const {
+double Visualizer::calculateFieldPixelWidth() const {
     lock_guard<mutex> lock(simulation_mutex_);
     const auto fields = simulation_.getLawn().getFields();
     if (fields.empty() || fields[0].empty()) {
@@ -93,7 +92,7 @@ double LawnSimulationView::calculateFieldPixelWidth() const {
     return static_cast<double>(width()) / num_cols;
 }
 
-double LawnSimulationView::calculateFieldPixelHeight() const {
+double Visualizer::calculateFieldPixelHeight() const {
     lock_guard<mutex> lock(simulation_mutex_);
     const auto fields = simulation_.getLawn().getFields();
     if (fields.empty()) {

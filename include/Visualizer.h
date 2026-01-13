@@ -1,11 +1,7 @@
 /* 
-    Author: Hanna Biegacz, Maciej Cieślik
+    Author: Hanna Biegacz
     
-    Displays the lawn on screen and shows which parts have been mowed.
-    Green color means grass is still there, brown means it has been cut.
-    
-    Safely reads lawn data from StateSimulation even when the simulation thread is changing it.
-    Updates are triggered externally via triggerRepaint().
+    Visualizer - displays the lawn and mowing progress on screen.
 */
 
 #pragma once
@@ -16,17 +12,16 @@
 
 class StateSimulation;
 
-class LawnSimulationView : public QWidget {
+class Visualizer : public QWidget {
     Q_OBJECT
 
 public:
-    explicit LawnSimulationView(StateSimulation& simulation, std::mutex& simulation_mutex, QWidget* parent = nullptr);
-    ~LawnSimulationView();
+    explicit Visualizer(StateSimulation& simulation, std::mutex& simulation_mutex, QWidget* parent = nullptr);
+    ~Visualizer();
     
-    LawnSimulationView(const LawnSimulationView&) = delete;
-    LawnSimulationView& operator=(const LawnSimulationView&) = delete;
+    Visualizer(const Visualizer&) = delete;
+    Visualizer& operator=(const Visualizer&) = delete;
     
-    // Updates the view. Thread-safe trigger for repaint.
     void triggerRepaint();
     
     QSize sizeHint() const override;

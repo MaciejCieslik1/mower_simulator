@@ -1,6 +1,6 @@
 #include "Engine.h"
 #include "StateSimulation.h"
-#include "simulation/LawnSimulationView.h"
+#include "Visualizer.h"
 
 #include <chrono>
 #include <iostream>
@@ -14,7 +14,7 @@ namespace {
     constexpr int CPU_YIELD_SLEEP_MS = 1;
 }
 
-Engine::Engine(StateSimulation& simulation, LawnSimulationView& visualization)
+Engine::Engine(StateSimulation& simulation, Visualizer& visualization)
     : simulation_(simulation)
     , visualization_(visualization)
     , running_(false)

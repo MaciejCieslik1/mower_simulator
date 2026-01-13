@@ -18,11 +18,11 @@
 #include <vector>
 
 class StateSimulation;
-class LawnSimulationView;
+class Visualizer;
 
 class Engine {
 public:
-    Engine(StateSimulation& simulation, LawnSimulationView& visualization);
+    Engine(StateSimulation& simulation, Visualizer& visualization);
     ~Engine();
 
     Engine(const Engine&) = delete;
@@ -47,7 +47,7 @@ private:
     double calculateInterpolationAlpha(double accumulator, double dt) const;
 
     StateSimulation& simulation_;
-    LawnSimulationView& visualization_;
+    Visualizer& visualization_;
 
     std::thread simulation_thread_;
     std::thread visualization_thread_;
