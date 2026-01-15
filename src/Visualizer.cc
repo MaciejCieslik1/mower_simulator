@@ -6,7 +6,7 @@
 #include "Visualizer.h"
 #include "StateSimulation.h"
 #include "Lawn.h"
-#include "Mover.h"
+#include "Mower.h"
 #include "MathHelper.h"
 #include "Engine.h"
 #include <QPainter>
@@ -186,11 +186,11 @@ void Visualizer::renderLawn(QPainter& painter) {
     }
 }
 
-void Visualizer::calculateMowerRenderSize(double mover_width, double mover_length, double blade_diameter, double& out_w_px, double& out_h_px) const {
-    double display_width_cm = std::max(mover_width, blade_diameter);
+void Visualizer::calculateMowerRenderSize(double mower_width, double mower_length, double blade_diameter, double& out_w_px, double& out_h_px) const {
+    double display_width_cm = std::max(mower_width, blade_diameter);
     
-    double scale_ratio = display_width_cm / mover_width;
-    double display_length_cm = mover_length * scale_ratio;
+    double scale_ratio = display_width_cm / mower_width;
+    double display_length_cm = mower_length * scale_ratio;
 
     out_w_px = display_width_cm * scale_factor_;
     out_h_px = display_length_cm * scale_factor_;

@@ -1,14 +1,14 @@
 /* 
     Author: Maciej Cieslik
     
-    Implements mover class.
+    Implements mower class.
 */
 
 #include <cmath>
 #include "../include/Constants.h"
 #include "../include/Config.h"
 #include "../include/Lawn.h"
-#include "../include/Mover.h"
+#include "../include/Mower.h"
 #include "../include/MathHelper.h"
 #include "../include/Exceptions.h"
 
@@ -16,12 +16,12 @@
 using namespace std;
 
 
-Mover::Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
+Mower::Mower(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
         const unsigned int& speed) : width_(width), length_(length), blade_diameter_(blade_diameter), speed_(speed), 
         angle_(Config::STARTING_ANGLE), is_mowing_(true), x_(Config::STARTING_X), y_(Config::STARTING_Y) {}
 
 
-bool Mover::operator==(const Mover& other) const {
+bool Mower::operator==(const Mower& other) const {
     return this->width_ == other.getWidth() && this->length_ == other.getLength() &&
         this->blade_diameter_ == other.getBladeDiameter() && this->speed_ == other.getSpeed() &&
         this->angle_ == other.getAngle() && this->is_mowing_ == other.getIsMowing() && 
@@ -30,66 +30,66 @@ bool Mover::operator==(const Mover& other) const {
 }
 
 
-bool Mover::operator!=(const Mover& other) const {
+bool Mower::operator!=(const Mower& other) const {
     return !((*this) == other);
 }
 
 
-unsigned int Mover::getWidth() const {
+unsigned int Mower::getWidth() const {
     return width_;
 }    
 
 
-unsigned int Mover::getLength() const {
+unsigned int Mower::getLength() const {
     return length_;
 }
 
 
-unsigned int Mover::getBladeDiameter() const {
+unsigned int Mower::getBladeDiameter() const {
     return blade_diameter_;
 }
 
 
-unsigned int Mover::getSpeed() const {
+unsigned int Mower::getSpeed() const {
     return speed_;
 }
 
 
-unsigned short Mover::getAngle() const {
+unsigned short Mower::getAngle() const {
     return angle_;
 }
 
 
-bool Mover::getIsMowing() const {
+bool Mower::getIsMowing() const {
     return is_mowing_;
 }
 
 
-double Mover::getX() const {
+double Mower::getX() const {
     return x_;
 }
 
 
-double Mover::getY() const {
+double Mower::getY() const {
     return y_;
 }
 
 
-void Mover::setAngle(const unsigned short& newAngle) {
+void Mower::setAngle(const unsigned short& newAngle) {
     angle_ = newAngle;
 }
 
 
-void Mover::setX(const double& newX) {
+void Mower::setX(const double& newX) {
     x_ = newX;
 }
 
-void Mover::setY(const double& newY) {
+void Mower::setY(const double& newY) {
     y_ = newY;
 }
 
 
-void Mover::move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length) {
+void Mower::move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length) {
     /* Changes coord of mower to new ones calculated by using trygonometric functions. 
         Throws MoveOutsideLawnError when destination point(the middle of the mower) is outside the lawn */
 
@@ -107,7 +107,7 @@ void Mover::move(const double& distance, const unsigned int& lawn_width, const u
 }
 
 
-pair<double, double> Mover::calculateFinalPoint(const double& distance) const {
+pair<double, double> Mower::calculateFinalPoint(const double& distance) const {
     double ROUND_MULTIPLIER = 1 / Constants::DISTANCE_PRECISION;
     const double ANGLE_IN_RADIANS = MathHelper::convertDegreesToRadians(getAngle());
     double calculated_x = getX() + sin(ANGLE_IN_RADIANS) * distance;
@@ -119,19 +119,19 @@ pair<double, double> Mover::calculateFinalPoint(const double& distance) const {
 }
 
 
-bool Mover::calculateIfXAccessible(const double& calculated_x, const unsigned int& lawn_width) const {
+bool Mower::calculateIfXAccessible(const double& calculated_x, const unsigned int& lawn_width) const {
     return (calculated_x <= static_cast<double>(lawn_width) + Config::MAX_HORIZONTAL_EXCEEDANCE &&
         calculated_x >= -Config::MAX_HORIZONTAL_EXCEEDANCE);
 }
 
 
-bool Mover::calculateIfYAccessible(const double& calculated_y, const unsigned int& lawn_length) const {
+bool Mower::calculateIfYAccessible(const double& calculated_y, const unsigned int& lawn_length) const {
     return (calculated_y <= static_cast<double>(lawn_length) + Config::MAX_VERTICAL_EXCEEDANCE &&
         calculated_y >= -Config::MAX_VERTICAL_EXCEEDANCE);
 }
 
 
-void Mover::rotate(const short& angle) {
+void Mower::rotate(const short& angle) {
     short MAX_ROTATION_ANGLE = 360;
     short MIN_ROTATION_ANGLE = -360;
     if (angle > MAX_ROTATION_ANGLE || angle < MIN_ROTATION_ANGLE) {
@@ -143,11 +143,11 @@ void Mover::rotate(const short& angle) {
 }
 
 
-void Mover::turnOnMowing() {
+void Mower::turnOnMowing() {
     is_mowing_ = true;
 }
 
 
-void Mover::turnOffMowing() {
+void Mower::turnOffMowing() {
     is_mowing_ = false;
 }

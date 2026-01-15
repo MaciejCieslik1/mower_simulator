@@ -14,10 +14,10 @@ using namespace std;
 namespace Config {
     unsigned int MAX_BLADE_DIAMETER = 0;
     unsigned int MIN_BLADE_DIAMETER = 0;
-    unsigned int MAX_MOVER_WIDTH = 0;
-    unsigned int MIN_MOVER_WIDTH = 0;
-    unsigned int MAX_MOVER_LENGTH = 0;
-    unsigned int MIN_MOVER_LENGTH = 0;
+    unsigned int MAX_MOWER_WIDTH = 0;
+    unsigned int MIN_MOWER_WIDTH = 0;
+    unsigned int MAX_MOWER_LENGTH = 0;
+    unsigned int MIN_MOWER_LENGTH = 0;
     double FIELD_WIDTH = 0.0;
     unsigned int HORIZONTAL_FIELDS_NUMBER = 0;
     unsigned int VERTICAL_FIELDS_NUMBER = 0;
@@ -36,10 +36,10 @@ namespace Config {
         MAX_BLADE_DIAMETER = min(Constants::ABSOLUTE_MAX_BLADE_DIAMETER, 
             min(lawn_width / Constants::MAX_LAWN_DIVISION_FACTOR, lawn_length / Constants::MAX_LAWN_DIVISION_FACTOR));
 
-        MIN_MOVER_WIDTH = MIN_BLADE_DIAMETER;
-        MAX_MOVER_WIDTH = Constants::MOVER_SIZE_MULTIPLICATON_FACTOR * MAX_BLADE_DIAMETER;
-        MIN_MOVER_LENGTH = MIN_MOVER_WIDTH;
-        MAX_MOVER_LENGTH = MAX_MOVER_WIDTH;
+        MIN_MOWER_WIDTH = MIN_BLADE_DIAMETER;
+        MAX_MOWER_WIDTH = Constants::MOWER_SIZE_MULTIPLICATON_FACTOR * MAX_BLADE_DIAMETER;
+        MIN_MOWER_LENGTH = MIN_MOWER_WIDTH;
+        MAX_MOWER_LENGTH = MAX_MOWER_WIDTH;
         
         FIELD_WIDTH = min(lawn_width, lawn_length) / 1000.0;
 
@@ -52,7 +52,7 @@ namespace Config {
             lawn_length / Constants::MAX_SPEED_DIVISION_FACTOR));
     }
 
-    void initializeMoverConstants(const unsigned int& mover_width, const unsigned int& mover_length, 
+    void initializeMowerConstants(const unsigned int& mower_width, const unsigned int& mower_length, 
         const double& starting_x, const double& starting_y, const unsigned short& starting_angle) {
         MAX_HORIZONTAL_EXCEEDANCE = Constants::DISTANCE_PRECISION;
         MAX_VERTICAL_EXCEEDANCE = Constants::DISTANCE_PRECISION;

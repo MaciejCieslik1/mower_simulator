@@ -72,7 +72,7 @@ void Engine::setUserSimulationLogic(std::function<void(StateSimulation&, double)
 }
 
 void Engine::defaultSimulationLogic(StateSimulation& simulation, double dt) {
-    simulation.simulateMovement(simulation.getMover().getSpeed() * dt);
+    simulation.simulateMovement(simulation.getMower().getSpeed() * dt);
 }
 
 double Engine::getSimulationTime() const {

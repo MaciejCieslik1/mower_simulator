@@ -18,12 +18,12 @@
 using namespace std;
 
 
-StateSimulation::StateSimulation(Lawn& lawn, Mover& mover, Logger& logger, FileLogger& file_logger) : lawn_(lawn),
-    mover_(mover), logger_(logger), file_logger_(file_logger), time_(0), points_(vector<Point>()), next_point_id_(0) {}
+StateSimulation::StateSimulation(Lawn& lawn, Mower& mower, Logger& logger, FileLogger& file_logger) : lawn_(lawn),
+    mower_(mower), logger_(logger), file_logger_(file_logger), time_(0), points_(vector<Point>()), next_point_id_(0) {}
 
 
 bool StateSimulation::operator==(const StateSimulation& other) const{
-    return this->getLawn() == other.getLawn() && this->getMover() == other.getMover() && 
+    return this->getLawn() == other.getLawn() && this->getMower() == other.getMower() && 
         this->getLogger().getLogs().size() == other.getLogger().getLogs().size() && 
         this->getTime() == other.getTime();
 }
@@ -39,8 +39,8 @@ const Lawn& StateSimulation::getLawn() const {
 }
 
 
-const Mover& StateSimulation::getMover() const {
-    return mover_;
+const Mower& StateSimulation::getMower() const {
+    return mower_;
 }
 
 
@@ -70,14 +70,14 @@ const FileLogger& StateSimulation::getFileLogger() const {
 
 
 void StateSimulation::simulateMovement(const double& distance) {
-    double begginning_x = mover_.getX();
-    double begginning_y = mover_.getY();
-    short angle = mover_.getAngle();
+    double begginning_x = mower_.getX();
+    double begginning_y = mower_.getY();
+    short angle = mower_.getAngle();
     double optional_distance = distance;
     string message;
 
     try {
-        mover_.move(distance, lawn_.getWidth(), lawn_.getLength());
+        mower_.move(distance, lawn_.getWidth(), lawn_.getLength());
 
         message = "Distance moved: " + to_string(distance) + "from point x: " + to_string(begginning_x) + 
             ", y: " + to_string(begginning_y);
@@ -87,7 +87,7 @@ void StateSimulation::simulateMovement(const double& distance) {
         logger_.push(log);
         file_logger_.saveLog(log);
         optional_distance = countDistanceToBorder(distance);
-        mover_.move(optional_distance, lawn_.getWidth(), lawn_.getLength());
+        mower_.move(optional_distance, lawn_.getWidth(), lawn_.getLength());
 
         message = "Distance moved to border: " + to_string(distance) + "from point x: " + 
             to_string(begginning_x) + ", y: " + to_string(begginning_y);
@@ -98,10 +98,10 @@ void StateSimulation::simulateMovement(const double& distance) {
 
     calculateMovementTime(optional_distance);
 
-    if (mover_.getIsMowing()) {
+    if (mower_.getIsMowing()) {
         pair<double, double> beginning_point = pair<double, double>(begginning_x, begginning_y);
-        pair<double, double> ending_point = pair<double, double>(mover_.getX(), mover_.getY());
-        lawn_.cutGrassSection(beginning_point, mover_.getBladeDiameter(), ending_point, angle);
+        pair<double, double> ending_point = pair<double, double>(mower_.getX(), mower_.getY());
+        lawn_.cutGrassSection(beginning_point, mower_.getBladeDiameter(), ending_point, angle);
     }
     
 }
@@ -113,11 +113,11 @@ double StateSimulation::countDistanceToBorder(const double& distance) const {
     double border_x = borderCornerPoint.first;
     double border_y = borderCornerPoint.second;
 
-    double angleInRadians = MathHelper::convertDegreesToRadians(mover_.getAngle());
+    double angleInRadians = MathHelper::convertDegreesToRadians(mower_.getAngle());
 
     // distances below mean how long distance has mower to move in given direction to reach border or it's extension  
-    double distance_to_vertical_border = (border_x - mover_.getX()) / sin(angleInRadians);
-    double distance_to_horizontal_border = (border_y - mover_.getY()) / cos(angleInRadians);
+    double distance_to_vertical_border = (border_x - mower_.getX()) / sin(angleInRadians);
+    double distance_to_horizontal_border = (border_y - mower_.getY()) / cos(angleInRadians);
     return min(MathHelper::roundNumber(distance_to_vertical_border, ROUND_MULTIPLIER), 
         MathHelper::roundNumber(distance_to_horizontal_border, ROUND_MULTIPLIER));
 }
@@ -126,7 +126,7 @@ double StateSimulation::countDistanceToBorder(const double& distance) const {
 void StateSimulation::calculateMovementTime(const double& distance) {
     double SECONDS_TO_MILISECONDS_MULTIPLIER = 1000;
 
-    double time_ms = distance * SECONDS_TO_MILISECONDS_MULTIPLIER / mover_.getSpeed();
+    double time_ms = distance * SECONDS_TO_MILISECONDS_MULTIPLIER / mower_.getSpeed();
     u_int64_t result_time = u_int64_t(ceil(time_ms / 10.0) * 10.0);
 
     time_ += result_time;
@@ -137,15 +137,15 @@ pair<double, double> StateSimulation::countBorderPoint() const {
     double border_x;
     double border_y;
 
-    if (mover_.getAngle() < 90) {
+    if (mower_.getAngle() < 90) {
         border_x = lawn_.getWidth();
         border_y = lawn_.getLength();
     }
-    else if (mover_.getAngle() < 180) {
+    else if (mower_.getAngle() < 180) {
         border_x = lawn_.getWidth();
         border_y = 0;
     }
-    else if (mover_.getAngle() < 270) {
+    else if (mower_.getAngle() < 270) {
         border_x = 0;
         border_y = 0;
     }
@@ -158,12 +158,12 @@ pair<double, double> StateSimulation::countBorderPoint() const {
 
 
 void StateSimulation::simulateRotation(const short& angle) {
-    short beginning_angle = mover_.getAngle();
+    short beginning_angle = mower_.getAngle();
     u_int64_t time = time_;
     string message;
 
     try {
-        mover_.rotate(angle);
+        mower_.rotate(angle);
 
         message = "Rotated: " + to_string(angle) + " degrees.";
         
@@ -193,7 +193,7 @@ void StateSimulation::calculateRotationTime(const short& angle) {
 
 
 void StateSimulation::simulateMowingOptionOn() {
-    mover_.turnOnMowing();
+    mower_.turnOnMowing();
 
     string message = "Mowing mode: on";
     Log log = Log(time_, message);
@@ -202,7 +202,7 @@ void StateSimulation::simulateMowingOptionOn() {
 
 
 void StateSimulation::simulateMowingOptionOff() {
-    mover_.turnOffMowing();
+    mower_.turnOffMowing();
 
     string message = "Mowing mode: off";
     Log log = Log(time_, message);
@@ -213,7 +213,11 @@ void StateSimulation::simulateMowingOptionOff() {
 void StateSimulation::simulateAddPoint(const double& x, const double& y) {
     string message;
 
-    if(lawn_.isPointInLawn(x, y)) {
+    if (points_.size() >= 7) {
+        message = "Unable to add point. Maximum number of points (7) reached.";
+        logger_.push(Log(time_, message));
+    }
+    else if(lawn_.isPointInLawn(x, y)) {
         points_.push_back(Point(x, y, next_point_id_));
 
         message = "Added point with id: " + to_string(next_point_id_) + "on coordinates x: " + to_string(x) + 
@@ -279,8 +283,8 @@ void StateSimulation::simulateMovementToPoint(const unsigned int& id) {
         return;
     }
 
-    while (abs(x - mover_.getX()) > Constants::DISTANCE_PRECISION || 
-        abs(y - mover_.getY()) > Constants::DISTANCE_PRECISION) {
+    while (abs(x - mower_.getX()) > Constants::DISTANCE_PRECISION || 
+        abs(y - mower_.getY()) > Constants::DISTANCE_PRECISION) {
         moveToPointAttempt(x, y);
     }
 
@@ -299,8 +303,8 @@ void StateSimulation::moveToPointAttempt(const double& x, const double& y) {
 
 
 pair<short, double> StateSimulation::calculateAngleAndDistance(const double& x, const double& y) const {
-    double dx = x - mover_.getX();
-    double dy = y - mover_.getY();
+    double dx = x - mower_.getX();
+    double dy = y - mower_.getY();
     short rotation;
     double distance;
 
@@ -320,10 +324,10 @@ double StateSimulation::calculateRotationNoDx(const double& dy) const {
     double rotation;
 
     if (dy > 0) {
-        rotation = -mover_.getAngle();
+        rotation = -mower_.getAngle();
     }
     else {
-        rotation = 180 - mover_.getAngle();
+        rotation = 180 - mower_.getAngle();
     }
     return rotation;
 }
@@ -334,25 +338,25 @@ double StateSimulation::calculateRotationDx(const double& dy, const double& dx) 
     double target_angle_degrees = MathHelper::convertRadiansToDegrees(target_angle_in_radians);
 
     short SQUARE_ANGLE = 90;
-    short rotation = SQUARE_ANGLE - short(target_angle_degrees) - mover_.getAngle();
+    short rotation = SQUARE_ANGLE - short(target_angle_degrees) - mower_.getAngle();
 
     return rotation;
 }
 
 Snapshot StateSimulation::buildSnapshot() const {
     Snapshot snapshot;
-    snapshot.x_ = mover_.getX();
-    snapshot.y_ = mover_.getY();
-    snapshot.angle_ = mover_.getAngle();
+    snapshot.x_ = mower_.getX();
+    snapshot.y_ = mower_.getY();
+    snapshot.angle_ = mower_.getAngle();
     snapshot.simulation_time_ = static_cast<double>(time_);
 
     snapshot.lawn_width_ = lawn_.getWidth();
     snapshot.lawn_length_ = lawn_.getLength();
     snapshot.fields_ = lawn_.getFields();
 
-    snapshot.mower_width_ = mover_.getWidth();
-    snapshot.mower_length_ = mover_.getLength();
-    snapshot.blade_diameter_ = mover_.getBladeDiameter();
+    snapshot.mower_width_ = mower_.getWidth();
+    snapshot.mower_length_ = mower_.getLength();
+    snapshot.blade_diameter_ = mower_.getBladeDiameter();
 
     snapshot.points_ = points_;
 

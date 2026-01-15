@@ -1,15 +1,15 @@
 /* 
     Author: Maciej Cieslik
     
-    Describes mover. Mover has rectangular shape with blade, which middle is located in the central point of the mover.
-    Blade cuts grass in circular area. The mover moves in continuous space(mover can cover the part of the field).
-    Location of mover is described by coordinates(x, y) of it's middle point.
+    Describes mower. Mower has rectangular shape with blade, which middle is located in the central point of the mower.
+    Blade cuts grass in circular area. The mower moves in continuous space(mower can cover the part of the field).
+    Location of mower is described by coordinates(x, y) of it's middle point.
 */
 
 #pragma once
 
 
-class Mover {
+class Mower {
 private:
     unsigned int width_; // cm
     unsigned int length_; // cm
@@ -25,12 +25,12 @@ private:
     bool calculateIfYAccessible(const double& calculatedY, const unsigned int& lawn_length) const;
 
 public:
-    Mover(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
+    Mower(const unsigned int& width, const unsigned int& length, const unsigned int& blade_diameter,
         const unsigned int& speed);
-    Mover(const Mover&) = delete;
-    Mover& operator=(const Mover&) = delete;
-    bool operator==(const Mover& other) const;
-    bool operator!=(const Mover& other) const;
+    Mower(const Mower&) = delete;
+    Mower& operator=(const Mower&) = delete;
+    bool operator==(const Mower& other) const;
+    bool operator!=(const Mower& other) const;
     
     unsigned int getWidth() const;
     unsigned int getLength() const;

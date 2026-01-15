@@ -209,8 +209,8 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     const unsigned short& angle) {
     
     double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
-    double a_mover_path = MathHelper::calculateAParameter(angle);
-    double a_perpendicular = MathHelper::calculateAPerpendicularParameter(a_mover_path);
+    double a_mower_path = MathHelper::calculateAParameter(angle);
+    double a_perpendicular = MathHelper::calculateAPerpendicularParameter(a_mower_path);
 
     double DIAMETER_TO_RADIUS_FACTOR = 2;
     double blade_radius = blade_diameter / DIAMETER_TO_RADIUS_FACTOR;
@@ -228,8 +228,8 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
     double y_left_ending = a_perpendicular * x_left_ending + b_horizontal_ending;
     double y_right_ending = a_perpendicular * x_right_ending + b_horizontal_ending;
 
-    double b_vertical_left = y_left_beginning - a_mover_path * x_left_beginning;
-    double b_vertical_right = y_right_beginning - a_mover_path * x_right_beginning;
+    double b_vertical_left = y_left_beginning - a_mower_path * x_left_beginning;
+    double b_vertical_right = y_right_beginning - a_mower_path * x_right_beginning;
 
     double max_b_horizontal = max(b_horizontal_beginning, b_horizontal_ending);
     double min_b_horizontal = min(b_horizontal_beginning, b_horizontal_ending);
@@ -257,7 +257,7 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
         while ((addition_factors.first > 0 && current_x <= end_x) ||
             (addition_factors.first < 0 && current_x >= end_x)) {
             double b_horizontal = current_y - a_perpendicular * current_x;
-            double b_vertical = current_y - a_mover_path * current_x;
+            double b_vertical = current_y - a_mower_path * current_x;
 
             if (min_b_horizontal <= b_horizontal && b_horizontal <= max_b_horizontal &&
                 min_b_vertical <= b_vertical && b_vertical <= max_b_vertical &&

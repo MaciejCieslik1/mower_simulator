@@ -2,7 +2,7 @@
 #include <cmath>
 #include "../include/Constants.h"
 #include "../include/Config.h"
-#include "../include/Mover.h"
+#include "../include/Mower.h"
 #include "../include/Lawn.h"
 #include "../include/Log.h"
 #include "../include/Logger.h"
@@ -21,22 +21,22 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
 
     bool result_lawn = lawn == stateSimulation.getLawn();
-    bool result_mover = mover == stateSimulation.getMover();
+    bool result_mower = mower == stateSimulation.getMower();
     bool result_logger_size = logger.getLogs().size() == stateSimulation.getLogger().getLogs().size();
     uint64_t result_time = 0;
     vector<Point> result_point_indexes = vector<Point>();
     unsigned int next_index = 0;
 
     EXPECT_TRUE(result_lawn);
-    EXPECT_TRUE(result_mover);
+    EXPECT_TRUE(result_mower);
     EXPECT_TRUE(result_logger_size);
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_point_indexes, stateSimulation.getPoints());
@@ -52,13 +52,13 @@ TEST(OperatorEquals, equals) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mower, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -74,14 +74,14 @@ TEST(OperatorEquals, notEqualsLawn) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn2, mower, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -89,7 +89,7 @@ TEST(OperatorEquals, notEqualsLawn) {
 }
 
 
-TEST(OperatorNotEquals, notEqualsMover) {
+TEST(OperatorNotEquals, notEqualsMower) {
     unsigned int lawn_width = 1000;
     unsigned int lawn_length = 1000;
     unsigned int width = 120;
@@ -97,14 +97,14 @@ TEST(OperatorNotEquals, notEqualsMover) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width + 1, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover2, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mower2, logger, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -120,15 +120,15 @@ TEST(OperatorNotEquals, notEqualsLogger) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     Logger logger2 = Logger();
     logger2.push(Log(20, "Hello"));
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger2, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mower, logger2, fileLogger);
 
     bool result_simulation = stateSimulation == stateSimulation2;
 
@@ -144,14 +144,14 @@ TEST(OperatorNotEquals, notEquals) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
     Lawn lawn2 = Lawn(lawn_width + 1, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn2, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn2, mower, logger, fileLogger);
 
     bool result_simulation = stateSimulation != stateSimulation2;
 
@@ -167,13 +167,13 @@ TEST(OperatorNotEquals, notEqualsEquals) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
-    StateSimulation stateSimulation2 = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    StateSimulation stateSimulation2 = StateSimulation(lawn, mower, logger, fileLogger);
 
     bool result_simulation = stateSimulation != stateSimulation2;
 
@@ -189,25 +189,25 @@ TEST(SimulateMovement, moveInsideLawn) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 500;
     double result_x = 0;
     double result_y = 500;
     unsigned short result_angle = 0;
-    double time_ms = double(distance) * 1000.0 / mover.getSpeed();
+    double time_ms = double(distance) * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 0;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -221,25 +221,25 @@ TEST(SimulateMovement, moveInsideLawnCorner) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
     double result_x = 0;
     double result_y = 1000;
     unsigned short result_angle = 0;
-    double time_ms = double(distance) * 1000.0 / mover.getSpeed();
+    double time_ms = double(distance) * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 0;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -253,25 +253,25 @@ TEST(SimulateMovement, moveOutsideLawnLine) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1001;
     double result_x = 0;
     double result_y = 1000;
     unsigned short result_angle = 0;
-    double time_ms = 1000.0 * 1000.0 / mover.getSpeed();
+    double time_ms = 1000.0 * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / Constants::TICK_DURATION) * Constants::TICK_DURATION);
     int result_logger_size = 1;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -284,25 +284,25 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleCorner) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 45);
+    Config::initializeMowerConstants(width, length, 500, 500, 45);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
     double result_x = 1000;
     double result_y = 1000;
     unsigned short result_angle = 45;
-    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mover.getSpeed();
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_NEAR(result_time, stateSimulation.getTime(), Constants::TICK_DURATION);
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -316,25 +316,25 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngle) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 0, 45);
+    Config::initializeMowerConstants(width, length, 500, 0, 45);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
     double result_x = 1000;
     double result_y = 500;
     unsigned short result_angle = 45;
-    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mover.getSpeed();
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -348,25 +348,25 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleOver180) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 225);
+    Config::initializeMowerConstants(width, length, 500, 500, 225);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
     double result_x = 0;
     double result_y = 0;
     unsigned short result_angle = 225;
-    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mover.getSpeed();
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
     stateSimulation.simulateMovement(distance);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -380,12 +380,12 @@ TEST(SimulateRotation, rotate) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     unsigned short rotation = 90;
     double result_x = 0;
     double result_y = 0;
@@ -396,9 +396,9 @@ TEST(SimulateRotation, rotate) {
 
     stateSimulation.simulateRotation(rotation);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -412,12 +412,12 @@ TEST(SimulateRotation, rotatePass360) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 270);
+    Config::initializeMowerConstants(width, length, 0, 0, 270);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     unsigned short rotation = 180;
     double result_x = 0;
     double result_y = 0;
@@ -428,9 +428,9 @@ TEST(SimulateRotation, rotatePass360) {
 
     stateSimulation.simulateRotation(rotation);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -444,12 +444,12 @@ TEST(SimulateRotation, rotatePass360NegativeAngle) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     short rotation = -180;
     double result_x = 0;
     double result_y = 0;
@@ -460,9 +460,9 @@ TEST(SimulateRotation, rotatePass360NegativeAngle) {
 
     stateSimulation.simulateRotation(rotation);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -476,12 +476,12 @@ TEST(SimulateRotation, invalidAngleTooBig) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     unsigned short rotation = 361;
     double result_x = 0;
     double result_y = 0;
@@ -491,9 +491,9 @@ TEST(SimulateRotation, invalidAngleTooBig) {
 
     stateSimulation.simulateRotation(rotation);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -507,12 +507,12 @@ TEST(SimulateRotation, invalidAngleTooSmall) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     unsigned short rotation = -361;
     double result_x = 0;
     double result_y = 0;
@@ -522,9 +522,9 @@ TEST(SimulateRotation, invalidAngleTooSmall) {
 
     stateSimulation.simulateRotation(rotation);
 
-    EXPECT_NEAR(result_x, stateSimulation.getMover().getX(), Constants::DISTANCE_PRECISION);
-    EXPECT_NEAR(result_y, stateSimulation.getMover().getY(), Constants::DISTANCE_PRECISION);
-    EXPECT_EQ(result_angle, mover.getAngle());
+    EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
+    EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
+    EXPECT_EQ(result_angle, mower.getAngle());
     EXPECT_EQ(result_time, stateSimulation.getTime());
     EXPECT_EQ(result_logger_size, stateSimulation.getLogger().getLogs().size());
 }
@@ -538,16 +538,16 @@ TEST(SimulateMowingOptionOn, turnOn) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
 
     stateSimulation.simulateMowingOptionOn();
 
-    EXPECT_TRUE(stateSimulation.getMover().getIsMowing());
+    EXPECT_TRUE(stateSimulation.getMower().getIsMowing());
 }
 
 
@@ -559,16 +559,16 @@ TEST(SimulateMovingOptionOff, turnOff) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
 
     stateSimulation.simulateMowingOptionOff();
 
-    EXPECT_FALSE(stateSimulation.getMover().getIsMowing());
+    EXPECT_FALSE(stateSimulation.getMower().getIsMowing());
 }
 
 
@@ -580,12 +580,12 @@ TEST(SimulateAddPoint, addPoint) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
 
     EXPECT_EQ(stateSimulation.getPoints().size(), 1);
@@ -602,12 +602,12 @@ TEST(SimulateAddPoint, addPointOutOfLawn) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(1500, 500);
 
     EXPECT_EQ(stateSimulation.getPoints().size(), 0);
@@ -624,12 +624,12 @@ TEST(SimulateAddPoint, add2Points) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateAddPoint(750, 750);
 
@@ -647,12 +647,12 @@ TEST(SimulateDeletePoint, deletePoint) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateDeletePoint(0);
 
@@ -670,12 +670,12 @@ TEST(SimulateDeletePoint, deletePointInvalidId) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateDeletePoint(3);
 
@@ -693,18 +693,18 @@ TEST(SimulateMovementToPoint, moveToPoint) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 90);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 500);
     stateSimulation.simulateMovementToPoint(0);
 
-    EXPECT_EQ(mover.getAngle(), 45);
-    EXPECT_EQ(mover.getX(), 500);
-    EXPECT_EQ(mover.getY(), 500);
+    EXPECT_EQ(mower.getAngle(), 45);
+    EXPECT_EQ(mower.getX(), 500);
+    EXPECT_EQ(mower.getY(), 500);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
 
@@ -717,18 +717,18 @@ TEST(SimulateMovementToPoint, moveToPoint2) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Config::initializeMowerConstants(width, length, 500, 500, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(250, 250);
     stateSimulation.simulateMovementToPoint(0);
 
-    EXPECT_EQ(mover.getAngle(), 225);
-    EXPECT_EQ(mover.getX(), 250);
-    EXPECT_EQ(mover.getY(), 250);
+    EXPECT_EQ(mower.getAngle(), 225);
+    EXPECT_EQ(mower.getX(), 250);
+    EXPECT_EQ(mower.getY(), 250);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
 
@@ -741,18 +741,18 @@ TEST(SimulateMovementToPoint, moveToPointSameX) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Config::initializeMowerConstants(width, length, 500, 500, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 250);
     stateSimulation.simulateMovementToPoint(0);
 
-    EXPECT_EQ(mover.getAngle(), 180);
-    EXPECT_EQ(mover.getX(), 500);
-    EXPECT_EQ(mover.getY(), 250);
+    EXPECT_EQ(mower.getAngle(), 180);
+    EXPECT_EQ(mower.getX(), 500);
+    EXPECT_EQ(mower.getY(), 250);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
 
@@ -765,18 +765,18 @@ TEST(SimulateMovementToPoint, moveToPointSameX2) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Config::initializeMowerConstants(width, length, 500, 500, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(500, 750);
     stateSimulation.simulateMovementToPoint(0);
 
-    EXPECT_EQ(mover.getAngle(), 0);
-    EXPECT_EQ(mover.getX(), 500);
-    EXPECT_EQ(mover.getY(), 750);
+    EXPECT_EQ(mower.getAngle(), 0);
+    EXPECT_EQ(mower.getX(), 500);
+    EXPECT_EQ(mower.getY(), 750);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
 
@@ -789,16 +789,40 @@ TEST(SimulateMovementToPoint, moveToPointCustom) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 500, 500, 90);
+    Config::initializeMowerConstants(width, length, 500, 500, 90);
     Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Mower mower = Mower(width, length, blade_diameter, speed);
     Logger logger = Logger();
     FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mover, logger, fileLogger);
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     stateSimulation.simulateAddPoint(131, 24);
     stateSimulation.simulateMovementToPoint(0);
 
-    EXPECT_EQ(mover.getX(), 131);
-    EXPECT_EQ(mover.getY(), 24);
+    EXPECT_EQ(mower.getX(), 131);
+    EXPECT_EQ(mower.getY(), 24);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
+}
+
+TEST(SimulateAddPoint, addPointsLimit) {
+    unsigned int lawn_width = 1000;
+    unsigned int lawn_length = 1000;
+    unsigned int width = 120;
+    unsigned int length = 100;
+    unsigned int blade_diameter = 90;
+    unsigned int speed = 105;
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0, 0, 90);
+    Lawn lawn = Lawn(lawn_width, lawn_length);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Logger logger = Logger();
+    FileLogger fileLogger = FileLogger("example_path");
+    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
+    for (int i = 0; i < 7; ++i) {
+        stateSimulation.simulateAddPoint(10.0 * i, 10.0 * i);
+    }
+    stateSimulation.simulateAddPoint(80.0, 80.0); // 8th point
+
+    EXPECT_EQ(stateSimulation.getPoints().size(), 7);
+    EXPECT_EQ(stateSimulation.getNextPointId(), 7);
+    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 1); // error log for 8th point
 }

@@ -6,7 +6,7 @@
 
 #include <gtest/gtest.h>
 #include "../include/Config.h"
-#include "../include/Mover.h"
+#include "../include/Mower.h"
 #include "../include/Exceptions.h"
 
 using namespace std;
@@ -17,17 +17,17 @@ TEST(ConstructorAndGetters, constructorAndGetters) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    unsigned int result_width = mover.getWidth();
-    unsigned int result_length = mover.getLength();
-    unsigned int result_blade_diameter = mover.getBladeDiameter();
-    unsigned int result_speed = mover.getSpeed();
-    unsigned short result_angle = mover.getAngle();
-    bool result_is_mowing = mover.getIsMowing();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_width = mower.getWidth();
+    unsigned int result_length = mower.getLength();
+    unsigned int result_blade_diameter = mower.getBladeDiameter();
+    unsigned int result_speed = mower.getSpeed();
+    unsigned short result_angle = mower.getAngle();
+    bool result_is_mowing = mower.getIsMowing();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(width, result_width);
     EXPECT_EQ(length, result_length);
@@ -45,11 +45,11 @@ TEST(OperatorEquals, equals) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_TRUE(result);
 }
 
@@ -59,11 +59,11 @@ TEST(OperatorEquals, notEqualsWidth) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width + 1, length, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -73,11 +73,11 @@ TEST(OperatorEquals, notEqualsLength) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length + 1, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length + 1, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -87,11 +87,11 @@ TEST(OperatorEquals, notEqualsBladeDiameter) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length, blade_diameter + 1, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length, blade_diameter + 1, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -101,11 +101,11 @@ TEST(OperatorEquals, notEqualsSpeed) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length, blade_diameter, speed + 1);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length, blade_diameter, speed + 1);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -115,12 +115,12 @@ TEST(OperatorEquals, notEqualsX) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.setX(mover.getX() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.setX(mower.getX() + 1);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -130,12 +130,12 @@ TEST(OperatorEquals, notEqualsY) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.setY(mover.getY() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.setY(mower.getY() + 1);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -145,12 +145,12 @@ TEST(OperatorEquals, notEqualsAngle) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.setAngle(mover.getAngle() + 1);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.setAngle(mower.getAngle() + 1);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
 
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -160,12 +160,12 @@ TEST(OperatorEquals, notEqualsIsMowing) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
-    mover.turnOffMowing();
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
+    mower.turnOffMowing();
     
-    bool result = mover == mover2;
+    bool result = mower == mower2;
     EXPECT_FALSE(result);
 }
 
@@ -175,11 +175,11 @@ TEST(OperatorNotEquals, notEquals) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width + 1, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width + 1, length, blade_diameter, speed);
 
-    bool result = mover != mover2;
+    bool result = mower != mower2;
     EXPECT_TRUE(result);
 }
 
@@ -189,11 +189,11 @@ TEST(OperatorNotEquals, equals) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    Mover mover2 = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    Mower mower2 = Mower(width, length, blade_diameter, speed);
 
-    bool result = mover != mover2;
+    bool result = mower != mower2;
     EXPECT_FALSE(result);
 }
 
@@ -206,15 +206,15 @@ TEST(Setters, setters) {
     unsigned int length = 100;
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.setAngle(angle);
-    mover.setX(x);
-    mover.setY(y);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.setAngle(angle);
+    mower.setX(x);
+    mower.setY(y);
 
-    unsigned int result_angle = mover.getAngle();
-    unsigned int result_x = mover.getX();
-    unsigned int result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    unsigned int result_x = mower.getX();
+    unsigned int result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-9);
@@ -234,13 +234,13 @@ TEST(Move, moveInsideLawnDefaultSpawnPoint) {
     unsigned int blade_diameter = 90;
     unsigned int speed = 105;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -260,13 +260,13 @@ TEST(Move, moveInsideLawnDoubleDistanceSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -286,13 +286,13 @@ TEST(Move, moveInsideLawnHardAngleDefaultSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -312,13 +312,13 @@ TEST(Move, moveInsideLawnHardAngleDoubleDistanceDefaultSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0.0, 0.0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0.0, 0.0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -338,13 +338,13 @@ TEST(Move, moveInsideLawnHardAngleDoubleDistanceCustomSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 30.298, 40.207, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 30.298, 40.207, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -364,13 +364,13 @@ TEST(Move, moveInsideLawnBorderXDefaultSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -390,13 +390,13 @@ TEST(Move, moveInsideLawnBorderYDefaultSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.move(distance, lawn_width, lawn_length);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.move(distance, lawn_width, lawn_length);
 
-    unsigned int result_angle = mover.getAngle();
-    double result_x = mover.getX();
-    double result_y = mover.getY();
+    unsigned int result_angle = mower.getAngle();
+    double result_x = mower.getX();
+    double result_y = mower.getY();
 
     EXPECT_EQ(angle, result_angle);
     EXPECT_NEAR(x, result_x, 1e-3);
@@ -414,10 +414,10 @@ TEST(Move, moveOutsideLawnBorderYDefaultSpawnPointMinimalDeltaX) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -431,10 +431,10 @@ TEST(Move, moveOutsideLawnBorderYDefaultSpawnPointMinimalDeltaY) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -448,10 +448,10 @@ TEST(Move, moveOutsideLawnBorderDefaultSpawnPoint) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -465,10 +465,10 @@ TEST(Move, moveOutsideLawnBorderDefaultSpawnPointNegativeX) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -482,10 +482,10 @@ TEST(Move, moveOutsideLawnBorderDefaultSpawnPointNegativeY) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -499,10 +499,10 @@ TEST(Move, moveOutsideLawnBorderDefaultSpawnPointNegativeXY) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, angle);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, angle);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
+    EXPECT_THROW({mower.move(distance, lawn_width, lawn_length);}, MoveOutsideLawnError);
 }
 
 
@@ -516,11 +516,11 @@ TEST(Rotate, rotatePositiveAngleDefaultSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -536,11 +536,11 @@ TEST(Rotate, rotateMaxPositiveAngleDefaultSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -556,11 +556,11 @@ TEST(Rotate, rotateNegativeAngleDefaultSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -576,11 +576,11 @@ TEST(Rotate, rotateMinNegativeAngleDefaultSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -596,11 +596,11 @@ TEST(Rotate, rotatePositiveAngleCustomSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 75);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 75);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -616,11 +616,11 @@ TEST(Rotate, rotateNegativeAngleCustomSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 75);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 75);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -636,11 +636,11 @@ TEST(Rotate, rotateMaxPositiveAngleCustomSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 30);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 30);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -656,11 +656,11 @@ TEST(Rotate, rotateMinNegativeAngleCustomSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 30);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 30);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -676,11 +676,11 @@ TEST(Rotate, rotateCustomNegativeAngleCustomSpawnAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 30);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 30);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    mover.rotate(angle_to_rotate);
-    unsigned short result_angle = mover.getAngle();
+    mower.rotate(angle_to_rotate);
+    unsigned short result_angle = mower.getAngle();
 
     EXPECT_EQ(angle, result_angle);
 }
@@ -696,10 +696,10 @@ TEST(Rotate, rotateTooBigPositiveAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 30);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 30);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
+    EXPECT_THROW({mower.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
 }
 
 
@@ -713,10 +713,10 @@ TEST(Rotate, rotateTooSmallNegativeAngle) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 30);
-    Mover mover = Mover(width, length, blade_diameter, speed);
+    Config::initializeMowerConstants(width, length, 0, 0, 30);
+    Mower mower = Mower(width, length, blade_diameter, speed);
 
-    EXPECT_THROW({mover.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
+    EXPECT_THROW({mower.rotate(angle_to_rotate);}, RotationAngleOutOfRangeError);
 }
 
 
@@ -728,12 +728,12 @@ TEST(TurnOnMowing, turnOn) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.turnOffMowing();
-    mover.turnOnMowing();
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.turnOffMowing();
+    mower.turnOnMowing();
 
-    EXPECT_TRUE(mover.getIsMowing());
+    EXPECT_TRUE(mower.getIsMowing());
 }
 
 
@@ -745,9 +745,9 @@ TEST(TurnOffMowing, turnOff) {
     unsigned int lawn_width = 120;
     unsigned int lawn_length = 100;
     Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMoverConstants(width, length, 0, 0, 0);
-    Mover mover = Mover(width, length, blade_diameter, speed);
-    mover.turnOffMowing();
+    Config::initializeMowerConstants(width, length, 0, 0, 0);
+    Mower mower = Mower(width, length, blade_diameter, speed);
+    mower.turnOffMowing();
 
-    EXPECT_FALSE(mover.getIsMowing());
+    EXPECT_FALSE(mower.getIsMowing());
 }

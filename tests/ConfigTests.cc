@@ -61,16 +61,16 @@ TEST(InitializeRuntimeConstantsTest, MaxBladeDiameterCustomSizeLawn) {
 }
 
 
-TEST(InitializeRuntimeConstantsTest, MoverSizes) {
+TEST(InitializeRuntimeConstantsTest, MowerSizes) {
     unsigned int lawn_width = 5000;
     unsigned int lawn_length = 6000;
 
     initializeRuntimeConstants(lawn_width, lawn_length);
 
-    EXPECT_EQ(MIN_MOVER_WIDTH, 50u);
-    EXPECT_EQ(MAX_MOVER_WIDTH, 200u);
-    EXPECT_EQ(MIN_MOVER_LENGTH, 50u);
-    EXPECT_EQ(MAX_MOVER_LENGTH, 200u);
+    EXPECT_EQ(MIN_MOWER_WIDTH, 50u);
+    EXPECT_EQ(MAX_MOWER_WIDTH, 200u);
+    EXPECT_EQ(MIN_MOWER_LENGTH, 50u);
+    EXPECT_EQ(MAX_MOWER_LENGTH, 200u);
 }
 
 
@@ -221,14 +221,14 @@ TEST(InitializeRuntimeConstantsTest, SpeedLimitsCustomBigLawn) {
 }
 
 
-TEST(InitializeMoverConstatsTest, initializeMoverConstants) {
-    unsigned int mover_width = 100;
-    unsigned int mover_length = 90;
+TEST(InitializeMowerConstatsTest, initializeMowerConstants) {
+    unsigned int mower_width = 100;
+    unsigned int mower_length = 90;
     unsigned short starting_angle = 10;
     double starting_x = 5.0;
     double starting_y = 3.0;
 
-    initializeMoverConstants(mover_width, mover_length, starting_x, starting_y, starting_angle);
+    initializeMowerConstants(mower_width, mower_length, starting_x, starting_y, starting_angle);
 
     EXPECT_NEAR(MAX_HORIZONTAL_EXCEEDANCE, Constants::DISTANCE_PRECISION, 1e-9);
     EXPECT_NEAR(MAX_VERTICAL_EXCEEDANCE, Constants::DISTANCE_PRECISION, 1e-9);

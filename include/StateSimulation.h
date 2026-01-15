@@ -2,7 +2,7 @@
     Author: Maciej Cieslik
     
     Handles simulation state. StateSimulation is responsible for changing state of the world 
-    by manipulating the mover and the lawn. Calculates simulation time.
+    by manipulating the mower and the lawn. Calculates simulation time.
 
 */
 
@@ -10,14 +10,14 @@
 #include "Point.h"
 #include "Lawn.h"
 #include "Logger.h"
-#include "Mover.h"
+#include "Mower.h"
 #include "FileLogger.h"
 #include "RenderContext.h"
 
 class StateSimulation {
 private:
     Lawn& lawn_;
-    Mover& mover_;
+    Mower& mower_;
     Logger& logger_;
     u_int64_t time_;
     std::vector<Point> points_;
@@ -34,14 +34,14 @@ private:
     double calculateRotationDx(const double& dy, const double& dx) const;
 
 public:
-    StateSimulation(Lawn& lawn, Mover& mover, Logger& logger, FileLogger& file_logger);
+    StateSimulation(Lawn& lawn, Mower& mower, Logger& logger, FileLogger& file_logger);
     StateSimulation(const StateSimulation&) = delete;
     StateSimulation& operator=(const StateSimulation&) = delete;
     bool operator==(const StateSimulation& other) const;
     bool operator!=(const StateSimulation& other) const;
 
     const Lawn& getLawn() const;
-    const Mover& getMover() const;
+    const Mower& getMower() const;
     const Logger& getLogger() const;
     const u_int64_t& getTime() const;
     const std::vector<Point>& getPoints() const;

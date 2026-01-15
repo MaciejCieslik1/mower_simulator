@@ -7,7 +7,7 @@
 #include "Engine.h"
 #include "StateSimulation.h"
 #include "Lawn.h"
-#include "Mover.h"
+#include "Mower.h"
 #include "Logger.h"
 #include "FileLogger.h"
 #include "Config.h"
@@ -33,8 +33,8 @@ TEST_F(EngineTests, Initialization) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     
     Engine engine(simulation);
     Visualizer visualizer(engine);
@@ -46,8 +46,8 @@ TEST_F(EngineTests, StartStop) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -64,8 +64,8 @@ TEST_F(EngineTests, DestructorStopsEngine) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     {
         Engine engine(simulation);
         Visualizer visualizer(engine);
@@ -80,8 +80,8 @@ TEST_F(EngineTests, MultipleStartStopCycles) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -107,8 +107,8 @@ TEST_F(EngineTests, DoubleStartIsIdempotent) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -126,8 +126,8 @@ TEST_F(EngineTests, DoubleStopIsIdempotent) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -143,8 +143,8 @@ TEST_F(EngineTests, SimulationCallbackExecution) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -165,8 +165,8 @@ TEST_F(EngineTests, CallbackReceivesCorrectDeltaTime) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -189,8 +189,8 @@ TEST_F(EngineTests, CallbackCanModifySimulation) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -211,8 +211,8 @@ TEST_F(EngineTests, SpeedMultiplier) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -242,8 +242,8 @@ TEST_F(EngineTests, SpeedMultiplierRejectsInvalidValues) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -266,8 +266,8 @@ TEST_F(EngineTests, CanChangeSpeedWhileRunning) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -291,9 +291,9 @@ TEST_F(EngineTests, FixedTimestepIsDeterministic) {
     Logger logger1, logger2;
     FileLogger fileLogger1("test1.log"), fileLogger2("test2.log");
     Lawn lawn1(100, 100), lawn2(100, 100);
-    Mover mover1(30, 40, 15, 20), mover2(30, 40, 15, 20);
-    StateSimulation sim1(lawn1, mover1, logger1, fileLogger1);
-    StateSimulation sim2(lawn2, mover2, logger2, fileLogger2);
+    Mower mower1(30, 40, 15, 20), mower2(30, 40, 15, 20);
+    StateSimulation sim1(lawn1, mower1, logger1, fileLogger1);
+    StateSimulation sim2(lawn2, mower2, logger2, fileLogger2);
     
     std::mutex mutex1, mutex2;
     Engine engine1(sim1);
@@ -326,8 +326,8 @@ TEST_F(EngineTests, MutexProtectsStateAccess) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -347,8 +347,8 @@ TEST_F(EngineTests, GetSimulationTimeReturnsValue) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     
@@ -360,8 +360,8 @@ TEST_F(EngineTests, BothThreadsActuallyRun) {
     Logger logger;
     FileLogger fileLogger("test.log");
     Lawn lawn(100, 100);
-    Mover mover(30, 40, 15, 20);
-    StateSimulation simulation(lawn, mover, logger, fileLogger);
+    Mower mower(30, 40, 15, 20);
+    StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
     Visualizer visualizer(engine);
     

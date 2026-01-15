@@ -14,7 +14,7 @@
 #include "RenderContext.h"
 
 class StateSimulation;
-class Mover;
+class Mower;
 class Engine;
 
 class Visualizer : public QWidget {
