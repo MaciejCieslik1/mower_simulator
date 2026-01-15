@@ -36,10 +36,8 @@ TEST_F(EngineTests, Initialization) {
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
     
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     EXPECT_FALSE(engine.isRunning());
 }
@@ -50,10 +48,8 @@ TEST_F(EngineTests, StartStop) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -70,11 +66,9 @@ TEST_F(EngineTests, DestructorStopsEngine) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
     {
-        Engine engine(simulation, visualizer);
+        Engine engine(simulation);
+        Visualizer visualizer(engine);
         engine.start();
         EXPECT_TRUE(engine.isRunning());
     }
@@ -88,10 +82,8 @@ TEST_F(EngineTests, MultipleStartStopCycles) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -117,10 +109,8 @@ TEST_F(EngineTests, DoubleStartIsIdempotent) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -138,10 +128,8 @@ TEST_F(EngineTests, DoubleStopIsIdempotent) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     engine.start();
     engine.stop();
@@ -157,10 +145,8 @@ TEST_F(EngineTests, SimulationCallbackExecution) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<int> callback_count(0);
     
@@ -181,10 +167,8 @@ TEST_F(EngineTests, CallbackReceivesCorrectDeltaTime) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<bool> dt_is_correct(true);
     
@@ -207,10 +191,8 @@ TEST_F(EngineTests, CallbackCanModifySimulation) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<int> execution_count(0);
     
@@ -231,10 +213,8 @@ TEST_F(EngineTests, SpeedMultiplier) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<int> callback_count_normal(0);
     std::atomic<int> callback_count_fast(0);
@@ -264,10 +244,8 @@ TEST_F(EngineTests, SpeedMultiplierRejectsInvalidValues) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     engine.setSimulationSpeed(0.0);
     engine.setSimulationSpeed(-1.0);
@@ -290,10 +268,8 @@ TEST_F(EngineTests, CanChangeSpeedWhileRunning) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<int> count(0);
     engine.setUserSimulationLogic([&](StateSimulation&, double) {
@@ -320,11 +296,10 @@ TEST_F(EngineTests, FixedTimestepIsDeterministic) {
     StateSimulation sim2(lawn2, mover2, logger2, fileLogger2);
     
     std::mutex mutex1, mutex2;
-    Visualizer visualizer1(sim1, mutex1);
-    Visualizer visualizer2(sim2, mutex2);
-    
-    Engine engine1(sim1, visualizer1);
-    Engine engine2(sim2, visualizer2);
+    Engine engine1(sim1);
+    Engine engine2(sim2);
+    Visualizer visualizer1(engine1);
+    Visualizer visualizer2(engine2);
     
     std::atomic<int> count1(0), count2(0);
     
@@ -353,10 +328,8 @@ TEST_F(EngineTests, MutexProtectsStateAccess) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<bool> no_race_condition(true);
     
@@ -376,10 +349,8 @@ TEST_F(EngineTests, GetSimulationTimeReturnsValue) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     double initial_time = engine.getSimulationTime();
     EXPECT_GE(initial_time, 0.0);
@@ -391,10 +362,8 @@ TEST_F(EngineTests, BothThreadsActuallyRun) {
     Lawn lawn(100, 100);
     Mover mover(30, 40, 15, 20);
     StateSimulation simulation(lawn, mover, logger, fileLogger);
-    std::mutex view_mutex;
-    Visualizer visualizer(simulation, view_mutex);
-    
-    Engine engine(simulation, visualizer);
+    Engine engine(simulation);
+    Visualizer visualizer(engine);
     
     std::atomic<bool> simulation_ran(false);
     

@@ -1,12 +1,6 @@
 /*
     Author: Hanna Biegacz
-    Engine class - main coordinator for the simulation.
-    
-    Responsibilities:
-    - Manages two separate threads: simulation and visualization
-    - Synchronizes access to StateSimulation using mutex
-    - Provides speed control for simulation (time multiplier)
-    - Executes user-defined simulation logic callbacks
+    TODO: description
 */
 
 #pragma once
@@ -15,14 +9,13 @@
 #include <functional>
 #include <mutex>
 #include <thread>
-#include <vector>
+#include "RenderContext.h"
 
 class StateSimulation;
-class Visualizer;
 
 class Engine {
 public:
-    Engine(StateSimulation& simulation, Visualizer& visualization);
+    Engine(StateSimulation& simulation);
     ~Engine();
 
     Engine(const Engine&) = delete;
@@ -33,24 +26,23 @@ public:
     bool isRunning() const;
 
     void setSimulationSpeed(double multiplier);
+    double getSpeedMultiplier() const;
     void setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback);
 
     static void defaultSimulationLogic(StateSimulation& simulation, double dt);
 
-    double getSimulationTime() const; // Returns simulation time from StateSimulation
-    // double getFPS() const; // Optional, can be added later
+    double getSimulationTime() const; 
+    RenderContext& getRenderContext();
 
 private:
-    void simulationLoop();
-    void visualizationLoop();
+    void runSimulation();
     void updateSimulation(double dt);
-    double calculateInterpolationAlpha(double accumulator, double dt) const;
 
     StateSimulation& simulation_;
-    Visualizer& visualization_;
+
+    RenderContext render_context_;
 
     std::thread simulation_thread_;
-    std::thread visualization_thread_;
     std::mutex state_mutex_; 
     std::atomic<bool> running_;
 

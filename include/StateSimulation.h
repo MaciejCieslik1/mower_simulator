@@ -12,6 +12,7 @@
 #include "Logger.h"
 #include "Mover.h"
 #include "FileLogger.h"
+#include "RenderContext.h"
 
 class StateSimulation {
 private:
@@ -54,4 +55,6 @@ public:
     void simulateAddPoint(const double& x, const double& y);
     void simulateDeletePoint(const unsigned int& pointIndex);
     void simulateMovementToPoint(const unsigned int& pointIndex);
+
+    Snapshot buildSnapshot() const;
 };
