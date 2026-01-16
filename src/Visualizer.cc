@@ -23,9 +23,8 @@ const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(75, 187, 103);
 const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
 Visualizer::Visualizer(StateInterpolator& render_context, QWidget* parent)
-    : QWidget(parent), state_interpolator_(render_context) {
+    : QWidget(parent), state_interpolator_(render_context), render_time_controller_(render_context) { 
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(0);
-
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
@@ -101,13 +100,26 @@ void Visualizer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     setupPainter(painter);
     
-    updateSmoothedRenderTime();
+    updateRenderTime();
     refreshStateAndLayout();
 
     renderLawn(painter);
     renderPoints(painter);
     renderMower(painter, current_sim_snapshot_);
+    
     update(); 
+}
+
+void Visualizer::updateRenderTime() {
+    double ms_since_last_frame = 0.0; 
+    
+    if (frame_timer_.isValid()) {
+        ms_since_last_frame = static_cast<double>(frame_timer_.restart());
+    } else {
+        frame_timer_.start();
+    }
+
+    render_time_controller_.update(ms_since_last_frame);
 }
 
 void Visualizer::setupPainter(QPainter& painter) {
@@ -115,57 +127,9 @@ void Visualizer::setupPainter(QPainter& painter) {
     painter.setRenderHint(QPainter::SmoothPixmapTransform, true);
 }
 
-void Visualizer::updateSmoothedRenderTime() {
-    double current_sim_time = state_interpolator_.getSimulationTime();
-    double current_speed = state_interpolator_.getSpeedMultiplier();
-
-    if (!frame_timer_.isValid()) {
-        frame_timer_.start();
-        smoothed_render_time_ = calculateIdealRenderTime(current_sim_time, current_speed);
-        return;
-    }
-
-    double dt_ms = static_cast<double>(frame_timer_.restart());
-
-    advanceRenderTime(dt_ms, current_speed);
-    syncWithSimulationClock(current_sim_time, current_speed);
-}
-double Visualizer::calculateIdealRenderTime(double actual_sim_time, double speed_multiplier) const {
-    double dynamic_delay = BASE_BUFFER_DELAY_MS * std::max(1.0, speed_multiplier);
-    return std::max(0.0, actual_sim_time - dynamic_delay);
-}
-
-void Visualizer::advanceRenderTime(double dt_ms, double speed_multiplier) {
-    smoothed_render_time_ += (dt_ms * speed_multiplier);
-}
-
-void Visualizer::syncWithSimulationClock(double actual_sim_time, double speed_multiplier) {
-    double ideal_time = calculateIdealRenderTime(actual_sim_time, speed_multiplier);
-    double time_drift = std::abs(ideal_time - smoothed_render_time_);
-    double max_allowed_drift = MAX_TIME_DRIFT_MS * std::max(1.0, speed_multiplier);
-
-    if (time_drift > max_allowed_drift) {
-        performHardTimeReset(ideal_time);
-    } else {
-        applySoftTimeCorrection(ideal_time);
-    }
-
-    if (smoothed_render_time_ > actual_sim_time) {
-        smoothed_render_time_ = actual_sim_time;
-    }
-}
-
-void Visualizer::applySoftTimeCorrection(double ideal_time) {
-    double correction = (ideal_time - smoothed_render_time_) * DRIFT_CORRECTION_FACTOR;
-    smoothed_render_time_ += correction;
-}
-
-void Visualizer::performHardTimeReset(double ideal_time) {
-    smoothed_render_time_ = ideal_time;
-}
-
 void Visualizer::refreshStateAndLayout() {
-    current_sim_snapshot_ = state_interpolator_.getInterpolatedState(smoothed_render_time_);
+    double render_time = render_time_controller_.getSmoothedTime();
+    current_sim_snapshot_ = state_interpolator_.getInterpolatedState(render_time);
     updateLayout();
 }
 
@@ -177,8 +141,6 @@ bool Visualizer::isLawnDataEmpty() const {
     const auto& fields = current_sim_snapshot_.fields_;
     return fields.empty() || fields[0].empty();
 }
-
-
 
 void Visualizer::renderLawn(QPainter& painter) {
     if (isLawnDataEmpty()) return;

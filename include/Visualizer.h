@@ -1,12 +1,10 @@
 /* 
     Author: Hanna Biegacz
     
-    This class handles the visualization layer using Qt. It reads the 
-    current state from the StateInterpolator (read-only) and draws the lawn, mower and points
-    on the screen. 
-
-    It calculates coordinate scaling to fit the simulation world into the window 
-    and make sure that all objects are proportionally scaled.
+    This class handles the visualization layer using Qt.
+    It draws the lawn, the mower, and the points based on the current simulation state.
+    It connects the data from StateInterpolator with the timing from RenderTimeController.
+    It also calculates scaling to fit the simulation world inside the application window.
 */
 
 #pragma once
@@ -16,6 +14,7 @@
 #include <QElapsedTimer>
 #include <QPixmap>
 #include <vector>
+#include "RenderTimeController.h"
 #include "StateInterpolator.h"
 #include "SimulationSnapshot.h"
 
@@ -42,10 +41,6 @@ private:
     static const QColor UNMOWED_GRASS_COLOR;
     static const QColor MOWED_GRASS_COLOR;
 
-    static constexpr double BASE_BUFFER_DELAY_MS = 200.0;  
-    static constexpr double MAX_TIME_DRIFT_MS = 2000.0;    
-    static constexpr double DRIFT_CORRECTION_FACTOR = 0.1; 
-
     StateInterpolator& state_interpolator_;
     SimulationSnapshot current_sim_snapshot_;
     
@@ -53,22 +48,14 @@ private:
     std::vector<QPixmap> point_pixmaps_;
 
     QElapsedTimer frame_timer_;
-    double smoothed_render_time_ = 0.0;
-
+    RenderTimeController render_time_controller_;
     double scale_factor_ = 1.0;
     double lawn_length_cm_ = 0.0;
     QPointF map_offset_;
 
-    void updateSmoothedRenderTime();
+    void updateRenderTime();
     void refreshStateAndLayout();
     
-    double calculateIdealRenderTime(double actual_sim_time, double speed_multiplier) const;
-    void advanceRenderTime(double dt_ms, double speed_multiplier);
-    void syncWithSimulationClock(double actual_sim_time, double speed_multiplier);
-    void applySoftTimeCorrection(double ideal_time);
-    void performHardTimeReset(double ideal_time);
-    bool hasSignificantTimeDrift(double target_render_time) const; // Możesz to usunąć jeśli używasz nowej logiki w syncWithSimulationClock, ale zostawiam dla kompatybilności wstecznej jeśli potrzebujesz
-
     void setupPainter(QPainter& painter);
     void updateLayout();
     void loadMowerImage();
