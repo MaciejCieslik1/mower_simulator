@@ -56,6 +56,14 @@ public:
         return result;
     }
 
+    void setSimulationMetadata(double time, double speed) {
+        latest_sim_time_.store(time);
+        current_speed_multiplier_.store(speed);
+    }
+
+    double getSimulationTime() const { return latest_sim_time_.load(); }
+    double getSpeedMultiplier() const { return current_speed_multiplier_.load(); }
+
 private:
     static double interpolate(double a, double b, double alpha) { 
         return a + (b - a) * alpha;

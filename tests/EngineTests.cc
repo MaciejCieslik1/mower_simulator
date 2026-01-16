@@ -37,7 +37,7 @@ TEST_F(EngineTests, Initialization) {
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     EXPECT_FALSE(engine.isRunning());
 }
@@ -49,7 +49,7 @@ TEST_F(EngineTests, StartStop) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -68,7 +68,7 @@ TEST_F(EngineTests, DestructorStopsEngine) {
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     {
         Engine engine(simulation);
-        Visualizer visualizer(engine);
+        Visualizer visualizer(engine.getRenderContext());
         engine.start();
         EXPECT_TRUE(engine.isRunning());
     }
@@ -83,7 +83,7 @@ TEST_F(EngineTests, MultipleStartStopCycles) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -110,7 +110,7 @@ TEST_F(EngineTests, DoubleStartIsIdempotent) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     engine.start();
     EXPECT_TRUE(engine.isRunning());
@@ -129,7 +129,7 @@ TEST_F(EngineTests, DoubleStopIsIdempotent) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     engine.start();
     engine.stop();
@@ -146,7 +146,7 @@ TEST_F(EngineTests, SimulationCallbackExecution) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<int> callback_count(0);
     
@@ -168,7 +168,7 @@ TEST_F(EngineTests, CallbackReceivesCorrectDeltaTime) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<bool> dt_is_correct(true);
     
@@ -192,7 +192,7 @@ TEST_F(EngineTests, CallbackCanModifySimulation) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<int> execution_count(0);
     
@@ -214,7 +214,7 @@ TEST_F(EngineTests, SpeedMultiplier) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<int> callback_count_normal(0);
     std::atomic<int> callback_count_fast(0);
@@ -245,7 +245,7 @@ TEST_F(EngineTests, SpeedMultiplierRejectsInvalidValues) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     engine.setSimulationSpeed(0.0);
     engine.setSimulationSpeed(-1.0);
@@ -269,7 +269,7 @@ TEST_F(EngineTests, CanChangeSpeedWhileRunning) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<int> count(0);
     engine.setUserSimulationLogic([&](StateSimulation&, double) {
@@ -298,8 +298,8 @@ TEST_F(EngineTests, FixedTimestepIsDeterministic) {
     std::mutex mutex1, mutex2;
     Engine engine1(sim1);
     Engine engine2(sim2);
-    Visualizer visualizer1(engine1);
-    Visualizer visualizer2(engine2);
+    Visualizer visualizer1(engine1.getRenderContext());
+    Visualizer visualizer2(engine2.getRenderContext());
     
     std::atomic<int> count1(0), count2(0);
     
@@ -329,7 +329,7 @@ TEST_F(EngineTests, MutexProtectsStateAccess) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<bool> no_race_condition(true);
     
@@ -350,7 +350,7 @@ TEST_F(EngineTests, GetSimulationTimeReturnsValue) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     double initial_time = engine.getSimulationTime();
     EXPECT_GE(initial_time, 0.0);
@@ -363,7 +363,7 @@ TEST_F(EngineTests, BothThreadsActuallyRun) {
     Mower mower(30, 40, 15, 20);
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     Engine engine(simulation);
-    Visualizer visualizer(engine);
+    Visualizer visualizer(engine.getRenderContext());
     
     std::atomic<bool> simulation_ran(false);
     

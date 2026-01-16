@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     engine.setSimulationSpeed(SIMULATION_SPEED_MULTIPLIER);
 
     cout << "[Main] Creating window" << endl;
-    Visualizer visualizer(engine); //TODO: should visualizer depend on engine??
+    Visualizer visualizer(engine.getRenderContext()); 
     visualizer.setWindowTitle("Lawn Mower Simulator");    
 
     QTimer renderTimer;

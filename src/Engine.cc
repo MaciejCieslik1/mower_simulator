@@ -60,6 +60,7 @@ void Engine::setSimulationSpeed(double multiplier) {
     if (multiplier > 0) {
         speed_multiplier_ = multiplier;
     }
+    render_context_.setSimulationMetadata(getSimulationTime(), multiplier);
 }
 
 double Engine::getSpeedMultiplier() const {
@@ -115,6 +116,6 @@ void Engine::updateSimulation(double dt) {
         user_simulation_callback_(simulation_, dt);
     }
 // }
-    render_context_.addSnapshot(simulation_.buildSnapshot());
+    render_context_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
+    render_context_.setSimulationMetadata(getSimulationTime(), speed_multiplier_.load()); //TODO: better to do that at once in addSimulationSnapshot
 }
-

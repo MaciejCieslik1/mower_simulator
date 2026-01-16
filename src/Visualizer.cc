@@ -8,7 +8,6 @@
 #include "Lawn.h"
 #include "Mower.h"
 #include "MathHelper.h"
-#include "Engine.h"
 #include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
@@ -25,9 +24,9 @@ using namespace std;
 const QColor Visualizer::UNMOWED_GRASS_COLOR = QColor(75, 187, 103);  
 const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
-Visualizer::Visualizer(Engine& engine, QWidget* parent)
-    : QWidget(parent), engine_(engine) {
-    current_snapshot_ = engine_.getRenderContext().getInterpolatedState(0);
+Visualizer::Visualizer(RenderContext& render_context, QWidget* parent)
+    : QWidget(parent), render_context_(render_context) {
+    current_snapshot_ = render_context_.getInterpolatedState(0);
 
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
@@ -118,31 +117,35 @@ void Visualizer::setupPainter(QPainter& painter) {
 }
 
 void Visualizer::updateSmoothedRenderTime() {
+    const double RENDER_DELAY_MS = 100.0;
+    double actual_sim_time = render_context_.getSimulationTime();
+
     if (!frame_timer_.isValid()) {
         frame_timer_.start();
-        smoothed_render_time_ = current_snapshot_.simulation_time_;
+        smoothed_render_time_ = std::max(0.0, actual_sim_time - RENDER_DELAY_MS);
         return;
     }
 
     double dt_ms = static_cast<double>(frame_timer_.restart());
-    double simulation_dt = dt_ms * engine_.getSpeedMultiplier();
-    double actual_sim_time = engine_.getSimulationTime();
+    double simulation_dt = dt_ms * render_context_.getSpeedMultiplier();
     
-    if (hasSignificantTimeDrift(actual_sim_time)) {
-        smoothed_render_time_ = actual_sim_time;
+    double target_render_time = actual_sim_time - RENDER_DELAY_MS;
+    
+    if (hasSignificantTimeDrift(target_render_time)) {
+        smoothed_render_time_ = target_render_time;
     } else {
         smoothed_render_time_ += simulation_dt;
     }
 }
 
-bool Visualizer::hasSignificantTimeDrift(double actual_sim_time) const {
+bool Visualizer::hasSignificantTimeDrift(double target_render_time) const {
     const int MAX_DRIFT_MS = 500;
-    return std::abs(actual_sim_time - smoothed_render_time_) > MAX_DRIFT_MS;
+    return std::abs(target_render_time - smoothed_render_time_) > MAX_DRIFT_MS;
 }
 
 
 void Visualizer::refreshStateAndLayout() {
-    current_snapshot_ = engine_.getRenderContext().getInterpolatedState(smoothed_render_time_);
+    current_snapshot_ = render_context_.getInterpolatedState(smoothed_render_time_);
     updateLayout();
 }
 
