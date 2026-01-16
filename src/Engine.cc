@@ -1,6 +1,6 @@
 /*
     Author: Hanna Biegacz
-    TODO: description
+    Implementation of the simulation Engine
 */
 
 #include "Engine.h"
@@ -26,6 +26,7 @@ Engine::Engine(StateSimulation& simulation)
     , fixed_timestep_(FIXED_TIMESTEP_SECONDS)
 {
     user_simulation_callback_ = defaultSimulationLogic;
+    state_interpolator_.setStaticSimulationData(simulation_.getStaticData());
 }
 
 Engine::~Engine() {
@@ -111,10 +112,10 @@ void Engine::runSimulation() {
 
 void Engine::updateSimulation(double dt) {
     {
-    std::lock_guard<std::mutex> lock(state_mutex_);
-    if (user_simulation_callback_) {
-        user_simulation_callback_(simulation_, dt);
-    }
+        std::lock_guard<std::mutex> lock(state_mutex_);
+        if (user_simulation_callback_) {
+            user_simulation_callback_(simulation_, dt);
+        }
     }
     state_interpolator_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
     state_interpolator_.setSimulationSpeedMultiplier(speed_multiplier_.load());

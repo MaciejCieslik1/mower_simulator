@@ -57,4 +57,5 @@ public:
     void simulateMovementToPoint(const unsigned int& pointIndex);
 
     SimulationSnapshot buildSimulationSnapshot() const;
+    StaticSimulationData getStaticData() const;
 };

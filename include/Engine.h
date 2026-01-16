@@ -1,6 +1,9 @@
 /*
     Author: Hanna Biegacz
-    TODO: description
+    This class is the main coordinator of the simulation.
+    It runs the simulation loop in a separate thread (fixed timestep) and manages time speed. 
+    It also handles synchronization (mutexes) to safely connect the 
+    logic update with the visualization.
 */
 
 #pragma once

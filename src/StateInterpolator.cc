@@ -41,6 +41,13 @@ SimulationSnapshot StateInterpolator::getInterpolatedState( double render_time )
     return computeInterpolatedSnapshot( render_time );
 }
 
+void StateInterpolator::setStaticSimulationData(const StaticSimulationData& data) {
+    static_simulation_data = data;
+}
+
+const StaticSimulationData& StateInterpolator::getStaticSimulationData() const {
+    return static_simulation_data;
+}
 
 void StateInterpolator::setSimulationSpeedMultiplier( double speed ){
     current_speed_multiplier_.store( speed );

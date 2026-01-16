@@ -350,15 +350,18 @@ SimulationSnapshot StateSimulation::buildSimulationSnapshot() const {
     sim_snapshot.angle_ = mower_.getAngle();
     sim_snapshot.simulation_time_ = static_cast<double>(time_);
 
-    sim_snapshot.lawn_width_ = lawn_.getWidth();
-    sim_snapshot.lawn_length_ = lawn_.getLength();
     sim_snapshot.fields_ = lawn_.getFields();
-
-    sim_snapshot.mower_width_ = mower_.getWidth();
-    sim_snapshot.mower_length_ = mower_.getLength();
-    sim_snapshot.blade_diameter_ = mower_.getBladeDiameter();
-
     sim_snapshot.points_ = points_;
 
     return sim_snapshot;
+}
+ 
+StaticSimulationData StateSimulation::getStaticData() const {
+    StaticSimulationData data;
+    data.lawn_width_ = lawn_.getWidth();
+    data.lawn_length_ = lawn_.getLength();
+    data.width_cm = mower_.getWidth();
+    data.length_cm = mower_.getLength();
+    data.blade_diameter_cm = mower_.getBladeDiameter();
+    return data;
 }

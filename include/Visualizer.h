@@ -43,29 +43,26 @@ private:
 
     StateInterpolator& state_interpolator_;
     SimulationSnapshot current_sim_snapshot_;
-    
-    QPixmap mower_image_;
-    std::vector<QPixmap> point_pixmaps_;
-
-    QElapsedTimer frame_timer_;
     RenderTimeController render_time_controller_;
+    StaticSimulationData static_simulation_data;
+    std::vector<QPixmap> point_pixmaps_;
+    QPixmap mower_image_;
+    QPointF map_offset_;
+    QElapsedTimer frame_timer_;
     double scale_factor_ = 1.0;
     double lawn_length_cm_ = 0.0;
-    QPointF map_offset_;
 
     void updateRenderTime();
     void refreshStateAndLayout();
-    
     void setupPainter(QPainter& painter);
     void updateLayout();
     void loadMowerImage();
     void loadPointImages();
-    
     void renderLawn(QPainter& painter);
     void renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot);
     void renderPoints(QPainter& painter);
-    
     QPointF mapToScreen(double x_cm, double y_cm);
+
     bool hasValidLawnDimensions() const;
     bool isLawnDataEmpty() const;
     void calculateMowerRenderSize(double mower_width, double mower_length, double blade_diameter, double& out_w_px, double& out_h_px) const;

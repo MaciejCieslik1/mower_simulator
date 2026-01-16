@@ -25,7 +25,8 @@ const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 Visualizer::Visualizer(StateInterpolator& render_context, QWidget* parent)
     : QWidget(parent), state_interpolator_(render_context), render_time_controller_(render_context) { 
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(0);
-    
+    static_simulation_data = state_interpolator_.getStaticSimulationData();
+
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
     resize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
     loadMowerImage();
@@ -70,8 +71,8 @@ void Visualizer::loadPointImages() {
 }
 
 void Visualizer::updateLayout() {
-    double lawn_width_cm = current_sim_snapshot_.lawn_width_;
-    lawn_length_cm_ = current_sim_snapshot_.lawn_length_;
+    double lawn_width_cm = static_simulation_data.lawn_width_;
+    lawn_length_cm_ = static_simulation_data.lawn_length_;
     
     if (!hasValidLawnDimensions()) return;
 
@@ -79,7 +80,7 @@ void Visualizer::updateLayout() {
                         static_cast<double>(height()) / lawn_length_cm_);
     
     double x = (width() - (lawn_width_cm * scale_factor_)) / 2;
-    double y = (height() - (lawn_length_cm_ * scale_factor_)) / 2;
+    double y = (height() - (static_simulation_data.lawn_length_ * scale_factor_)) / 2;
     map_offset_ = QPointF(x, y);
 }
 
@@ -130,11 +131,12 @@ void Visualizer::setupPainter(QPainter& painter) {
 void Visualizer::refreshStateAndLayout() {
     double render_time = render_time_controller_.getSmoothedTime();
     current_sim_snapshot_ = state_interpolator_.getInterpolatedState(render_time);
+    static_simulation_data = state_interpolator_.getStaticSimulationData();
     updateLayout();
 }
 
 bool Visualizer::hasValidLawnDimensions() const {
-    return current_sim_snapshot_.lawn_width_ > 0 && current_sim_snapshot_.lawn_length_ > 0;
+    return static_simulation_data.lawn_width_ > 0 && static_simulation_data.lawn_length_ > 0;
 }
 
 bool Visualizer::isLawnDataEmpty() const {
@@ -149,8 +151,8 @@ void Visualizer::renderLawn(QPainter& painter) {
     const unsigned int num_rows = fields.size();
     const unsigned int num_cols = fields[0].size();
     
-    const double field_width_cm = static_cast<double>(current_sim_snapshot_.lawn_width_) / num_cols;
-    const double field_height_cm = static_cast<double>(current_sim_snapshot_.lawn_length_) / num_rows;
+    const double field_width_cm = static_cast<double>(static_simulation_data.lawn_width_) / num_cols;
+    const double field_height_cm = static_cast<double>(static_simulation_data.lawn_length_) / num_rows;
 
     
     for (unsigned int row = 0; row < num_rows; ++row) {
@@ -183,7 +185,8 @@ void Visualizer::calculateMowerRenderSize(double mower_width, double mower_lengt
 
 void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot) {
     double mower_w_px, mower_h_px;
-    calculateMowerRenderSize(sim_snapshot.mower_width_, sim_snapshot.mower_length_, sim_snapshot.blade_diameter_, mower_w_px, mower_h_px);
+    calculateMowerRenderSize(static_simulation_data.width_cm, static_simulation_data.length_cm, 
+                            static_simulation_data.blade_diameter_cm, mower_w_px, mower_h_px);
     painter.save();
 
     QPointF center_pos = mapToScreen(sim_snapshot.x_, sim_snapshot.y_);

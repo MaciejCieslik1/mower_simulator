@@ -8,13 +8,13 @@
 
 #include <QApplication>
 #include <iostream>
-#include "../include/Lawn.h"
-#include "../include/Mower.h"
-#include "../include/Config.h"
-#include "../include/Logger.h"
-#include "../include/FileLogger.h"
 #include <QTimer>
-#include "../include/StateSimulation.h"
+#include "Lawn.h"
+#include "Mower.h"
+#include "Config.h"
+#include "Logger.h"
+#include "FileLogger.h"
+#include "StateSimulation.h"
 #include "Engine.h"
 #include "Visualizer.h"
 
@@ -22,7 +22,7 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
     constexpr unsigned int LAWN_WIDTH_CM = 500;
-    constexpr unsigned int LAWN_LENGTH_CM = 2500;
+    constexpr unsigned int LAWN_LENGTH_CM = 1000;
     constexpr double SIMULATION_SPEED_MULTIPLIER = 1.0;
     
     constexpr unsigned int MOWER_WIDTH_CM = 50;
