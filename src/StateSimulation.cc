@@ -343,22 +343,22 @@ double StateSimulation::calculateRotationDx(const double& dy, const double& dx) 
     return rotation;
 }
 
-Snapshot StateSimulation::buildSnapshot() const {
-    Snapshot snapshot;
-    snapshot.x_ = mower_.getX();
-    snapshot.y_ = mower_.getY();
-    snapshot.angle_ = mower_.getAngle();
-    snapshot.simulation_time_ = static_cast<double>(time_);
+SimulationSnapshot StateSimulation::buildSimulationSnapshot() const {
+    SimulationSnapshot sim_snapshot;
+    sim_snapshot.x_ = mower_.getX();
+    sim_snapshot.y_ = mower_.getY();
+    sim_snapshot.angle_ = mower_.getAngle();
+    sim_snapshot.simulation_time_ = static_cast<double>(time_);
 
-    snapshot.lawn_width_ = lawn_.getWidth();
-    snapshot.lawn_length_ = lawn_.getLength();
-    snapshot.fields_ = lawn_.getFields();
+    sim_snapshot.lawn_width_ = lawn_.getWidth();
+    sim_snapshot.lawn_length_ = lawn_.getLength();
+    sim_snapshot.fields_ = lawn_.getFields();
 
-    snapshot.mower_width_ = mower_.getWidth();
-    snapshot.mower_length_ = mower_.getLength();
-    snapshot.blade_diameter_ = mower_.getBladeDiameter();
+    sim_snapshot.mower_width_ = mower_.getWidth();
+    sim_snapshot.mower_length_ = mower_.getLength();
+    sim_snapshot.blade_diameter_ = mower_.getBladeDiameter();
 
-    snapshot.points_ = points_;
+    sim_snapshot.points_ = points_;
 
-    return snapshot;
+    return sim_snapshot;
 }

@@ -26,7 +26,7 @@ const QColor Visualizer::MOWED_GRASS_COLOR =   QColor(115, 213, 139);
 
 Visualizer::Visualizer(RenderContext& render_context, QWidget* parent)
     : QWidget(parent), render_context_(render_context) {
-    current_snapshot_ = render_context_.getInterpolatedState(0);
+    current_sim_snapshot_ = render_context_.getInterpolatedState(0);
 
     
     setMinimumSize(MIN_WINDOW_WIDTH, MIN_WINDOW_HEIGHT);
@@ -73,10 +73,10 @@ void Visualizer::loadPointImages() {
 }
 
 void Visualizer::updateLayout() {
-    double lawn_width_cm = current_snapshot_.lawn_width_;
-    lawn_length_cm_ = current_snapshot_.lawn_length_;
+    double lawn_width_cm = current_sim_snapshot_.lawn_width_;
+    lawn_length_cm_ = current_sim_snapshot_.lawn_length_;
     
-    if (!hasValidLawnDimensions()) return; //TODO: DO WE NEED TO CHECK IT HERE?
+    if (!hasValidLawnDimensions()) return;
 
     scale_factor_ = min(static_cast<double>(width()) / lawn_width_cm, 
                         static_cast<double>(height()) / lawn_length_cm_);
@@ -108,7 +108,7 @@ void Visualizer::paintEvent(QPaintEvent* event) {
 
     renderLawn(painter);
     renderPoints(painter);
-    renderMower(painter, current_snapshot_);
+    renderMower(painter, current_sim_snapshot_);
 }
 
 void Visualizer::setupPainter(QPainter& painter) {
@@ -145,16 +145,16 @@ bool Visualizer::hasSignificantTimeDrift(double target_render_time) const {
 
 
 void Visualizer::refreshStateAndLayout() {
-    current_snapshot_ = render_context_.getInterpolatedState(smoothed_render_time_);
+    current_sim_snapshot_ = render_context_.getInterpolatedState(smoothed_render_time_);
     updateLayout();
 }
 
 bool Visualizer::hasValidLawnDimensions() const {
-    return current_snapshot_.lawn_width_ > 0 && current_snapshot_.lawn_length_ > 0;
+    return current_sim_snapshot_.lawn_width_ > 0 && current_sim_snapshot_.lawn_length_ > 0;
 }
 
 bool Visualizer::isLawnDataEmpty() const {
-    const auto& fields = current_snapshot_.fields_;
+    const auto& fields = current_sim_snapshot_.fields_;
     return fields.empty() || fields[0].empty();
 }
 
@@ -163,12 +163,12 @@ bool Visualizer::isLawnDataEmpty() const {
 void Visualizer::renderLawn(QPainter& painter) {
     if (isLawnDataEmpty()) return;
 
-    const auto& fields = current_snapshot_.fields_;
+    const auto& fields = current_sim_snapshot_.fields_;
     const unsigned int num_rows = fields.size();
     const unsigned int num_cols = fields[0].size();
     
-    const double field_width_cm = static_cast<double>(current_snapshot_.lawn_width_) / num_cols;
-    const double field_height_cm = static_cast<double>(current_snapshot_.lawn_length_) / num_rows;
+    const double field_width_cm = static_cast<double>(current_sim_snapshot_.lawn_width_) / num_cols;
+    const double field_height_cm = static_cast<double>(current_sim_snapshot_.lawn_length_) / num_rows;
 
     
     for (unsigned int row = 0; row < num_rows; ++row) {
@@ -199,14 +199,14 @@ void Visualizer::calculateMowerRenderSize(double mower_width, double mower_lengt
     out_h_px = display_length_cm * scale_factor_;
 }
 
-void Visualizer::renderMower(QPainter& painter, const Snapshot& snapshot) {
+void Visualizer::renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot) {
     double mower_w_px, mower_h_px;
-    calculateMowerRenderSize(snapshot.mower_width_, snapshot.mower_length_, snapshot.blade_diameter_, mower_w_px, mower_h_px);
+    calculateMowerRenderSize(sim_snapshot.mower_width_, sim_snapshot.mower_length_, sim_snapshot.blade_diameter_, mower_w_px, mower_h_px);
     painter.save();
 
-    QPointF center_pos = mapToScreen(snapshot.x_, snapshot.y_);
+    QPointF center_pos = mapToScreen(sim_snapshot.x_, sim_snapshot.y_);
     painter.translate(center_pos);
-    painter.rotate(MathHelper::convertRadiansToDegrees(-snapshot.angle_));
+    painter.rotate(MathHelper::convertRadiansToDegrees(-sim_snapshot.angle_));
     
     QRectF target_rect(-mower_w_px / 2.0, -mower_h_px / 2.0, mower_w_px, mower_h_px);
     
@@ -217,7 +217,7 @@ void Visualizer::renderMower(QPainter& painter, const Snapshot& snapshot) {
 void Visualizer::renderPoints(QPainter& painter) {
     double MIN_POINT_HEIGHT = 30.0;
     double POINT_PROPORTION = 0.05;
-    const auto& points = current_snapshot_.points_;
+    const auto& points = current_sim_snapshot_.points_;
 
     double point_height = height() * POINT_PROPORTION;
     

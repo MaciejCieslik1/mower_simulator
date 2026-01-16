@@ -56,5 +56,5 @@ public:
     void simulateDeletePoint(const unsigned int& pointIndex);
     void simulateMovementToPoint(const unsigned int& pointIndex);
 
-    Snapshot buildSnapshot() const;
+    SimulationSnapshot buildSimulationSnapshot() const;
 };

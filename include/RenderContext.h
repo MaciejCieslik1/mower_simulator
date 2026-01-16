@@ -4,54 +4,69 @@
 */
 
 #pragma once
-
+#include <atomic>
 #include <mutex>
 #include <cmath>
-#include <vector>
+#include <deque>
+#include <algorithm>
 #include "Point.h"
+#include "SimulationSnapshot.h"
 
-struct Snapshot {
-    double x_ = 0;
-    double y_ = 0;
-    double angle_ = 0;
-    double simulation_time_ = 0;
-
-    unsigned int lawn_width_ = 0;
-    unsigned int lawn_length_ = 0;
-    std::vector<std::vector<bool>> fields_;
-
-    double mower_width_ = 0;
-    double mower_length_ = 0;
-    double blade_diameter_ = 0;
-
-    std::vector<Point> points_;
-};
 
 class RenderContext {
+    // TODO: improve name to StateInterpolator
+    // TODO: better interpolation! przy większej prędkości kosiarki, niestety skacze
+    // TODO: Separate .cc file
+
+    std::atomic<double> latest_sim_time_{0.0};
+    std::atomic<double> current_speed_multiplier_{1.0}; //why atomic? why 1.0?
 public:
-    void addSnapshot(const Snapshot& snapshot) {
+    void addSimulationSnapshot(const SimulationSnapshot& sim_snapshot) {
         std::lock_guard<std::mutex> lock(mutex_);
-        previous_snapshot_ = current_snapshot_;
-        current_snapshot_ = snapshot;
+        if (!sim_snapshot_buffer_.empty() && sim_snapshot.simulation_time_ <= sim_snapshot_buffer_.back().simulation_time_) {
+            return;
+        }
+        sim_snapshot_buffer_.push_back(sim_snapshot);
+        
+        while (sim_snapshot_buffer_.size() > MAX_BUFFER_SIZE) {
+            sim_snapshot_buffer_.pop_front();
+        }
     }
 
-    Snapshot getInterpolatedState(double render_time) const {
+    SimulationSnapshot getInterpolatedState(double render_time) const {
         std::lock_guard<std::mutex> lock(mutex_);
         
-        if (current_snapshot_.simulation_time_ <= previous_snapshot_.simulation_time_) {
-            return current_snapshot_;
+        if (sim_snapshot_buffer_.empty()) {
+            return SimulationSnapshot();
         }
 
-        double alpha = (render_time - previous_snapshot_.simulation_time_) / 
-                       (current_snapshot_.simulation_time_ - previous_snapshot_.simulation_time_);
-        
-        if (alpha < 0.0) alpha = 0.0;
-        if (alpha > 1.0) alpha = 1.0;
+        if (sim_snapshot_buffer_.size() == 1 || render_time <= sim_snapshot_buffer_.front().simulation_time_) {
+            return sim_snapshot_buffer_.front();
+        }
 
-        Snapshot result = current_snapshot_;
-        result.x_ = interpolate(previous_snapshot_.x_, current_snapshot_.x_, alpha);
-        result.y_ = interpolate(previous_snapshot_.y_, current_snapshot_.y_, alpha);
-        result.angle_ = interpolateAngle(previous_snapshot_.angle_, current_snapshot_.angle_, alpha);
+        if (render_time >= sim_snapshot_buffer_.back().simulation_time_) {
+            return sim_snapshot_buffer_.back();
+        }
+
+        auto it = std::lower_bound(sim_snapshot_buffer_.begin(), sim_snapshot_buffer_.end(), render_time,
+            [](const SimulationSnapshot& s, double t) {
+                return s.simulation_time_ < t;
+            });
+
+        if (it == sim_snapshot_buffer_.begin()) return sim_snapshot_buffer_.front();
+        
+        const SimulationSnapshot& s2 = *it;
+        const SimulationSnapshot& s1 = *std::prev(it);
+
+        double alpha = (render_time - s1.simulation_time_) / 
+                       (s2.simulation_time_ - s1.simulation_time_);
+        
+        alpha = std::clamp(alpha, 0.0, 1.0);
+
+        SimulationSnapshot result = s2;
+        result.x_ = interpolate(s1.x_, s2.x_, alpha);
+        result.y_ = interpolate(s1.y_, s2.y_, alpha);
+        result.angle_ = interpolateAngle(s1.angle_, s2.angle_, alpha);
         result.simulation_time_ = render_time;
         return result;
     }
@@ -65,6 +80,7 @@ public:
     double getSpeedMultiplier() const { return current_speed_multiplier_.load(); }
 
 private:
+
     static double interpolate(double a, double b, double alpha) { 
         return a + (b - a) * alpha;
     }
@@ -76,7 +92,7 @@ private:
         return start_angle + diff * alpha;
     }
 
-    Snapshot previous_snapshot_;
-    Snapshot current_snapshot_;
+    std::deque<SimulationSnapshot> sim_snapshot_buffer_;
+    static constexpr size_t MAX_BUFFER_SIZE = 50;
     mutable std::mutex mutex_;
 };

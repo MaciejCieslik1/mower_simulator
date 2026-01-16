@@ -45,13 +45,14 @@ private:
     void loadMowerImage();
     void loadPointImages();
     void setupPainter(QPainter& painter);
+
     void updateSmoothedRenderTime();
     void refreshStateAndLayout();
     void updateLayout();
     bool hasSignificantTimeDrift(double actual_sim_time) const;
 
     void renderLawn(QPainter& painter);
-    void renderMower(QPainter& painter, const SimulationSnapshot& snapshot);
+    void renderMower(QPainter& painter, const SimulationSnapshot& sim_snapshot);
     void renderPoints(QPainter& painter);
 
     QPointF mapToScreen(double x_cm, double y_cm);
@@ -61,7 +62,7 @@ private:
 
     RenderContext& render_context_;
 
-    SimulationSnapshot current_snapshot_;
+    SimulationSnapshot current_sim_snapshot_;
     
     QElapsedTimer frame_timer_;
     double smoothed_render_time_ = 0;
