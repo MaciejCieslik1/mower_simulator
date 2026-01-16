@@ -63,3 +63,10 @@ add_executable(EngineTests tests/EngineTests.cc src/Engine.cc src/StateSimulatio
 target_link_libraries(EngineTests gtest gtest_main pthread Threads::Threads Qt5::Widgets)
 add_test(NAME EngineTests COMMAND EngineTests)
 
+add_executable(StateInterpolatorTests tests/StateInterpolatorTests.cc src/StateInterpolator.cc src/Point.cc src/MathHelper.cc)
+target_link_libraries(StateInterpolatorTests gtest gtest_main pthread)
+add_test(NAME StateInterpolatorTests COMMAND StateInterpolatorTests)
+
+add_executable(RenderTimeControllerTests tests/RenderTimeControllerTests.cc src/RenderTimeController.cc src/StateInterpolator.cc src/Point.cc src/MathHelper.cc)
+target_link_libraries(RenderTimeControllerTests gtest gtest_main pthread)
+add_test(NAME RenderTimeControllerTests COMMAND RenderTimeControllerTests)
