@@ -34,3 +34,22 @@ public:
 private:
     bool enable_;
 };
+
+class AddPointCommand : public ICommand {
+public:
+    AddPointCommand(double x, double y);
+    bool execute(StateSimulation& sim, double dt) override;
+
+private:
+    double x_;
+    double y_;
+};
+
+class DeletePointCommand : public ICommand {
+public:
+    explicit DeletePointCommand(unsigned int id);
+    bool execute(StateSimulation& sim, double dt) override;
+
+private:
+    unsigned int id_;
+};

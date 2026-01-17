@@ -51,3 +51,16 @@ bool MowingOptionCommand::execute(StateSimulation& sim, double dt) {
     return true; 
 }
 
+AddPointCommand::AddPointCommand(double x, double y) : x_(x), y_(y) {}
+
+bool AddPointCommand::execute(StateSimulation& sim, double dt) {
+    sim.simulateAddPoint(x_, y_);
+    return true;
+}
+
+DeletePointCommand::DeletePointCommand(unsigned int id) : id_(id) {}
+
+bool DeletePointCommand::execute(StateSimulation& sim, double dt) {
+    sim.simulateDeletePoint(id_);
+    return true;
+}

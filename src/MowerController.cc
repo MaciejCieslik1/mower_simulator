@@ -25,3 +25,11 @@ bool MowerController::hasCommands() const {
 void MowerController::setMowing(bool enable) {
     command_queue_.push(std::make_unique<MowingOptionCommand>(enable));
 }
+
+void MowerController::addPoint(double x, double y) {
+    command_queue_.push(std::make_unique<AddPointCommand>(x, y));
+}
+
+void MowerController::deletePoint(unsigned int id) {
+    command_queue_.push(std::make_unique<DeletePointCommand>(id));
+}
