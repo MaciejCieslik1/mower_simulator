@@ -43,6 +43,7 @@ private:
     bool isSnapshotOutdatedOrDuplicate( const SimulationSnapshot& snapshot ) const;
     bool shouldReturnEarliestSnapshot( double render_time ) const;
     bool shouldReturnLatestSnapshot( double render_time ) const;
+    bool tryUpdateExistingSnapshot(const SimulationSnapshot& snapshot);
     std::deque<SimulationSnapshot>::const_iterator findFirstSnapshotAfter( double time ) const;
 
     SimulationSnapshot computeInterpolatedSnapshot( double render_time ) const;

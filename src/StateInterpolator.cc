@@ -14,6 +14,10 @@ using namespace std;
 void StateInterpolator::addSimulationSnapshot( const SimulationSnapshot& sim_snapshot ){
     lock_guard<mutex> lock( mutex_ );
     
+    if (tryUpdateExistingSnapshot(sim_snapshot)) {
+        return;
+    }
+
     if( isSnapshotOutdatedOrDuplicate( sim_snapshot ) ){
         return;
     }
@@ -22,6 +26,18 @@ void StateInterpolator::addSimulationSnapshot( const SimulationSnapshot& sim_sna
     enforceBufferSizeLimit();
 }
 
+bool StateInterpolator::tryUpdateExistingSnapshot(const SimulationSnapshot& snapshot) {
+    if (sim_snapshot_buffer_.empty()) {
+        return false;
+    }
+
+    if (snapshot.simulation_time_ == sim_snapshot_buffer_.back().simulation_time_) {
+        sim_snapshot_buffer_.back() = snapshot;
+        return true;
+    }
+
+    return false;
+}
 
 SimulationSnapshot StateInterpolator::getInterpolatedState( double render_time ) const {
     lock_guard<mutex> lock( mutex_ );
