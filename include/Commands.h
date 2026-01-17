@@ -25,3 +25,12 @@ public:
 private:
     short angle_left_;
 };
+
+class MowingOptionCommand : public ICommand {
+public:
+    explicit MowingOptionCommand(bool enable);
+    bool execute(StateSimulation& sim, double dt) override;
+
+private:
+    bool enable_;
+};

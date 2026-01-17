@@ -11,6 +11,7 @@ public:
 
     void move(double cm);
     void rotate(short deg);
+    void setMowing(bool enable);
 
     void update(StateSimulation& sim, double dt);
 

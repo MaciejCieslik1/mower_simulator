@@ -39,3 +39,15 @@ bool RotateCommand::execute(StateSimulation& sim, double dt) {
 
     return angle_left_ == 0;
 }
+
+MowingOptionCommand::MowingOptionCommand(bool enable) : enable_(enable) {}
+
+bool MowingOptionCommand::execute(StateSimulation& sim, double dt) {
+    if (enable_) {
+        sim.simulateMowingOptionOn();
+    } else {
+        sim.simulateMowingOptionOff();
+    }
+    return true; 
+}
+

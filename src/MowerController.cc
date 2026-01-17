@@ -21,3 +21,7 @@ void MowerController::update(StateSimulation& sim, double dt) {
 bool MowerController::hasCommands() const {
     return !command_queue_.empty();
 }
+
+void MowerController::setMowing(bool enable) {
+    command_queue_.push(std::make_unique<MowingOptionCommand>(enable));
+}

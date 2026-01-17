@@ -70,8 +70,10 @@ int main(int argc, char *argv[]) {
     // User script
     controller.move(200);
     controller.rotate(90);
+    controller.setMowing(false);
     controller.move(100);
     controller.rotate(-90);
+    controller.setMowing(true);
     controller.move(100);
     controller.rotate(180);
     controller.move(200);
