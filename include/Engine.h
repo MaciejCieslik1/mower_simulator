@@ -33,13 +33,13 @@ public:
     void setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback);
 
     static void defaultSimulationLogic(StateSimulation& simulation, double dt);
-
     double getSimulationTime() const; 
     StateInterpolator& getStateInterpolator();
 
 private:
     void runSimulation();
     void updateSimulation(double dt);
+    void processLogs(); 
 
     StateSimulation& simulation_;
 

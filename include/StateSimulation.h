@@ -42,6 +42,7 @@ public:
 
     const Lawn& getLawn() const;
     const Mower& getMower() const;
+    Logger& getLogger();
     const Logger& getLogger() const;
     const u_int64_t& getTime() const;
     const std::vector<Point>& getPoints() const;

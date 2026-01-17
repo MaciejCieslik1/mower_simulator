@@ -116,7 +116,25 @@ void Engine::updateSimulation(double dt) {
         if (user_simulation_callback_) {
             user_simulation_callback_(simulation_, dt);
         }
+        processLogs();
     }
     state_interpolator_.addSimulationSnapshot(simulation_.buildSimulationSnapshot());
     state_interpolator_.setSimulationSpeedMultiplier(speed_multiplier_.load());
+}
+
+void Engine::processLogs() {
+    Logger& logger = simulation_.getLogger();
+    std::queue<Log> logsQueue = logger.getLogs();
+    if (logsQueue.empty()) {
+        return;
+    }
+
+    const FileLogger& fileLogger = simulation_.getFileLogger();
+    
+    while (!logsQueue.empty()) {
+        fileLogger.saveLog(logsQueue.front());
+        logsQueue.pop();
+    }
+
+    logger.clear();
 }

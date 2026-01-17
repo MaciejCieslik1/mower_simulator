@@ -44,7 +44,8 @@ int main(int argc, char *argv[]) {
     
     cout << "[Main] Creating Loggers" << endl;
     Logger logger; 
-    FileLogger fileLogger("simulation.log");
+    std::string logPath = std::string(PROJECT_ROOT_DIR) + "/simulation_logs.log";
+    FileLogger fileLogger(logPath);
     
     cout << "[Main] Creating StateSimulation" << endl;
     StateSimulation simulation(lawn, mower, logger, fileLogger);

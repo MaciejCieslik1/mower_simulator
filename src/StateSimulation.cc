@@ -43,6 +43,9 @@ const Mower& StateSimulation::getMower() const {
     return mower_;
 }
 
+Logger& StateSimulation::getLogger() {
+    return logger_;
+}
 
 const Logger& StateSimulation::getLogger() const {
     return logger_;
@@ -288,7 +291,7 @@ void StateSimulation::simulateMovementToPoint(const unsigned int& id) {
         moveToPointAttempt(x, y);
     }
 
-    message = "Moving to point wiht id:  " + to_string(id);
+    message = "Moving to point with id:  " + to_string(id);
     Log log = Log(time_, message);
     file_logger_.saveLog(log);
 }
