@@ -10,6 +10,7 @@ public:
     MowerController() = default;
 
     void move(double cm);
+    void move(const double* distance_ptr, double scale = 1.0);
     void rotate(short deg);
     void setMowing(bool enable);
     void addPoint(double x, double y);

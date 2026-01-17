@@ -4,6 +4,10 @@ void MowerController::move(double cm) {
     command_queue_.push(std::make_unique<MoveCommand>(cm));
 }
 
+void MowerController::move(const double* distance_ptr, double scale) {
+    command_queue_.push(std::make_unique<MoveCommand>(distance_ptr, scale));
+}
+
 void MowerController::rotate(short deg) {
     command_queue_.push(std::make_unique<RotateCommand>(deg));
 }

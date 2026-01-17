@@ -11,10 +11,14 @@ public:
 class MoveCommand : public ICommand {
 public:
     explicit MoveCommand(double distance);
+    MoveCommand(const double* distance_ptr, double scale);
     bool execute(StateSimulation& sim, double dt) override;
 
 private:
     double distance_left_;
+    const double* deferred_distance_ = nullptr;
+    double scale_ = 1.0;
+    bool initialized_ = false;
 };
 
 class RotateCommand : public ICommand {
@@ -24,6 +28,12 @@ public:
 
 private:
     short angle_left_;
+    double rotation_accumulator_ = 0.0;
+
+    double calculateRotationStepForFrame(double dt) const;
+    void updateInternalRotationState(double step);
+    void applyAccumulatedRotationToSimulation(StateSimulation& sim);
+    bool isRotationFinished() const;
 };
 
 class MowingOptionCommand : public ICommand {

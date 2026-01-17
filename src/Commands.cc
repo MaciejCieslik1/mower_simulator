@@ -3,9 +3,23 @@
 #include <cmath>
 #include <algorithm>
 
-MoveCommand::MoveCommand(double distance) : distance_left_(distance) {}
+MoveCommand::MoveCommand(double distance) 
+    : distance_left_(distance), initialized_(true) {}
+
+MoveCommand::MoveCommand(const double* distance_ptr, double scale)
+    : distance_left_(0.0), deferred_distance_(distance_ptr), scale_(scale), initialized_(false) {}
 
 bool MoveCommand::execute(StateSimulation& sim, double dt) {
+    if (!initialized_) {
+        if (deferred_distance_) {
+            distance_left_ = (*deferred_distance_) * scale_;
+            sim.getFileLogger().saveMessage("MoveCommand init. Deferred val: " + std::to_string(*deferred_distance_) + ", Scale: " + std::to_string(scale_) + ", DistLeft: " + std::to_string(distance_left_));
+        } else {
+             sim.getFileLogger().saveMessage("MoveCommand init. No deferred pointer. DistLeft: " + std::to_string(distance_left_));
+        }
+        initialized_ = true;
+    }
+
     if (distance_left_ <= 0) return true;
 
     double speed = sim.getMower().getSpeed();
@@ -34,7 +48,7 @@ bool RotateCommand::execute(StateSimulation& sim, double dt) {
 double RotateCommand::calculateRotationStepForFrame(double dt) const {
     double max_rot_speed = static_cast<double>(Constants::ROTATION_SPEED);
     double max_step = max_rot_speed * dt;
-    
+
     if (angle_left_ > 0) {
         return std::min(max_step, static_cast<double>(angle_left_));
     } else {
@@ -55,9 +69,9 @@ void RotateCommand::updateInternalRotationState(double step) {
 void RotateCommand::applyAccumulatedRotationToSimulation(StateSimulation& sim) {
     if (std::abs(rotation_accumulator_) >= 1.0) {
         short actual_rot_to_apply = static_cast<short>(rotation_accumulator_);
-
+        
         sim.simulateRotation(actual_rot_to_apply);
-
+        
         rotation_accumulator_ -= actual_rot_to_apply;
     }
 }
