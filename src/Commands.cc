@@ -21,23 +21,49 @@ bool MoveCommand::execute(StateSimulation& sim, double dt) {
 RotateCommand::RotateCommand(short angle) : angle_left_(angle) {}
 
 bool RotateCommand::execute(StateSimulation& sim, double dt) {
-    if (angle_left_ == 0) return true;
-
-    double rot_speed = Constants::ROTATION_SPEED;
-    double step = rot_speed * dt;
-    
-    short actual_step;
-    if (angle_left_ > 0) {
-        actual_step = static_cast<short>(std::min(step, static_cast<double>(angle_left_)));
-        angle_left_ -= actual_step;
-    } else {
-        actual_step = static_cast<short>(std::max(-step, static_cast<double>(angle_left_)));
-        angle_left_ -= actual_step;
+    if (isRotationFinished()) {
+        return true;
     }
 
-    sim.simulateRotation(actual_step);
+    double step = calculateRotationStepForFrame(dt);
+    updateInternalRotationState(step);
+    applyAccumulatedRotationToSimulation(sim);
+    return isRotationFinished();
+}
 
-    return angle_left_ == 0;
+double RotateCommand::calculateRotationStepForFrame(double dt) const {
+    double max_rot_speed = static_cast<double>(Constants::ROTATION_SPEED);
+    double max_step = max_rot_speed * dt;
+    
+    if (angle_left_ > 0) {
+        return std::min(max_step, static_cast<double>(angle_left_));
+    } else {
+        return std::max(-max_step, static_cast<double>(angle_left_));
+    }
+}
+
+void RotateCommand::updateInternalRotationState(double step) {
+    rotation_accumulator_ += step;
+
+    if (step > 0) {
+        angle_left_ -= static_cast<short>(std::floor(step + 0.5)); // Zaokrąglanie
+    } else {
+        angle_left_ -= static_cast<short>(std::ceil(step - 0.5));
+    }
+}
+
+void RotateCommand::applyAccumulatedRotationToSimulation(StateSimulation& sim) {
+    if (std::abs(rotation_accumulator_) >= 1.0) {
+        short actual_rot_to_apply = static_cast<short>(rotation_accumulator_);
+
+        sim.simulateRotation(actual_rot_to_apply);
+
+        rotation_accumulator_ -= actual_rot_to_apply;
+    }
+}
+
+bool RotateCommand::isRotationFinished() const {
+    return angle_left_ == 0 && std::abs(rotation_accumulator_) < 0.5;
 }
 
 MowingOptionCommand::MowingOptionCommand(bool enable) : enable_(enable) {}
