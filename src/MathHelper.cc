@@ -27,8 +27,7 @@ double MathHelper::convertRadiansToDegrees(const double& angle) {
 
 double MathHelper::calculateAParameter(const unsigned short& angle) {
     double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
-    return tan(angle_in_radians);
-    
+    return 1.0 / tan(angle_in_radians);
 }
 
 
