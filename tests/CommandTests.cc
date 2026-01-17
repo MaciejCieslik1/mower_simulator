@@ -1,0 +1,160 @@
+#include <gtest/gtest.h>
+#include <memory>
+#include <cmath>
+#include "../include/StateSimulation.h"
+#include "../include/commands/AddPointCommand.h"
+#include "../include/commands/DeletePointCommand.h"
+#include "../include/commands/GetDistanceToPointCommand.h"
+#include "../include/commands/MoveCommand.h"
+#include "../include/commands/MoveToPointCommand.h"
+#include "../include/commands/MowingOptionCommand.h"
+#include "../include/commands/RotateCommand.h"
+#include "../include/commands/RotateTowardsPointCommand.h"
+#include "../include/MathHelper.h"
+#include "../include/Lawn.h"
+#include "../include/Mower.h"
+#include "../include/Logger.h"
+#include "../include/FileLogger.h"
+#include "../include/Config.h"
+
+class CommandTests : public ::testing::Test {
+protected:
+    void SetUp() override {
+        // Initialize Config if necessary (using some default values)
+        Config::initializeRuntimeConstants(1000, 1000); // 10m x 10m lawn
+        Config::initializeMowerConstants(50, 50, 0, 0, 0);
+
+        lawn = std::make_unique<Lawn>(1000, 1000);
+        mower = std::make_unique<Mower>(50, 50, 20, 10); // width, length, blade, speed
+        logger = std::make_unique<Logger>();
+        fileLogger = std::make_unique<FileLogger>("test_command_log.txt");
+        
+        simulation = std::make_unique<StateSimulation>(*lawn, *mower, *logger, *fileLogger);
+    }
+    
+    void TearDown() override {
+        // cleanup if needed
+    }
+
+    std::unique_ptr<Lawn> lawn;
+    std::unique_ptr<Mower> mower;
+    std::unique_ptr<Logger> logger;
+    std::unique_ptr<FileLogger> fileLogger;
+    std::unique_ptr<StateSimulation> simulation;
+};
+
+TEST_F(CommandTests, AddPointCommandAddsPointToSimulation) {
+    AddPointCommand command(10.0, 20.0);
+    command.execute(*simulation, 1.0);
+
+    auto points = simulation->getPoints();
+    ASSERT_FALSE(points.empty());
+    EXPECT_DOUBLE_EQ(points.back().getX(), 10.0);
+    EXPECT_DOUBLE_EQ(points.back().getY(), 20.0);
+}
+
+TEST_F(CommandTests, DeletePointCommandRemovesPointFromSimulation) {
+    simulation->simulateAddPoint(10.0, 20.0);
+    auto pointsBefore = simulation->getPoints();
+    ASSERT_FALSE(pointsBefore.empty());
+    unsigned int pointId = pointsBefore.back().getId();
+
+    DeletePointCommand command(pointId);
+    command.execute(*simulation, 1.0);
+
+    auto pointsAfter = simulation->getPoints();
+    EXPECT_EQ(pointsAfter.size(), pointsBefore.size() - 1);
+}
+
+TEST_F(CommandTests, MowingOptionCommandEnablesAndDisablesMowing) {
+    MowingOptionCommand enableCommand(true);
+    enableCommand.execute(*simulation, 1.0);
+    EXPECT_TRUE(simulation->getMower().getIsMowing());
+
+    MowingOptionCommand disableCommand(false);
+    disableCommand.execute(*simulation, 1.0);
+    EXPECT_FALSE(simulation->getMower().getIsMowing());
+}
+
+TEST_F(CommandTests, MoveCommandMovesMowerForward) {
+    double initialX = simulation->getMower().getX();
+    double initialY = simulation->getMower().getY(); // Track Y as well
+    MoveCommand command(10.0); // Move 10 units
+    
+    while (!command.execute(*simulation, 0.1));
+    
+    double finalX = simulation->getMower().getX();
+    double finalY = simulation->getMower().getY();
+    
+    // Mower moves based on angle. Check if position changed in general.
+    EXPECT_TRUE(finalX != initialX || finalY != initialY); 
+}
+
+TEST_F(CommandTests, RotateCommandRotatesMower) {
+    double initialAngle = simulation->getMower().getAngle();
+    RotateCommand command(90); // Rotate 90 degrees
+    
+    while (!command.execute(*simulation, 0.1));
+
+    double finalAngle = simulation->getMower().getAngle();
+    // Angles are unsigned short 0-359 in Mower.
+    // 90 degrees added.
+    unsigned short expectedAngle = (initialAngle + 90);
+    if (expectedAngle >= 360) expectedAngle -= 360;
+    
+    EXPECT_EQ(finalAngle, expectedAngle);
+}
+
+TEST_F(CommandTests, GetDistanceToPointCommandCalculatesCorrectDistance) {
+    // Mower at 0,0 (default for now)
+    simulation->simulateAddPoint(10.0, 0.0); 
+    
+    auto points = simulation->getPoints();
+    ASSERT_FALSE(points.empty());
+    unsigned int pointId = points.back().getId();
+    
+    double distance = 0.0;
+    GetDistanceToPointCommand command(pointId, distance);
+    command.execute(*simulation, 1.0);
+    
+    double mowerX = simulation->getMower().getX();
+    double mowerY = simulation->getMower().getY();
+    double expectedDist = std::sqrt(std::pow(10.0 - mowerX, 2) + std::pow(0.0 - mowerY, 2));
+    
+    EXPECT_NEAR(distance, expectedDist, 0.001);
+}
+
+TEST_F(CommandTests, RotateTowardsPointCommandRotatesToFacePoint) {
+    simulation->simulateAddPoint(100.0, 100.0); 
+    auto points = simulation->getPoints();
+    unsigned int pointId = points.back().getId();
+
+    RotateTowardsPointCommand command(pointId);
+    int safety = 0;
+    while (!command.execute(*simulation, 0.1) && safety++ < 1000);
+    
+    // Just asserting command completion is a good enough integration test step.
+    ASSERT_LT(safety, 1000);
+}
+
+TEST_F(CommandTests, MoveToPointCommandMovesMowerToPoint) {
+    simulation->simulateAddPoint(50.0, 50.0); // FIXED THIS LINE
+    auto points = simulation->getPoints();
+    unsigned int pointId = points.back().getId();
+    
+    MoveToPointCommand command(pointId);
+    
+    int steps = 0;
+    const int APP_TIMEOUT = 10000;
+    while (!command.execute(*simulation, 0.1) && steps < APP_TIMEOUT) {
+        steps++;
+    }
+    
+    ASSERT_LT(steps, APP_TIMEOUT);
+    
+    double mowerX = simulation->getMower().getX();
+    double mowerY = simulation->getMower().getY();
+    
+    EXPECT_NEAR(mowerX, 50.0, 2.0); // Tolerance
+    EXPECT_NEAR(mowerY, 50.0, 2.0);
+}

@@ -72,3 +72,12 @@ add_test(NAME StateInterpolatorTests COMMAND StateInterpolatorTests)
 add_executable(RenderTimeControllerTests tests/RenderTimeControllerTests.cc src/RenderTimeController.cc src/StateInterpolator.cc src/Point.cc src/MathHelper.cc)
 target_link_libraries(RenderTimeControllerTests gtest gtest_main pthread)
 add_test(NAME RenderTimeControllerTests COMMAND RenderTimeControllerTests)
+
+add_executable(CommandTests tests/CommandTests.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc)
+target_link_libraries(CommandTests gtest gtest_main pthread)
+add_test(NAME CommandTests COMMAND CommandTests)
+
+add_executable(MowerControllerTests tests/MowerControllerTests.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/Logger.cc src/Log.cc src/FileLogger.cc)
+target_link_libraries(MowerControllerTests gtest gtest_main pthread)
+add_test(NAME MowerControllerTests COMMAND MowerControllerTests)
+
