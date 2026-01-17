@@ -1,14 +1,17 @@
 /* 
     Author: Hanna Biegacz, Maciej Cieślik
     
-    Creates the lawn, starts the simulation thread and opens the window to display everything.
-    When you close the window, it cleanly stops the simulation and exits.
-    TODO: description
+    This is the main entry point of the application. 
+    It initializes the simulation components (Lawn, Mower, Engine, Visualizer) and launches the GUI.
+    
+    Configuration: Allows the user to define simulation constants (lawn size, mower speed, etc.).
+    Custom Logic: The 'customUserLogic' function is where the user programs the mower's path.
 */
 
 #include <QApplication>
 #include <iostream>
 #include <QTimer>
+#include <cmath>
 #include "Lawn.h"
 #include "Mower.h"
 #include "Config.h"
@@ -21,21 +24,67 @@
 
 using namespace std;
 
-int main(int argc, char *argv[]) {
-    constexpr unsigned int LAWN_WIDTH_CM = 500;
-    constexpr unsigned int LAWN_LENGTH_CM = 1000;
-    constexpr double SIMULATION_SPEED_MULTIPLIER = 1.0;
-    
+// HERE THE USER CAN DEFINE THE SIMULATION PARAMETERS
+    constexpr unsigned int LAWN_WIDTH_CM = 800;
+    constexpr unsigned int LAWN_LENGTH_CM = 600;
+    constexpr double       SIMULATION_SPEED_MULTIPLIER = 2.0;
     constexpr unsigned int MOWER_WIDTH_CM = 50;
     constexpr unsigned int MOWER_LENGTH_CM = 50;
-    constexpr unsigned int BLADE_DIAMETER_CM = 25;
-    constexpr unsigned int MOWER_SPEED_CM_S = 50;
+    constexpr unsigned int BLADE_DIAMETER_CM = 50;
+    constexpr unsigned int MOWER_SPEED_CM_S = 100;
+    constexpr char*        LOG_PATH = "../simulation_logs.log";
+    constexpr int          TARGET_FPS = 100;
+    constexpr int          RENDER_INTERVAL_MS = 1000 / TARGET_FPS;
+
+
+void customUserLogic(MowerController& controller) {
     
+    static double distance_p1_p0 = 0.0;
+    static double distance_p1_p2 = 0.0;  
+    controller.addPoint(LAWN_WIDTH_CM * 0.5, LAWN_LENGTH_CM * 0.29); // Point 0
+    controller.addPoint(LAWN_WIDTH_CM * 0.5, LAWN_LENGTH_CM * 0.55); // Point 1 --- centre of the 8
+    controller.addPoint(LAWN_WIDTH_CM * 0.5, LAWN_LENGTH_CM * 0.75); // Point 2
+
+    controller.setMowing(false);
+    controller.moveToPoint(1);
+
+    controller.getDistanceToPoint(0, distance_p1_p0);
+    controller.getDistanceToPoint(2, distance_p1_p2);
+
+
+
+    // DRAWING FIRST CIRCLE
+    controller.rotateTowardsPoint(0);
+    controller.rotate(90);
+    controller.setMowing(true);
+
+    for (double angle = 0; angle < 360; angle += 1) {
+        controller.move(&distance_p1_p0, (M_PI / 180.0));
+        controller.rotate(-1);
+    }
+
+    // DRAWING SECOND CIRCLE
+    controller.setMowing(false);
+    controller.moveToPoint(1);
+    controller.rotateTowardsPoint(2);
+    controller.rotate(-90);
+    controller.setMowing(true);
+    for (double angle = 0; angle < 360; angle += 1) {
+        controller.rotate(1);
+        controller.move(&distance_p1_p2, (M_PI / 180.0));
+    }
+
+    controller.deletePoint(0);
+    controller.deletePoint(1);
+    controller.deletePoint(2);
+}
+
+
+// USERS SHOULD NOT HAVE TO CHANGE BELOW THIS LINE
+
+int main(int argc, char *argv[]) {
     QApplication app(argc, argv);
-    
     cout << "[Main] Initializing components..." << endl;
-    
-    Config::initializeRuntimeConstants(LAWN_WIDTH_CM, LAWN_LENGTH_CM);
     
     cout << "[Main] Creating lawn: " << LAWN_WIDTH_CM << "x" << LAWN_LENGTH_CM << " cm" << endl;
     Lawn lawn(LAWN_WIDTH_CM, LAWN_LENGTH_CM);
@@ -45,20 +94,10 @@ int main(int argc, char *argv[]) {
     
     cout << "[Main] Creating Loggers" << endl;
     Logger logger; 
-    std::string logPath = std::string(PROJECT_ROOT_DIR) + "/simulation_logs.log";
-    FileLogger fileLogger(logPath);
+    FileLogger fileLogger(LOG_PATH);
     
     cout << "[Main] Creating StateSimulation" << endl;
     StateSimulation simulation(lawn, mower, logger, fileLogger);
-    
-    // Test points
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 1/10, LAWN_LENGTH_CM* 1/10);
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 1/10, LAWN_LENGTH_CM * 9/10);
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 9/10, LAWN_LENGTH_CM* 1/10);
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 5/10, LAWN_LENGTH_CM* 5/10);
-    simulation.simulateAddPoint(10, 10);
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 1/10, LAWN_LENGTH_CM* 9/10);
-    simulation.simulateAddPoint(LAWN_WIDTH_CM* 9/10, LAWN_LENGTH_CM* 9/10);
     
     cout << "[Main] Initializing Engine" << endl;
     Engine engine(simulation); 
@@ -66,32 +105,21 @@ int main(int argc, char *argv[]) {
 
     cout << "[Main] Setting up MowerController and user logic" << endl;
     MowerController controller;
-    
-    // User script
-    controller.move(200);
-    controller.rotate(90);
-    controller.setMowing(false);
-    controller.move(100);
-    controller.rotate(-90);
-    controller.setMowing(true);
-    controller.move(100);
-    controller.rotate(180);
-    controller.move(200);
 
+    customUserLogic(controller);
     engine.setUserSimulationLogic([&controller](StateSimulation& sim, double dt) {
         controller.update(sim, dt);
     });
-
+    
     cout << "[Main] Creating window" << endl;
     Visualizer visualizer(engine.getStateInterpolator()); 
     visualizer.setWindowTitle("Lawn Mower Simulator");    
 
     QTimer renderTimer;
     QObject::connect(&renderTimer, &QTimer::timeout, &visualizer, QOverload<>::of(&Visualizer::update));
-    renderTimer.start(16);
+    renderTimer.start(RENDER_INTERVAL_MS);
 
     visualizer.show();
-    
     engine.start();
     
     cout << "[Main] Starting event loop" << endl;
@@ -99,6 +127,5 @@ int main(int argc, char *argv[]) {
     
     cout << "[Main] Stopping simulation" << endl;
     engine.stop();
-    
     return result;
 }
