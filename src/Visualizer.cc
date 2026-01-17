@@ -148,29 +148,31 @@ void Visualizer::renderLawn(QPainter& painter) {
     if (isLawnDataEmpty()) return;
 
     const auto& fields = current_sim_snapshot_.fields_;
-    const unsigned int num_rows = fields.size();
-    const unsigned int num_cols = fields[0].size();
-    
-    const double field_width_cm = static_cast<double>(static_simulation_data.lawn_width_) / num_cols;
-    const double field_height_cm = static_cast<double>(static_simulation_data.lawn_length_) / num_rows;
+    const int num_rows = static_cast<int>(fields.size());
+    const int num_cols = static_cast<int>(fields[0].size());
 
+    QImage lawn_image(num_cols, num_rows, QImage::Format_RGB32);
     
-    for (unsigned int row = 0; row < num_rows; ++row) {
-        for (unsigned int col = 0; col < num_cols; ++col) {
-            const bool is_mowed = fields[row][col];
-            QColor fill_color = is_mowed ? MOWED_GRASS_COLOR : UNMOWED_GRASS_COLOR;
-            
-            double world_x = col * field_width_cm;
-            double world_y_top = (row + 1) * field_height_cm;
-            
-            QPointF top_left = mapToScreen(world_x, world_y_top);
-            
-            double w_px = field_width_cm * scale_factor_;
-            double h_px = field_height_cm * scale_factor_;
-            
-            painter.fillRect(QRectF(top_left.x(), top_left.y(), w_px, h_px), fill_color);
+    for (int row = 0; row < num_rows; ++row) {
+        int img_row = num_rows - 1 - row;
+        const auto& field_row = fields[row];
+        for (int col = 0; col < num_cols; ++col) {
+            lawn_image.setPixel(col, img_row, 
+                field_row[col] ? MOWED_GRASS_COLOR.rgb() : UNMOWED_GRASS_COLOR.rgb());
         }
     }
+
+    QPointF top_left_px = mapToScreen(0, static_simulation_data.lawn_length_);
+    double w_px = static_simulation_data.lawn_width_ * scale_factor_;
+    double h_px = static_simulation_data.lawn_length_ * scale_factor_;
+    QRectF target_rect(top_left_px.x(), top_left_px.y(), w_px, h_px);
+
+    bool old_aa = painter.renderHints().testFlag(QPainter::Antialiasing);
+    painter.setRenderHint(QPainter::Antialiasing, false);
+    
+    painter.drawImage(target_rect, lawn_image);
+    
+    painter.setRenderHint(QPainter::Antialiasing, old_aa);
 }
 
 void Visualizer::calculateMowerRenderSize(double mower_width, double mower_length, double blade_diameter, double& out_w_px, double& out_h_px) const {
