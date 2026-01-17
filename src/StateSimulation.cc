@@ -7,6 +7,7 @@
 
 #include <cmath>
 #include <iostream>
+#include <optional>
 #include "../include/Constants.h"
 #include "../include/StateSimulation.h"
 #include "../include/Point.h"
@@ -234,7 +235,6 @@ void StateSimulation::simulateAddPoint(const double& x, const double& y) {
     }
 
     Log log = Log(time_, message);
-    file_logger_.saveLog(log);
 }
 
 void StateSimulation::simulateDeletePoint(const unsigned int& id) {
@@ -259,7 +259,6 @@ void StateSimulation::simulateDeletePoint(const unsigned int& id) {
     }
 
     Log log = Log(time_, message);
-    file_logger_.saveLog(log);
 }
 
 
@@ -367,4 +366,30 @@ StaticSimulationData StateSimulation::getStaticData() const {
     data.length_cm = mower_.getLength();
     data.blade_diameter_cm = mower_.getBladeDiameter();
     return data;
+}
+
+
+std::optional<std::pair<double, double>> StateSimulation::getPointCoordinates(unsigned int pointId) {
+    for (const Point& point : points_) {
+        if (point.getId() == pointId) {
+            return std::make_pair(point.getX(), point.getY());
+        }
+    }
+    
+    string message = "Unable to find point in the lawn. Incorrect point's id " + to_string(pointId);
+    Log log = Log(time_, message);
+    logger_.push(log);
+    file_logger_.saveLog(log);
+    
+    return std::nullopt;
+}
+
+void StateSimulation::logArrivalAtPoint(unsigned int pointId) {
+    string message = "Arrived at point with id:  " + to_string(pointId);
+    Log log = Log(time_, message);
+    logger_.push(log);       
+}
+
+std::pair<short, double> StateSimulation::calculateNavigationVector(double targetX, double targetY) const {
+    return calculateAngleAndDistance(targetX, targetY);
 }

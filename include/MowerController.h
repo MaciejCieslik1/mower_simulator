@@ -13,7 +13,8 @@ public:
     void rotate(short deg);
     void setMowing(bool enable);
     void addPoint(double x, double y);
-    void deletePoint(unsigned int id);
+    void deletePoint(unsigned int point_id);
+    void moveToPoint(unsigned int point_id);
 
     void update(StateSimulation& sim, double dt);
 

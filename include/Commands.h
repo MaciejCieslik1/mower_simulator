@@ -53,3 +53,25 @@ public:
 private:
     unsigned int id_;
 };
+
+class MoveToPointCommand : public ICommand {
+public:
+    explicit MoveToPointCommand(unsigned int pointId);
+    bool execute(StateSimulation& sim, double dt) override;
+
+private:
+    unsigned int point_id_;
+        
+    bool initialized_ = false;
+    double target_x_ = 0.0;
+    double target_y_ = 0.0;
+    double rotation_accumulator_ = 0.0;
+
+    bool initializeTarget(StateSimulation& sim);
+    double calculateDistanceToTarget(const StateSimulation& sim) const;
+    bool hasArrivedAtTarget(StateSimulation& sim, double currentDistance) const;
+    void executeRotationLogic(StateSimulation& sim, double dt, short rotationNeeded);
+    void applyAccumulatedRotation(StateSimulation& sim);
+    void executeMovementLogic(StateSimulation& sim, double dt, double distanceToTarget);
+    bool isAlignedWithTarget(short rotationNeeded, double distanceToTarget) const;
+};
