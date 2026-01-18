@@ -24,6 +24,8 @@ const string& FileLogger::getFilePath() const {
 
 
 void FileLogger::saveLog(const Log& log) const {
+    // Save log to the logs file
+
     ofstream file(file_path_, ios::app);
     if (file.is_open()) {
         file << "Time: "<< log.getTime() << ": " << log.getMessage() << endl;
@@ -33,6 +35,8 @@ void FileLogger::saveLog(const Log& log) const {
 
 
 void FileLogger::saveMessage(const string& message) const {
+    // Save message to the logs file
+
     ofstream file(file_path_, ios::app);
 
     if (file.is_open()) {

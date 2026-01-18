@@ -90,7 +90,7 @@ void Mower::setY(const double& newY) {
 
 
 void Mower::move(const double& distance, const unsigned int& lawn_width, const unsigned int& lawn_length) {
-    /* Changes coord of mower to new ones calculated by using trygonometric functions. 
+    /* Change coord of mower to new ones calculated by using trygonometric functions. 
         Throws MoveOutsideLawnError when destination point(the middle of the mower) is outside the lawn */
 
     pair<double, double>(calculatedPoint) = calculateFinalPoint(distance);
@@ -108,6 +108,8 @@ void Mower::move(const double& distance, const unsigned int& lawn_width, const u
 
 
 pair<double, double> Mower::calculateFinalPoint(const double& distance) const {
+    // Calculate final point for mower movement
+
     double ROUND_MULTIPLIER = 1 / Constants::DISTANCE_PRECISION;
     const double ANGLE_IN_RADIANS = MathHelper::convertDegreesToRadians(getAngle());
     double calculated_x = getX() + sin(ANGLE_IN_RADIANS) * distance;
@@ -120,18 +122,24 @@ pair<double, double> Mower::calculateFinalPoint(const double& distance) const {
 
 
 bool Mower::calculateIfXAccessible(const double& calculated_x, const unsigned int& lawn_width) const {
+    // Calculate if X coord is accessible for mower
+
     return (calculated_x <= static_cast<double>(lawn_width) + Config::MAX_HORIZONTAL_EXCEEDANCE &&
         calculated_x >= -Config::MAX_HORIZONTAL_EXCEEDANCE);
 }
 
 
 bool Mower::calculateIfYAccessible(const double& calculated_y, const unsigned int& lawn_length) const {
+    // Calculate if X coord is accessible for mower 
+
     return (calculated_y <= static_cast<double>(lawn_length) + Config::MAX_VERTICAL_EXCEEDANCE &&
         calculated_y >= -Config::MAX_VERTICAL_EXCEEDANCE);
 }
 
 
 void Mower::rotate(const short& angle) {
+    // Rotate mower
+
     short MAX_ROTATION_ANGLE = 360;
     short MIN_ROTATION_ANGLE = -360;
     if (angle > MAX_ROTATION_ANGLE || angle < MIN_ROTATION_ANGLE) {

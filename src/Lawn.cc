@@ -48,6 +48,8 @@ std::vector<std::vector<bool>> Lawn::getFields() const {
 
 
 bool Lawn::isPointInLawn(const double& x, const double& y) const {
+    // Check if point (x, y) is located inside the lawn.
+
     bool is_point_in_lawn_vertical = Lawn::countIfCoordInSection(length_, y);
     bool is_point_in_lawn_horizontal = Lawn::countIfCoordInSection(width_, x);
 
@@ -57,11 +59,15 @@ bool Lawn::isPointInLawn(const double& x, const double& y) const {
 
 bool Lawn::countIfCoordInSection(const unsigned int& section_length,
         const double& coord_value) {
+    // Check if single coord value is between the beggining and the end of section
+    
     return coord_value >= 0.0 && coord_value <= static_cast<double>(section_length);
 }
 
 
 pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, const double& y) const {
+    // Calculate index of the field located inside the lawn
+
     unsigned int x_index = Lawn::calculateIndexInSection(width_, x, fields_[0].size());
     unsigned int y_index = Lawn::calculateIndexInSection(length_, y, fields_.size());
 
@@ -73,6 +79,8 @@ pair<unsigned int, unsigned int> Lawn::calculateFieldIndexes(const double& x, co
 
 unsigned int Lawn::calculateIndexInSection(const unsigned int& section_length, const double& coord_value, 
         const unsigned int& vector_size) {
+    // Calculate index of the coord in section
+
     unsigned int index = static_cast<unsigned int>(coord_value / Config::FIELD_WIDTH);
 
     return index;
@@ -80,11 +88,15 @@ unsigned int Lawn::calculateIndexInSection(const unsigned int& section_length, c
 
 
 void Lawn::cutGrassOnField(const pair<unsigned int, unsigned int>& indexes) {
+    // Change field state to mowed 
+
     fields_[indexes.second][indexes.first] = true;
 }
 
 
 double Lawn::calculateShavedArea() const {
+    // Calculate shaved area of the field as ratio of mowed fields to not mowed fields
+
     int64_t all_fields_number = static_cast<int64_t>(Config::HORIZONTAL_FIELDS_NUMBER) * 
         static_cast<int64_t>(Config::VERTICAL_FIELDS_NUMBER);
     int64_t shaved_fields_number = 0;
@@ -100,6 +112,10 @@ double Lawn::calculateShavedArea() const {
 
 
 void Lawn::cutGrass(const pair<double, double>& blade_middle, const unsigned int& blade_diameter) {
+    /* Cut grass in circle shape. Iterates over all fields of minimal square in which all circle can be fit.
+        Each field is checked if it is in circle. If field is both in the circle and in the lawn as well, the field
+        is mowed. Otherwise the field is not mowed. */
+
     double DIAMETER_TO_RADIUS_DIVISION_FACTOR = 2.0;
 
     pair<double, double> first_coords = calculateFirstMowingFieldCoords(blade_middle, blade_diameter);
@@ -126,6 +142,8 @@ void Lawn::cutGrass(const pair<double, double>& blade_middle, const unsigned int
 
 
 pair<double, double> Lawn::calculateFirstMowingFieldCoords(const pair<double, double>& blade_middle, const double& blade_diameter) const {
+    // Calculate coords of the most left down field for mowing
+    
     double DIAMETER_TO_RADIUS_DIVISION_FACTOR = 2.0;
     double LEFT_DOWN_CORNER_COORD = 0.0;
     double first_x = blade_middle.first - static_cast<double>(blade_diameter) / DIAMETER_TO_RADIUS_DIVISION_FACTOR;
@@ -139,6 +157,9 @@ pair<double, double> Lawn::calculateFirstMowingFieldCoords(const pair<double, do
 
 bool Lawn::isFieldInMowingArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
         const double& blade_diameter) const {
+    /* Check if field is in the range of mower's blade. Filed is mowed if it has 3 corners in range of blade or
+        it has 2 corners in range of mower's blade and also the middle of the field is in range */
+
     unsigned int counter = countCornersInArea(x, y, blade_middle, blade_diameter);
     
     if (counter > 2) {
@@ -156,6 +177,8 @@ bool Lawn::isFieldInMowingArea(const double& x, const double& y, const std::pair
 
 unsigned int Lawn::countCornersInArea(const double& x, const double& y, const std::pair<double, double>& blade_middle, 
         const double& blade_diameter) const {
+    // Calculates how many corners are in area accessible for blade
+
     pair<double, double> points[4] = {
         {x, y},
         {x + Config::FIELD_WIDTH, y},
@@ -176,6 +199,8 @@ unsigned int Lawn::countCornersInArea(const double& x, const double& y, const st
 
 double Lawn::calculateDistanceBetweenPoints(const double& x, const double& y, 
     const std::pair<double, double>& destination_point) const {
+    // Calculate distance between two points
+
     double dx = x - destination_point.first;
     double dy = y - destination_point.second;
 
@@ -185,6 +210,8 @@ double Lawn::calculateDistanceBetweenPoints(const double& x, const double& y,
 
 void Lawn::cutGrassSection(const std::pair<double, double>& blade_middle_beginning, const unsigned int& blade_diameter,
     const std::pair<double, double>& blade_middle_ending, const unsigned short& angle) {
+    // Cuts grass area, which contsists of two circles and one rectangle
+ 
     cutGrass(blade_middle_beginning, blade_diameter);
     cutRectangularGrass(blade_middle_beginning, blade_diameter, blade_middle_ending, angle);
     cutGrass(blade_middle_ending, blade_diameter);
@@ -194,6 +221,8 @@ void Lawn::cutGrassSection(const std::pair<double, double>& blade_middle_beginni
 void Lawn::cutRectangularGrass(const std::pair<double, double>& blade_middle_beginning, 
     const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending, 
     const unsigned short& angle) {
+    // Cuts rectangular shaped grass. Provides correct mowing mode, depends on the position of rectangle
+
     
     if (angle % 90 == 0) {
         cutVerticalRectangle(blade_middle_beginning, blade_diameter, blade_middle_ending);
@@ -207,7 +236,10 @@ void Lawn::cutRectangularGrass(const std::pair<double, double>& blade_middle_beg
 void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_beginning, 
     const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending, 
     const unsigned short& angle) {
-    
+    /* Cuts grass in tilted rectangular shape. Iterates through fields which are located inside the big 
+    not tilted rectangle, which is the minimal rectangle, in which mowing rectangular area can be fit. 
+    If field is both in big rectangle and small rectangle it is mowed.*/ 
+
     double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
     double a_mower_path = MathHelper::calculateAParameter(angle);
     double a_perpendicular = MathHelper::calculateAPerpendicularParameter(a_mower_path);
@@ -274,6 +306,8 @@ void Lawn::cutTiltedRectangle(const std::pair<double, double>& blade_middle_begi
 
 
 pair<double, double> Lawn::calculateAdditionFactors(const unsigned short& angle) {
+    // Calculate addition factor for fields for iteration in nested loop, depending on angle.
+
     double x_addition_factor = Config::FIELD_WIDTH;
     double y_addition_factor = Config::FIELD_WIDTH;
 
@@ -294,6 +328,8 @@ pair<double, double> Lawn::calculateAdditionFactors(const unsigned short& angle)
 
 void Lawn::cutVerticalRectangle(const std::pair<double, double>& blade_middle_beginning, 
     const unsigned int& blade_diameter, const std::pair<double, double>& blade_middle_ending) {
+    // Cut grass in not tilted rectangular shape. Simplified version of default tilted rectangle mowing 
+
     double DIAMETER_TO_RADIUS_FACTOR = 2;
     double blade_radius = blade_diameter / DIAMETER_TO_RADIUS_FACTOR;
 

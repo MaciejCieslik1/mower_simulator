@@ -26,12 +26,16 @@ double MathHelper::convertRadiansToDegrees(const double& angle) {
 
 
 double MathHelper::calculateAParameter(const unsigned short& angle) {
+    // Calculate 'a' parameter for linear function
+
     double angle_in_radians = MathHelper::convertDegreesToRadians(angle);
     return 1.0 / tan(angle_in_radians);
 }
 
 
 double MathHelper::calculateAPerpendicularParameter(const double& a_parameter) {
+    // Calculate 'a' parameter for linear function, which is perepndciular to function with 'a' parameter given
+
     return -1.0 / a_parameter;
 }
 

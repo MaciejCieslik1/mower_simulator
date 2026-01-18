@@ -74,6 +74,9 @@ const FileLogger& StateSimulation::getFileLogger() const {
 
 
 void StateSimulation::simulateMovement(const double& distance) {
+    /* Simulate movement of the mower. Handles situation when mower tries to go out of the lawn.
+        Sends logs to file logger */
+
     double begginning_x = mower_.getX();
     double begginning_y = mower_.getY();
     short angle = mower_.getAngle();
@@ -112,6 +115,8 @@ void StateSimulation::simulateMovement(const double& distance) {
 
 
 double StateSimulation::countDistanceToBorder(const double& distance) const {
+    // Count distance to the closest border of the lawn
+
     double ROUND_MULTIPLIER = 1 / Constants::DISTANCE_PRECISION;
     pair<double, double> borderCornerPoint = countBorderPoint();
     double border_x = borderCornerPoint.first;
@@ -128,6 +133,8 @@ double StateSimulation::countDistanceToBorder(const double& distance) const {
 
 
 void StateSimulation::calculateMovementTime(const double& distance) {
+    // Calculates time of movement action
+
     double SECONDS_TO_MILISECONDS_MULTIPLIER = 1000;
 
     double time_ms = distance * SECONDS_TO_MILISECONDS_MULTIPLIER / mower_.getSpeed();
@@ -138,6 +145,8 @@ void StateSimulation::calculateMovementTime(const double& distance) {
 
 
 pair<double, double> StateSimulation::countBorderPoint() const {
+    // Calculates coords of the point, in which mower must stop not to exeede teh lawn area
+
     double border_x;
     double border_y;
 
@@ -162,6 +171,9 @@ pair<double, double> StateSimulation::countBorderPoint() const {
 
 
 void StateSimulation::simulateRotation(const short& angle) {
+    /* Simulate rotation of the mower. Handles situation when mower wants to rotate incorrectly.
+        Sends logs to file logger */
+
     short beginning_angle = mower_.getAngle();
     u_int64_t time = time_;
     string message;
@@ -184,7 +196,9 @@ void StateSimulation::simulateRotation(const short& angle) {
 }
 
 
-void StateSimulation::calculateRotationTime(const short& angle) {
+void StateSimulation::calculateRotationTime(const short& angle) { 
+    // Calculate time of the rotation action
+
     short MAX_ROTATION_ANGLE = 360;
     double SECONDS_TO_MILISECONDS_MULTIPLIER = 1000;
     short positive_angle = (angle + MAX_ROTATION_ANGLE) % MAX_ROTATION_ANGLE;
@@ -197,6 +211,8 @@ void StateSimulation::calculateRotationTime(const short& angle) {
 
 
 void StateSimulation::simulateMowingOptionOn() {
+    // Simulate switching on mowing
+
     mower_.turnOnMowing();
 
     string message = "Mowing mode: on";
@@ -206,6 +222,8 @@ void StateSimulation::simulateMowingOptionOn() {
 
 
 void StateSimulation::simulateMowingOptionOff() {
+    // Simulate switching off mowing
+
     mower_.turnOffMowing();
 
     string message = "Mowing mode: off";
@@ -215,6 +233,8 @@ void StateSimulation::simulateMowingOptionOff() {
 
 
 void StateSimulation::simulateAddPoint(const double& x, const double& y) {
+    // Simulate adding point on the law
+
     string message;
 
     if(lawn_.isPointInLawn(x, y)) {
@@ -234,6 +254,8 @@ void StateSimulation::simulateAddPoint(const double& x, const double& y) {
 }
 
 void StateSimulation::simulateDeletePoint(const unsigned int& id) {
+    // Simulates deleting point from the lawn
+
     bool is_found = false;
     string message;
 
@@ -259,6 +281,10 @@ void StateSimulation::simulateDeletePoint(const unsigned int& id) {
 
 
 void StateSimulation::simulateMovementToPoint(const unsigned int& id) {
+    /* Simulate movement to the point. Handles both moving and rotation.
+        As it is impossible to move exactly to the given point with rotation tolerance, which equals 1 degree, 
+        the mower is getting closer during each iteration so as to reach the given point*/
+
     bool is_found = false;
     double x;
     double y;
@@ -293,6 +319,9 @@ void StateSimulation::simulateMovementToPoint(const unsigned int& id) {
 
 
 void StateSimulation::moveToPointAttempt(const double& x, const double& y) {
+    /* Simulate attept to reach final point. The purpose of this method is to move closer to the lawn point,
+        without confidence that the final point will be reached during this iteration*/ 
+
     pair<short, double> rotation_distance = calculateAngleAndDistance(x, y);
 
     simulateRotation(rotation_distance.first);
@@ -301,6 +330,8 @@ void StateSimulation::moveToPointAttempt(const double& x, const double& y) {
 
 
 pair<short, double> StateSimulation::calculateAngleAndDistance(const double& x, const double& y) const {
+    // Calculate angle and distance to the given point
+
     double dx = x - mower_.getX();
     double dy = y - mower_.getY();
     short rotation;
@@ -319,6 +350,8 @@ pair<short, double> StateSimulation::calculateAngleAndDistance(const double& x, 
 
 
 double StateSimulation::calculateRotationNoDx(const double& dy) const {
+    // Calculate rotation, when mower and point have the same x coord
+
     double rotation;
 
     if (dy > 0) {
@@ -332,6 +365,8 @@ double StateSimulation::calculateRotationNoDx(const double& dy) const {
 
 
 double StateSimulation::calculateRotationDx(const double& dy, const double& dx) const {
+    // Calculate rotation, when mower and point have the different x coord
+
     const short RIGHT_ANGLE = 90;
     const short HALF_CIRCLE = 180;
     const short FULL_CIRCLE = 360;
