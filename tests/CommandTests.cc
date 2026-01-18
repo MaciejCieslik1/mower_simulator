@@ -1,21 +1,23 @@
 #include <gtest/gtest.h>
 #include <memory>
 #include <cmath>
-#include "../include/StateSimulation.h"
-#include "../include/commands/AddPointCommand.h"
-#include "../include/commands/DeletePointCommand.h"
-#include "../include/commands/GetDistanceToPointCommand.h"
-#include "../include/commands/MoveCommand.h"
-#include "../include/commands/MoveToPointCommand.h"
-#include "../include/commands/MowingOptionCommand.h"
-#include "../include/commands/RotateCommand.h"
-#include "../include/commands/RotateTowardsPointCommand.h"
-#include "../include/MathHelper.h"
-#include "../include/Lawn.h"
-#include "../include/Mower.h"
-#include "../include/Logger.h"
-#include "../include/FileLogger.h"
-#include "../include/Config.h"
+#include "StateSimulation.h"
+#include "commands/AddPointCommand.h"
+#include "commands/DeletePointCommand.h"
+#include "commands/GetDistanceToPointCommand.h"
+#include "commands/MoveCommand.h"
+#include "commands/MoveToPointCommand.h"
+#include "commands/MowingOptionCommand.h"
+#include "commands/RotateCommand.h"
+#include "commands/RotateTowardsPointCommand.h"
+#include "commands/GetCurrentPositionCommand.h"
+#include "commands/GetCurrentAngleCommand.h"
+#include "MathHelper.h"
+#include "Lawn.h"
+#include "Mower.h"
+#include "Logger.h"
+#include "FileLogger.h"
+#include "Config.h"
 
 class CommandTests : public ::testing::Test {
 protected:
@@ -155,6 +157,32 @@ TEST_F(CommandTests, MoveToPointCommandMovesMowerToPoint) {
     double mowerX = simulation->getMower().getX();
     double mowerY = simulation->getMower().getY();
     
-    EXPECT_NEAR(mowerX, 50.0, 2.0); // Tolerance
+    EXPECT_NEAR(mowerX, 50.0, 2.0);
     EXPECT_NEAR(mowerY, 50.0, 2.0);
+}
+
+TEST_F(CommandTests, GetCurrentPositionCommandRetrievesMowerPosition) {
+    Config::initializeMowerConstants(50, 50, 100.0, 200.0, 0);
+    mower = std::make_unique<Mower>(50, 50, 20, 10);
+    simulation = std::make_unique<StateSimulation>(*lawn, *mower, *logger, *fileLogger);
+
+    double outX = 0.0, outY = 0.0;
+    GetCurrentPositionCommand command(outX, outY);
+    command.execute(*simulation, 1.0);
+
+    EXPECT_DOUBLE_EQ(outX, 100.0);
+    EXPECT_DOUBLE_EQ(outY, 200.0);
+}
+
+TEST_F(CommandTests, GetCurrentAngleCommandRetrievesMowerAngle) {
+    const unsigned short initialAngle = 45;
+    Config::initializeMowerConstants(50, 50, 0, 0, initialAngle);
+    mower = std::make_unique<Mower>(50, 50, 20, 10);
+    simulation = std::make_unique<StateSimulation>(*lawn, *mower, *logger, *fileLogger);
+
+    unsigned short outAngle = 0;
+    GetCurrentAngleCommand command(outAngle);
+    command.execute(*simulation, 1.0);
+
+    EXPECT_EQ(outAngle, initialAngle);
 }

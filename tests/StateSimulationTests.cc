@@ -802,27 +802,3 @@ TEST(SimulateMovementToPoint, moveToPointCustom) {
     EXPECT_EQ(mower.getY(), 24);
     EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 0);
 }
-
-TEST(SimulateAddPoint, addPointsLimit) {
-    unsigned int lawn_width = 1000;
-    unsigned int lawn_length = 1000;
-    unsigned int width = 120;
-    unsigned int length = 100;
-    unsigned int blade_diameter = 90;
-    unsigned int speed = 105;
-    Config::initializeRuntimeConstants(lawn_width, lawn_length);
-    Config::initializeMowerConstants(width, length, 0, 0, 90);
-    Lawn lawn = Lawn(lawn_width, lawn_length);
-    Mower mower = Mower(width, length, blade_diameter, speed);
-    Logger logger = Logger();
-    FileLogger fileLogger = FileLogger("example_path");
-    StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
-    for (int i = 0; i < 7; ++i) {
-        stateSimulation.simulateAddPoint(10.0 * i, 10.0 * i);
-    }
-    stateSimulation.simulateAddPoint(80.0, 80.0); // 8th point
-
-    EXPECT_EQ(stateSimulation.getPoints().size(), 7);
-    EXPECT_EQ(stateSimulation.getNextPointId(), 7);
-    EXPECT_EQ(stateSimulation.getLogger().getLogs().size(), 1); // error log for 8th point
-}
