@@ -267,7 +267,7 @@ TEST(SimulateMovement, moveOutsideLawnLine) {
     uint64_t result_time = uint64_t(ceil(time_ms / Constants::TICK_DURATION) * Constants::TICK_DURATION);
     int result_logger_size = 1;
 
-    stateSimulation.simulateMovement(distance);
+    EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
 
     EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
     EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
@@ -298,7 +298,7 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleCorner) {
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
-    stateSimulation.simulateMovement(distance);
+    EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
 
     EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
     EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
@@ -330,7 +330,7 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngle) {
     uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
-    stateSimulation.simulateMovement(distance);
+    EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
 
     EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
     EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);
@@ -358,11 +358,10 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleOver180) {
     double result_x = 0;
     double result_y = 0;
     unsigned short result_angle = 225;
-    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
-    uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
+    uint64_t result_time = 0;
     int result_logger_size = 1;
 
-    stateSimulation.simulateMovement(distance);
+    EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
 
     EXPECT_NEAR(result_x, stateSimulation.getMower().getX(), Constants::DISTANCE_PRECISION);
     EXPECT_NEAR(result_y, stateSimulation.getMower().getY(), Constants::DISTANCE_PRECISION);

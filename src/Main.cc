@@ -27,7 +27,7 @@ using namespace std;
 // HERE THE USER CAN DEFINE THE SIMULATION PARAMETERS
     constexpr unsigned int LAWN_WIDTH_CM = 800;
     constexpr unsigned int LAWN_LENGTH_CM = 600;
-    constexpr double       SIMULATION_SPEED_MULTIPLIER = 2.0;
+    constexpr double       SIMULATION_SPEED_MULTIPLIER = 1.0;
     constexpr unsigned int MOWER_WIDTH_CM = 50;
     constexpr unsigned int MOWER_LENGTH_CM = 50;
     constexpr unsigned int BLADE_DIAMETER_CM = 50;
@@ -99,17 +99,20 @@ int main(int argc, char *argv[]) {
     cout << "[Main] Creating StateSimulation" << endl;
     StateSimulation simulation(lawn, mower, logger, fileLogger);
     
-    cout << "[Main] Initializing Engine" << endl;
-    Engine engine(simulation); 
-    engine.setSimulationSpeed(SIMULATION_SPEED_MULTIPLIER);
-
     cout << "[Main] Setting up MowerController and user logic" << endl;
     MowerController controller;
-
     customUserLogic(controller);
-    engine.setUserSimulationLogic([&controller](StateSimulation& sim, double dt) {
-        controller.update(sim, dt);
-    });
+
+    cout << "[Main] Initializing Engine" << endl;
+    Engine engine(simulation, 
+        [&controller](StateSimulation& sim, double dt) {
+            controller.update(sim, dt);
+        }, 
+        [&app](const string& error) {
+            QMetaObject::invokeMethod(&app, "quit", Qt::QueuedConnection);
+        }
+    ); 
+    engine.setSimulationSpeed(SIMULATION_SPEED_MULTIPLIER);
     
     cout << "[Main] Creating window" << endl;
     Visualizer visualizer(engine.getStateInterpolator()); 
@@ -118,7 +121,6 @@ int main(int argc, char *argv[]) {
     QTimer renderTimer;
     QObject::connect(&renderTimer, &QTimer::timeout, &visualizer, QOverload<>::of(&Visualizer::update));
     renderTimer.start(RENDER_INTERVAL_MS);
-
     visualizer.show();
     engine.start();
     

@@ -88,17 +88,12 @@ void StateSimulation::simulateMovement(const double& distance) {
 
         message = "Distance moved: " + to_string(distance) + "from point x: " + to_string(begginning_x) + 
             ", y: " + to_string(begginning_y);
-    }
-    catch (const MoveOutsideLawnError& e) {
+    } catch (const MoveOutsideLawnError& e) {
         Log log = Log(time_, "Attempted to move outside the lawn.");
         logger_.push(log);
         file_logger_.saveLog(log);
-        optional_distance = countDistanceToBorder(distance);
-        mower_.move(optional_distance, lawn_.getWidth(), lawn_.getLength());
-
-        message = "Distance moved to border: " + to_string(distance) + "from point x: " + 
-            to_string(begginning_x) + ", y: " + to_string(begginning_y);
-    }   
+        throw; 
+    }
 
     Log log = Log(time_, message);
     file_logger_.saveLog(log);

@@ -61,7 +61,7 @@ add_executable(StateSimulationTests tests/StateSimulationTests.cc src/Logger.cc 
 target_link_libraries(StateSimulationTests gtest gtest_main)
 add_test(NAME StateSimulationTests COMMAND StateSimulationTests)
 
-add_executable(EngineTests tests/EngineTests.cc src/Engine.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Logger.cc src/Log.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/FileLogger.cc src/Visualizer.cc include/Visualizer.h src/StateInterpolator.cc src/RenderTimeController.cc)
+add_executable(EngineTests tests/EngineTests.cc src/Engine.cc src/StateSimulation.cc src/Lawn.cc src/Mower.cc src/Logger.cc src/Log.cc src/Config.cc src/Exceptions.cc src/MathHelper.cc src/Point.cc src/FileLogger.cc src/Visualizer.cc include/Visualizer.h src/StateInterpolator.cc src/RenderTimeController.cc src/MowerController.cc src/commands/MoveCommand.cc src/commands/RotateCommand.cc src/commands/MowingOptionCommand.cc src/commands/AddPointCommand.cc src/commands/DeletePointCommand.cc src/commands/MoveToPointCommand.cc src/commands/GetDistanceToPointCommand.cc src/commands/RotateTowardsPointCommand.cc src/commands/GetCurrentAngleCommand.cc src/commands/GetCurrentPositionCommand.cc)
 target_link_libraries(EngineTests gtest gtest_main pthread Threads::Threads Qt5::Widgets)
 add_test(NAME EngineTests COMMAND EngineTests)
 

@@ -12,6 +12,8 @@
 #include "FileLogger.h"
 #include "Config.h"
 #include "Visualizer.h"
+#include "MowerController.h"
+#include "Exceptions.h"
 
 class EngineTests : public ::testing::Test {
 protected:
@@ -376,4 +378,44 @@ TEST_F(EngineTests, BothThreadsActuallyRun) {
     engine.stop();
     
     EXPECT_TRUE(simulation_ran.load()) << "Simulation thread should execute";
+}
+
+TEST_F(EngineTests, simulationStopsOnMoveOutsideLawn) {
+    unsigned int lawn_width = 100;
+    unsigned int lawn_length = 100;
+    unsigned int mower_width = 10;
+    unsigned int mower_length = 10;
+    unsigned int blade_diameter = 8;
+    unsigned int mower_speed = 100;
+
+    Config::initializeRuntimeConstants(lawn_width, lawn_length);
+    Config::initializeMowerConstants(mower_width, mower_length, 50.0, 50.0, 0);
+
+    Lawn lawn(lawn_width, lawn_length);
+    Mower mower(mower_width, mower_length, blade_diameter, mower_speed);
+    Logger logger;
+    FileLogger fileLogger("test_exception_logs.log");
+    StateSimulation sim(lawn, mower, logger, fileLogger);
+    
+    MowerController controller;
+    controller.move(200.0); 
+
+    Engine engine(sim, [&controller](StateSimulation& s, double dt) {
+        controller.update(s, dt);
+    });
+
+    engine.start();
+    
+    auto start_time = std::chrono::steady_clock::now();
+    bool stopped = false;
+    while (std::chrono::steady_clock::now() - start_time < std::chrono::seconds(2)) {
+        if (!engine.isRunning()) {
+            stopped = true;
+            break;
+        }
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+    EXPECT_TRUE(stopped);
+    EXPECT_FALSE(engine.isRunning());
 }

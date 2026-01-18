@@ -18,7 +18,9 @@ class StateSimulation;
 
 class Engine {
 public:
-    Engine(StateSimulation& simulation);
+    Engine(StateSimulation& simulation, 
+           std::function<void(StateSimulation&, double)> user_logic = nullptr,
+           std::function<void(const std::string&)> error_callback = nullptr);
     ~Engine();
 
     Engine(const Engine&) = delete;
@@ -31,9 +33,10 @@ public:
     void setSimulationSpeed(double multiplier);
     double getSpeedMultiplier() const;
     double getSimulationTime() const; 
-    StateInterpolator& getStateInterpolator(); //todo: const???
+    StateInterpolator& getStateInterpolator();
 
     void setUserSimulationLogic(std::function<void(StateSimulation&, double)> callback);
+    void setOnErrorCallback(std::function<void(const std::string&)> callback);
     static void defaultSimulationLogic(StateSimulation& simulation, double dt);
 
 private:
@@ -50,4 +53,5 @@ private:
     const double fixed_timestep_; 
 
     std::function<void(StateSimulation&, double)> user_simulation_callback_;
+    std::function<void(const std::string&)> error_callback_;
 };
