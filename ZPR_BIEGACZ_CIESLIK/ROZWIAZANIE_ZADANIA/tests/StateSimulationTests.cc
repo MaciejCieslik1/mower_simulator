@@ -261,9 +261,10 @@ TEST(SimulateMovement, moveOutsideLawnLine) {
     StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1001;
     double result_x = 0;
-    double result_y = 0;
+    double result_y = 1000;
     unsigned short result_angle = 0;
-    uint64_t result_time = 0;
+    double time_ms = 1000.0 * 1000.0 / mower.getSpeed();
+    uint64_t result_time = uint64_t(ceil(time_ms / Constants::TICK_DURATION) * Constants::TICK_DURATION);
     int result_logger_size = 1;
 
     EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
@@ -290,10 +291,11 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleCorner) {
     FileLogger fileLogger = FileLogger("example_path");
     StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
-    double result_x = 500;
-    double result_y = 500;
+    double result_x = 1000;
+    double result_y = 1000;
     unsigned short result_angle = 45;
-    uint64_t result_time = 0;
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
+    uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
     EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
@@ -321,10 +323,11 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngle) {
     FileLogger fileLogger = FileLogger("example_path");
     StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
-    double result_x = 500;
-    double result_y = 0;
+    double result_x = 1000;
+    double result_y = 500;
     unsigned short result_angle = 45;
-    uint64_t result_time = 0;
+    double time_ms = double(distance / 2 * sqrt(2)) * 1000.0 / mower.getSpeed();
+    uint64_t result_time = uint64_t(ceil(time_ms / 10.0) * 10.0);
     int result_logger_size = 1;
 
     EXPECT_THROW(stateSimulation.simulateMovement(distance), MoveOutsideLawnError);
@@ -352,8 +355,8 @@ TEST(SimulateMovement, moveOutsideLawnCustomAngleOver180) {
     FileLogger fileLogger = FileLogger("example_path");
     StateSimulation stateSimulation = StateSimulation(lawn, mower, logger, fileLogger);
     double distance = 1000;
-    double result_x = 500;
-    double result_y = 500;
+    double result_x = 0;
+    double result_y = 0;
     unsigned short result_angle = 225;
     uint64_t result_time = 0;
     int result_logger_size = 1;
