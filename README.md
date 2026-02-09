@@ -22,8 +22,12 @@ Users are also able to customize other simulation parameters, such as the mower'
 Another thing that can be customized is the overall simulation speed.
 
 ## Running the Simulation
+> Note: App was tested on Ubuntu 24.04.
+
 In order to start the mower simulator, run:
 ```
+git clone https://github.com/MaciejCieslik1/mower_simulator.git
+cd mower_simulator/ROZWIAZANIE_ZADANIA
 ./setup_extra_libraries.sh
 mkdir build/
 cd build/
